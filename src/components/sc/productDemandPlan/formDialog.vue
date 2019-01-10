@@ -1,0 +1,65 @@
+<template>
+	<el-dialog 
+		:title='title'
+		class='c-dialog-fixed'
+		:visible.sync='show'
+		:append-to-body='inDialog'
+		width='80%'
+		@open='openDialog'>
+		<plan-form in-dialog ref='form' @saved='saved'></plan-form>
+		<span slot="footer">
+	    <el-button @click="save" type="primary"  size='small' :loading='buttonLoading'>{{ buttonText }}</el-button>
+	    <el-button @click="show=false" size='small'>关 闭</el-button>
+	  </span>
+	</el-dialog>
+</template>
+<script>
+	import planForm from './form'
+	export default {
+		components:{ planForm },
+		props:{
+			inDialog:{
+				type:Boolean,
+				default:false
+			}
+		},
+		data(){
+			return {
+				show:false,
+				buttonLoading:false,
+				data:{}
+			}
+		},
+		computed:{
+			title(){
+				return this.data.id?'编辑生产需求计划':'创建生产需求计划'
+			},
+			buttonText(){
+				return this.data.id?'更 新':'创 建'
+			}
+		},
+		methods:{
+			openDialog(){
+				this.buttonLoading = false
+				this.$nextTick(()=>{
+					this.$refs.form.resetFields()
+					this.$refs.form.assign(this.data)
+				})
+			},
+			open(data={}){
+				this.data = data	
+				this.show = true
+			},
+			save(){
+				this.buttonLoading = true
+				this.$refs.form.save().catch(()=>{
+					this.buttonLoading = false
+				})
+			},
+			saved(){
+				this.show=false
+				this.$emit('saved')
+			}
+		}
+	}
+</script>
