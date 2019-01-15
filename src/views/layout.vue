@@ -54,7 +54,7 @@
 				<router-view style='margin-bottom:25px'/>
 			</el-main>
 			<el-footer height='35px' style='text-align: center;border-top:1px solid #EBEEF5'>
-				<el-button type='text' @click='checkVersion'>Copyright © 2018 广东金刚玻璃科技股份有限公司 | 版本：v<span ref='version'>20181120001</span></el-button>
+				<el-button type='text' @click='checkVersion'>Copyright © 2019 广东金刚玻璃科技股份有限公司 | 版本：v<span ref='version'>20190115001</span></el-button>
 				<!-- <el-button type='text' @click='contactDialog=true'>系统帮助</el-button> -->
 			</el-footer>
 			<el-dialog :visible.sync="contactDialog" title='系统帮助' class='c-dialog-fixed'>

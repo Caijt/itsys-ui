@@ -88,27 +88,42 @@
 					<span class='c-link' @click='openDetails(row)'>{{row.no}}</span>
 				</template>
 			</el-table-column>
+			<el-table-column label='资产状态' align='center' width='100'>
+				<template slot-scope='{row}'>
+					<status-tag :asset='row'/>
+				</template>
+			</el-table-column>
 			<el-table-column 
 				prop='model' 
 				min-width='150' 
-				label='型号' 
+				label='资产型号' 
 				show-overflow-tooltip />
 			<el-table-column 
 				prop='type_name' 
 				width='100' 
 				label='资产类型' 
 				show-overflow-tooltip />			
-			<el-table-column prop='buy_date' label='购入日期' sortable='custom' width='100' />
+			<el-table-column prop='buy_date' label='购买日期' sortable='custom' width='100' />
 			<el-table-column prop='price' label='金额' sortable='custom' width='100' align='right'>
 				<template slot-scope='{row}'>
 					<span>￥{{ row.price }}</span>
 				</template>
 			</el-table-column>
 			<el-table-column 
-				prop='amount' 
-				label='数量' 
+				prop='remain' 
+				label='库存量' 
+				align='right'
 				sortable='custom' 
-				width='80' />
+				width='110'>
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openUseStatusDialog(row)'>{{row.remain}} / {{row.avaiable_amount}} / {{row.amount}}</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop='use_dep' label='最后领用人' sortable='custom' width='120' show-overflow-tooltip>
+				<template slot-scope='{row}'>
+					<span>{{row.use_dep}} / {{row.use_emp}}</span>
+				</template>
+			</el-table-column>
 			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />
 			<el-table-column 
 				prop='supplier_name' 
@@ -123,7 +138,7 @@
 			<el-table-column 
 				prop='company_name' 
 				min-width='120' 
-				label='所属公司' 
+				label='资产所属公司' 
 				show-overflow-tooltip />		
 			<el-table-column 
 				prop='create_user_name' 
@@ -163,14 +178,17 @@
 	    @current-change='getData' />
 	  <!--/ 分页 -->
 	  <asset-details :in-dialog='inDialog' ref='assetDetails' />
+	  <asset-use-status-dialog :in-dialog='inDialog' hide-asset-fields ref='assetUseStatusDialog'/>
 	</div>
 </template>
 <script>
 import assetApi from '@/api/it/asset'
 import assetDetails from '@/components/it/asset/details'
+import assetUseStatusDialog from './useStatus/listDialog'
+import statusTag from './statusTag'
 
 export default {
-	components:{ assetDetails },
+	components:{ assetDetails, assetUseStatusDialog, statusTag },
 	props:{
 		size:{
 			type:String,
@@ -343,6 +361,11 @@ export default {
 					this.$message.success('删除成功')
 					this.$emit('del')
 				})
+			})
+		},
+		openUseStatusDialog(row){
+			this.$refs.assetUseStatusDialog.open().then(that=>{
+				that.initData({asset_id:row.id})
 			})
 		}
 	}

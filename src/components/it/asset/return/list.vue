@@ -23,7 +23,7 @@
 				</el-button-group>
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
-				<el-form-item label='领用编号' prop='record_no'>
+				<el-form-item label='交还编号' prop='record_no'>
 					<el-input v-model='queryParams.record_no' clearable></el-input>
 				</el-form-item>
 				<span v-show='queryShowMore'>
@@ -36,17 +36,17 @@
 					<el-form-item label='业务员' prop='salesman'>
 						<el-input v-model='queryParams.salesman' clearable></el-input>
 					</el-form-item>
-					<el-form-item label='购买日期'>
+					<el-form-item label='交还日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
-								<el-form-item prop='buy_date_begin'>
-					      	<el-date-picker v-model='queryParams.buy_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+								<el-form-item prop='return_date_begin'>
+					      	<el-date-picker v-model='queryParams.return_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					    	</el-form-item>
 					    </el-col>
 					    <el-col :span="2">至</el-col>
 					    <el-col :span="11">
-					    	<el-form-item prop='buy_date_end'>
-					    		<el-date-picker v-model='queryParams.buy_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    	<el-form-item prop='return_date_end'>
+					    		<el-date-picker v-model='queryParams.return_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					      </el-form-item>
 					    </el-col>
 				  	</el-row>
@@ -76,7 +76,7 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column prop='no' label='领用单编号' width='110'>
+			<el-table-column prop='no' label='交还单编号' width='110'>
 				<template slot-scope='{row}'>
 					<span class='c-link' @click='openDetailsDialog(row)'>{{row.no}}</span>
 				</template>
@@ -85,28 +85,18 @@
 				prop='record_date' 
 				width='100' 
 				sortable='custom' 
-				label='领用日期' />
-			<el-table-column 
-				prop='dep' 
-				width='100' 
-				label='领用部门' 
-				show-overflow-tooltip />
-			<el-table-column 
-				prop='emp' 
-				width='90' 
-				label='领用人' 
-				show-overflow-tooltip />
+				label='交还日期' />
 			<el-table-column 
 				prop='amount' 
 				align='center'
-				label='领用数量' 
+				label='交还数量'
 				sortable='custom' 
 				width='100'>
 					<template slot-scope='{row}'>
 						<span class='c-link' @click='openRecordDetailDialog(row)'>{{row.amount}}</span>
 					</template>
 			</el-table-column>
-			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />
+			<el-table-column prop='remarks' label='备注' min-width='120' show-overflow-tooltip />
 			<el-table-column 
 				prop='company_name' 
 				min-width='120' 
@@ -115,8 +105,8 @@
 			<el-table-column 
 				width='90' 
 				prop='create_user_name' 
-				label='录入员' 
-				show-overflow-tooltip/>
+				show-overflow-tooltip
+				label='录入员' />
 			<el-table-column 
 				prop='submit_time' 
 				width='120' 
@@ -147,7 +137,7 @@
 	</div>
 </template>
 <script>
-import assetApi from '@/api/it/assetUseRecord'
+import assetApi from '@/api/it/assetReturnRecord'
 import detailListDialog from './detail/listDialog'
 import recordDetails from './details'
 

@@ -21,9 +21,19 @@
           	</el-button>
           </el-tooltip>
 				</el-button-group>
+				<!-- <span><el-button type='primary' @click='query' icon='el-icon-search' size='mini'></el-button></span>
+				<span><el-button @click='resetQuery' size='mini'>重置</el-button ></span>
+				<el-tooltip content='导出Excel' placement='top'>
+					<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
+				</el-tooltip>				 
+        <el-tooltip content='显示更多查询条件' placement='top'>
+          <el-button @click='queryShowMore=!queryShowMore' size='mini'>
+          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
+          </el-button>
+        </el-tooltip> -->
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
-				<el-form-item label='领用编号' prop='record_no'>
+				<el-form-item label='交还编号' prop='record_no'>
 					<el-input v-model='queryParams.record_no' clearable></el-input>
 				</el-form-item>
 				<span v-show='queryShowMore'>
@@ -76,48 +86,44 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column prop='no' label='领用单编号' width='110'>
+			<el-table-column v-if='!hideRecordFields' prop='no' label='交还单编号' width='110'>
 				<template slot-scope='{row}'>
-					<span class='c-link' @click='openDetailsDialog(row)'>{{row.no}}</span>
+					<span class='c-link' @click='openDetails(row)'>{{row.no}}</span>
 				</template>
 			</el-table-column>
 			<el-table-column 
+				v-if='!hideRecordFields'
 				prop='record_date' 
 				width='100' 
 				sortable='custom' 
-				label='领用日期' />
-			<el-table-column 
+				label='交还日期' />
+			<el-table-column 			
 				prop='dep' 
 				width='100' 
-				label='领用部门' 
+				label='交还部门' 
 				show-overflow-tooltip />
-			<el-table-column 
+			<el-table-column 				
 				prop='emp' 
 				width='90' 
-				label='领用人' 
+				label='交还人' 
 				show-overflow-tooltip />
+			<el-table-column v-if='!hideRecordFields' prop='remarks' label='交还备注' width='120' show-overflow-tooltip />
+			<el-table-column prop='asset_no' width='110' label='资产编号' show-overflow-tooltip />
+			<el-table-column prop='asset_model' min-width='150' label='资产型号' show-overflow-tooltip />
+			<el-table-column prop='asset_type_name' width='100' label='资产类型' show-overflow-tooltip />
 			<el-table-column 
 				prop='amount' 
-				align='center'
-				label='领用数量' 
+				align='right'
+				label='交还数量' 
 				sortable='custom' 
 				width='100'>
-					<template slot-scope='{row}'>
-						<span class='c-link' @click='openRecordDetailDialog(row)'>{{row.amount}}</span>
-					</template>
-			</el-table-column>
-			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />
+			</el-table-column>				
 			<el-table-column 
-				prop='company_name' 
-				min-width='120' 
-				label='记录所属公司' 
-				show-overflow-tooltip />		
-			<el-table-column 
-				width='90' 
+				v-if='!hideRecordFields'
 				prop='create_user_name' 
-				label='录入员' 
-				show-overflow-tooltip/>
+				label='录入员' />
 			<el-table-column 
+				v-if='!hideRecordFields'
 				prop='submit_time' 
 				width='120' 
 				label='提交时间' 
@@ -142,17 +148,15 @@
 	    @size-change='sizeChange'
 	    @current-change='getData' />
 	  <!--/ 分页 -->
-	  <detail-list-dialog hide-record-fields :in-dialog='inDialog' ref='detailListDialog'/>
-	  <record-details :in-dialog='inDialog' ref='recordDetails'/>
+	  <asset-details :in-dialog='inDialog' ref='assetDetails' />
 	</div>
 </template>
 <script>
-import assetApi from '@/api/it/assetUseRecord'
-import detailListDialog from './detail/listDialog'
-import recordDetails from './details'
+import assetApi from '@/api/it/assetUseRecordDetail'
+import assetDetails from '@/components/it/asset/details'
 
 export default {
-	components:{ detailListDialog, recordDetails },
+	components:{ assetDetails },
 	props:{
 		size:{
 			type:String,
@@ -187,7 +191,11 @@ export default {
 		showSelection:{
 			type:Boolean,
 			default:false
-		}
+		},
+		hideRecordFields:{
+			type:Boolean,
+			default:false
+		},
 	},
 	data(){
 		return {
@@ -200,6 +208,7 @@ export default {
 			projectList:[],
 			summaryData:{},
 			selectionList:[],
+			initParams:{},
 			queryShowMore:this.showMore,
 			//查询条件字段
 			queryParams:{
@@ -236,7 +245,8 @@ export default {
   },
 	methods:{
 		//初始化数据
-		initData(){
+		initData(params={}){
+			this.initParams = {...params}
 			this.resetQuery()
 		},
 		//刷新数据
@@ -266,7 +276,7 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			assetApi.getList(this.requestParams).then(res=>{
+			assetApi.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
 				this.list = res.data.list
 				this.dataTotal = res.data.total
 				this.summaryData = res.data.summary
@@ -312,14 +322,17 @@ export default {
 		clear(){
 			this.list = []
 		},
-		openRecordDetailDialog(row){
-			this.$refs.detailListDialog.open().then(that=>{
-				that.initData({record_id:row.id})
-			})
-		},
-		openDetailsDialog(row){
-			this.$refs.recordDetails.open().then(that=>{
-				that.initData(row)
+		del({ row,$index }){
+			let confirmText = '确定删除此IT领用单吗？'
+			this.$confirm(confirmText,'提示',{
+				type: 'warning'
+			}).then(()=>{
+				assetApi.del(row.id).then(res=>{
+					// this.list.splice($index,1)
+					this.reload()
+					this.$message.success('删除成功')
+					this.$emit('del')
+				})
 			})
 		}
 	}

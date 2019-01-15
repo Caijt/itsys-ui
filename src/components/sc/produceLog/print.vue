@@ -188,13 +188,6 @@
 		}
 	}
 </script>
-<style lang='scss'>
-	.c-table{
-		.label{
-			text-align:center;
-		}
-	}
-</style>
 <style lang='scss' scoped>
 	._order-print-page{
 		color:#000;

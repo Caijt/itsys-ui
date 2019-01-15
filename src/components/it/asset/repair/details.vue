@@ -5,7 +5,7 @@
 			:visible.sync="show" 
 			:append-to-body='inDialog'
 			@open='openDialog'
-			width='70%'
+			width='80%'
 			@close='closeDialog'>
 			<div slot='title' class='el-dialog__title'>
 				<span>{{title}}</span>
@@ -14,66 +14,39 @@
 			<div v-loading='loading'>
 				<el-form 
 					ref='form' label-width='85px' size='mini' class='c-form-text'>
-					<divider title='IT资产信息' ></divider>
+					<divider title='IT资产领用信息' ></divider>
 					<el-row :gutter='10'>					
 						<el-col :span='8'>
-							<el-form-item label='资产编号'>
+							<el-form-item label='领用单编号'>
 								<span>{{form.no}}</span>
 							</el-form-item>
 						</el-col>
-						<el-col :span='8'>
-							<el-form-item label='资产状态' class='no-border'>
-								<status-tag :asset='form'/>
-							</el-form-item>
-						</el-col>
 					</el-row>
-					<el-row :gutter='10'>
-						<el-col :span='24'>
-							<el-form-item label='资产型号'>
-								<span>{{form.model}}</span>
-							</el-form-item>
-						</el-col>
+					<el-row :gutter='10'>						
 						<el-col :span='24'>
 							<el-form-item label='所属公司'>
 								<span>{{form.company_name}}</span>
 							</el-form-item>
-						</el-col>
-						<el-col :span='24'>
-							<el-form-item label='供应商'>
-								<span>{{form.supplier_name}}</span>
-							</el-form-item>
-						</el-col>
+						</el-col>						
 					</el-row>
 					<el-row :gutter='10'>
 						<el-col :span='8'>
-							<el-form-item label='购买日期' >
-								<span>{{form.buy_date}}</span>
+							<el-form-item label='领用日期' >
+								<span>{{form.record_date}}</span>
 							</el-form-item>
 						</el-col>
 						<el-col :span='8'>
-							<el-form-item label='总价格'>
-								<span>￥{{form.price}}</span>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row :gutter='10' >
-						<el-col :span='8'>
-							<el-form-item label='入库数量'>
-								<span>{{form.amount}}</span>
-							</el-form-item>
-						</el-col>						
-						<el-col :span='8'>
-							<el-form-item label='可用量'>
-								<span>{{form.avaiable_amount}}</span>
+							<el-form-item label='领用部门'>
+								<span>{{form.dep}}</span>
 							</el-form-item>
 						</el-col>
 						<el-col :span='8'>
-							<el-form-item label='库存量'>
-								<span>{{form.remain}}</span>
+							<el-form-item label='领用员工'>
+								<span>{{form.emp}}</span>
 							</el-form-item>
 						</el-col>
 						<el-col :span='24'>
-							<el-form-item label='备注'>
+							<el-form-item label='领用备注'>
 								<span>{{form.remarks}}</span>
 							</el-form-item>
 						</el-col>
@@ -90,8 +63,8 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span='8'>
-							<el-form-item label='创建时间' >
-								<span>{{ $commonJs.formatDate(form.create_time) }}</span>
+							<el-form-item label='提交时间' >
+								<span>{{ $commonJs.formatDate(form.submit_time) }}</span>
 							</el-form-item>
 						</el-col>	
 						<el-col :span='8'>
@@ -101,41 +74,42 @@
 						</el-col>						
 					</el-row>
 				</el-form>
-				<el-tabs v-model='tabName'>
-					<el-tab-pane label='领用状态'  name='useStatus'>
-						<asset-use-status-list in-dialog hide-query no-page hide-asset-fields ref='assetUseStatusList'/>
-					</el-tab-pane>
-					<el-tab-pane label='领用交还记录' name='use'>
-						<asset-use-return-list in-dialog sort-prop='submit_time' hide-query no-page ref='assetUseReturnList'/>
-					</el-tab-pane>
-					<el-tab-pane label='维修记录' name='repair'>
-						<asset-repair-list in-dialog hide-asset-fields sort-prop='repair_date' hide-query no-page ref='assetRepairList' />
-					</el-tab-pane>
-					<el-tab-pane label='报废记录' name='scrap'>
-						<asset-scrap-list in-dialog hide-asset-fields sort-prop='scrap_date' hide-query no-page ref='assetScrapList' />
-					</el-tab-pane>
-				</el-tabs>
+				<divider title='资产列表' style='margin-top:10px'></divider>
+				<detail-list in-dialog hide-record-fields no-page hide-query ref='assetList'/>
 			</div>
 			<template slot="footer">
 				<slot name='footer' :data='form'></slot>
 			</template>
-		</el-dialog>
+		</el-dialog>		
 	</div>
 </template>
 <script>
-	import assetApi from '@/api/it/asset'
+	import assetApi from '@/api/it/assetUseRecord'
 	import attachList from '@/components/common/attach/textList'
 	import qrcodePopover from '@/components/common/qrcodePopover'
-	import statusTag from './statusTag'
 
 	const formInit = {
-		id:null
+		id:null,
+		input_status:0,
+		order_no:'',
+		project_name:'',
+		customer_name:'',
+		order_date:'',
+		order_type:'',
+		delivery_date:'',
+		contract_no:'',
+		domain:'',
+		remarks:'',
+		load_progress:0,
+		delivery_progress:0,
+		receive_progress:0,
+		finish_progress:0,
 	}
 	export default {
 		components:{ 
-			attachList,
+			attachList, 
 			qrcodePopover,
-			statusTag
+			detailList
 		},
 		props:{
 			inDialog:{
@@ -147,15 +121,8 @@
 				default:false
 			},
 		},
-		created(){
-			this.$options.components.assetUseStatusList = ()=>import('./useStatus/list')
-			this.$options.components.assetUseReturnList = ()=>import('./useReturn/list')
-			this.$options.components.assetRepairList = ()=>import('./repair/list')
-			this.$options.components.assetScrapList = ()=>import('./scrap/list')
-		},
 		data(){
 			return {
-				tabName:'useStatus',
 				resolve:null,
 				loading: false,
 				form: { ...formInit },
@@ -171,7 +138,7 @@
 				}				
 			},
 			title(){
-				let title='IT资产详情 [ '+(this.form.no||'...')+' ]'
+				let title='IT资产领用单详情 [ '+(this.form.no||'...')+' ]'
 				return title
 			}
 		},
@@ -184,7 +151,7 @@
 				})
 			},
 			closeDialog(){
-				this.tabName = 'useStatus'
+				this.tabName = 'list'
 				this.form = {...formInit}
 				this.$refs.taskAttachList.clear()
 			},
@@ -202,10 +169,7 @@
 				if(data.attach_ids){
 					this.$refs.taskAttachList.initData({attach_ids:data.attach_ids})
 				}
-				this.$refs.assetUseStatusList.initData({asset_id:data.id})
-				this.$refs.assetUseReturnList.initData({asset_id:data.id})
-				this.$refs.assetRepairList.initData({asset_id:data.id})
-				this.$refs.assetScrapList.initData({asset_id:data.id})
+				this.$refs.assetList.initData({record_id:data.id})
 			},
 			open(){
 				this.show = true

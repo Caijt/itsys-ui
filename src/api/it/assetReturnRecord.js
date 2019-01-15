@@ -3,7 +3,7 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/asset_use_record' 
+const BASE_URL = baseUrl +'/asset_return_record' 
 
 export default {
 	getPrintQrcode(id){
@@ -91,8 +91,6 @@ export default {
 			'company_id',
 			'record_date',
 			'remarks',
-			'dep',
-			'emp',
 			'asset_list'
 		])
 		return request({

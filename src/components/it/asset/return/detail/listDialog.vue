@@ -1,13 +1,14 @@
 <template>
 	<el-dialog 
 		class='c-dialog-fixed'
-		title='资产列表' 
+		title='IT资产交还明细列表' 
 		width='80%'		
 		:visible.sync='show'
 		:append-to-body='inDialog'
 		@open='openDialog'
 		@close='closeDialog'>
 		<list 
+			:hide-record-fields='hideRecordFields'
 			:show-selection='showSelection'
 			max-height='300' 
 			:params='params' 
@@ -37,6 +38,10 @@
 			},
 			params:{
 				default:()=>({})
+			},
+			hideRecordFields:{
+				type:Boolean,
+				default:false
 			},
 		},
 		data(){

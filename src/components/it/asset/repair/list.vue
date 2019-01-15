@@ -23,35 +23,44 @@
 				</el-button-group>
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
-				<el-form-item label='领用编号' prop='record_no'>
-					<el-input v-model='queryParams.record_no' clearable></el-input>
+				<el-form-item label='资产编号' prop='asset_no'>
+					<el-input v-model='queryParams.asset_no' clearable></el-input>
 				</el-form-item>
-				<span v-show='queryShowMore'>
-					<el-form-item label='资产编号' prop='asset_no'>
-						<el-input v-model='queryParams.asset_no' clearable></el-input>
+				<div v-show='queryShowMore'>
+					<el-form-item label='资产型号' prop='asset_model'>
+						<el-input v-model='queryParams.asset_model' clearable></el-input>
 					</el-form-item>
-					<el-form-item label='业绩公司' prop='company_name'>
-						<el-input v-model='queryParams.company_name' clearable></el-input>
-					</el-form-item>
-					<el-form-item label='业务员' prop='salesman'>
-						<el-input v-model='queryParams.salesman' clearable></el-input>
-					</el-form-item>
-					<el-form-item label='购买日期'>
+					<el-form-item label='维修日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
-								<el-form-item prop='buy_date_begin'>
-					      	<el-date-picker v-model='queryParams.buy_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+								<el-form-item prop='repair_date_begin'>
+					      	<el-date-picker v-model='queryParams.repair_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					    	</el-form-item>
 					    </el-col>
 					    <el-col :span="2">至</el-col>
 					    <el-col :span="11">
-					    	<el-form-item prop='buy_date_end'>
-					    		<el-date-picker v-model='queryParams.buy_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    	<el-form-item prop='repair_date_end'>
+					    		<el-date-picker v-model='queryParams.repair_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					      </el-form-item>
 					    </el-col>
 				  	</el-row>
 					</el-form-item>
-				</span>
+					<el-form-item label='完成日期'>
+						<el-row style='width:300px'>
+							<el-col :span="11">
+								<el-form-item prop='finish_date_begin'>
+					      	<el-date-picker v-model='queryParams.finish_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    	</el-form-item>
+					    </el-col>
+					    <el-col :span="2">至</el-col>
+					    <el-col :span="11">
+					    	<el-form-item prop='finish_date_end'>
+					    		<el-date-picker v-model='queryParams.finish_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					      </el-form-item>
+					    </el-col>
+				  	</el-row>
+					</el-form-item>
+				</div>
 			</el-form>
 		</div> 
 		<!--/ 查询条件 -->		
@@ -76,54 +85,72 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column prop='no' label='领用单编号' width='110'>
+			<el-table-column 
+				prop='status' 
+				width='90' 
+				align='center'
+				label='维修状态'>
 				<template slot-scope='{row}'>
-					<span class='c-link' @click='openDetailsDialog(row)'>{{row.no}}</span>
+					<el-tag v-if='row.status==0' type='danger'>维修中</el-tag>
+					<el-tag v-else='row.status==1' type='success'>已完成</el-tag>
 				</template>
 			</el-table-column>
 			<el-table-column 
-				prop='record_date' 
+				prop='repair_date' 
 				width='100' 
 				sortable='custom' 
-				label='领用日期' />
+				label='维修日期' />
 			<el-table-column 
-				prop='dep' 
+				prop='supplier_name' 
 				width='100' 
-				label='领用部门' 
+				label='维修供应商' 
 				show-overflow-tooltip />
 			<el-table-column 
-				prop='emp' 
-				width='90' 
-				label='领用人' 
-				show-overflow-tooltip />
-			<el-table-column 
-				prop='amount' 
+				v-if='!hideAssetFields'
+				prop='asset_no' 
 				align='center'
-				label='领用数量' 
+				label='资产编号' 
 				sortable='custom' 
 				width='100'>
 					<template slot-scope='{row}'>
-						<span class='c-link' @click='openRecordDetailDialog(row)'>{{row.amount}}</span>
+						<span class='c-link' @click='openAssetDetails(row)'>{{row.asset_no}}</span>
 					</template>
 			</el-table-column>
-			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />
 			<el-table-column 
-				prop='company_name' 
-				min-width='120' 
-				label='记录所属公司' 
-				show-overflow-tooltip />		
+				v-if='!hideAssetFields'
+				prop='asset_model' 
+				width='150' 
+				label='资产型号' 
+				show-overflow-tooltip />
+			<el-table-column prop='reason' label='故障描述' width='120' show-overflow-tooltip />
+			<el-table-column prop='finish_date' label='完成日期' sortable='custom'  width='100' show-overflow-tooltip />
+			<el-table-column prop='price' label='维修金额' align='right' sortable='custom'  width='100' show-overflow-tooltip>
+				<template slot-scope='{row}'>
+					<span>￥{{row.price}}</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop='content' label='维修内容' width='150' show-overflow-tooltip />
 			<el-table-column 
 				width='90' 
 				prop='create_user_name' 
 				label='录入员' 
 				show-overflow-tooltip/>
 			<el-table-column 
-				prop='submit_time' 
+				prop='create_time' 
 				width='120' 
-				label='提交时间' 
+				label='创建时间' 
 				sortable='custom'>
 				<template slot-scope='{ row }'>
-					<span>{{ row.submit_time | formatDate }}</span>
+					<span>{{ row.create_time | formatDate }}</span>
+				</template>
+			</el-table-column>
+			<el-table-column 
+				prop='update_time' 
+				width='120' 
+				label='更新时间' 
+				sortable='custom'>
+				<template slot-scope='{ row }'>
+					<span>{{ row.update_time | formatDate }}</span>
 				</template>
 			</el-table-column>
 			<!-- slot[column] -->
@@ -142,17 +169,14 @@
 	    @size-change='sizeChange'
 	    @current-change='getData' />
 	  <!--/ 分页 -->
-	  <detail-list-dialog hide-record-fields :in-dialog='inDialog' ref='detailListDialog'/>
-	  <record-details :in-dialog='inDialog' ref='recordDetails'/>
+	  <asset-details v-if='!hideAssetFields' :in-dialog='inDialog' ref='assetDetails'/>
 	</div>
 </template>
 <script>
-import assetApi from '@/api/it/assetUseRecord'
-import detailListDialog from './detail/listDialog'
-import recordDetails from './details'
-
+import assetApi from '@/api/it/assetRepairRecord'
+import assetDetails from '../details'
 export default {
-	components:{ detailListDialog, recordDetails },
+	components:{ assetDetails },
 	props:{
 		size:{
 			type:String,
@@ -187,6 +211,10 @@ export default {
 		showSelection:{
 			type:Boolean,
 			default:false
+		},
+		hideAssetFields:{
+			type:Boolean,
+			default:false
 		}
 	},
 	data(){
@@ -201,6 +229,7 @@ export default {
 			summaryData:{},
 			selectionList:[],
 			queryShowMore:this.showMore,
+			initParams:{},
 			//查询条件字段
 			queryParams:{
 				no:'',//项目编号
@@ -236,7 +265,8 @@ export default {
   },
 	methods:{
 		//初始化数据
-		initData(){
+		initData(params={}){
+			this.initParams = {...params}
 			this.resetQuery()
 		},
 		//刷新数据
@@ -266,7 +296,7 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			assetApi.getList(this.requestParams).then(res=>{
+			assetApi.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
 				this.list = res.data.list
 				this.dataTotal = res.data.total
 				this.summaryData = res.data.summary
@@ -291,7 +321,6 @@ export default {
 		//重置查询条件
 		resetQuery(){
 			this.$refs.formQuery.resetFields()
-			this.queryParams = {...this.queryParams,...this.params}
 			this.requestParams.currentPage=1
 			this.query()
 		},
@@ -320,6 +349,23 @@ export default {
 		openDetailsDialog(row){
 			this.$refs.recordDetails.open().then(that=>{
 				that.initData(row)
+			})
+		},
+		del({ row,$index }){
+			let confirmText = '确定删除此IT资产维修记录吗？'
+			this.$confirm(confirmText,'提示',{
+				type: 'warning'
+			}).then(()=>{
+				assetApi.del(row.id).then(res=>{
+					this.reload()
+					this.$message.success('删除成功')
+					this.$emit('del')
+				})
+			})
+		},
+		openAssetDetails(row){
+			this.$refs.assetDetails.open().then(that=>{
+				that.getDetails(row.asset_id)
 			})
 		}
 	}

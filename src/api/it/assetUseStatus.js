@@ -3,7 +3,7 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/asset_use_record' 
+const BASE_URL = baseUrl +'/asset_use_status' 
 
 export default {
 	getPrintQrcode(id){
@@ -62,14 +62,6 @@ export default {
 			params
 		})
 	},
-	getPrintRecordList(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getPrintRecordList',
-			method:'get',
-			params
-		})
-	},
 	getProductList(params){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
@@ -87,13 +79,15 @@ export default {
 	update(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
+			'input_status',
 			'company_id',
-			'record_date',
-			'remarks',
-			'dep',
-			'emp',
-			'asset_list'
+			'model',
+			'supplier_name',
+			'buy_date',
+			'price',
+			'amount',
+			'sn',
+			'remarks'
 		])
 		return request({
 			url: BASE_URL + '/update',

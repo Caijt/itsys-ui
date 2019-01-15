@@ -28,20 +28,20 @@
 			</el-table-column>
   	</list>
 		<edit-dialog ref='editDialog' @updated='reload'></edit-dialog>
-		<label-print ref='labelPrint' />
+		<print-label ref='printLabel' />
 	</div>
 </template>
 
 <script>
 import list from '@/components/it/asset/list'
 import editDialog from '@/components/it/asset/editDialog'
-import labelPrint from '@/components/it/asset/labelPrint'
+import printLabel from '@/components/it/asset/printLabel'
 
 export default {
 	components:{ 
 		list, 
 		editDialog,
-		labelPrint
+		printLabel
 	},
 	data(){
 		return {
@@ -86,7 +86,7 @@ export default {
 			this.$refs.list.reload()
 		},
 		print({row}){
-			this.$refs.labelPrint.open().then(that=>{
+			this.$refs.printLabel.open().then(that=>{
 				that.getData({ids:row.id})
 			})
 		},
@@ -98,7 +98,7 @@ export default {
 			let ids = this.$refs.list.selectionList.map(d=>{
 				return d.id
 			})
-			this.$refs.labelPrint.open().then(that=>{
+			this.$refs.printLabel.open().then(that=>{
 				that.getData({ids:ids.join(',')})
 			})
 		},

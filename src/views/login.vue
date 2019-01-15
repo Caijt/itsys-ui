@@ -20,7 +20,7 @@
           登录
         </el-button>
       </el-form-item>
-      <div class="tips">Copyright © 2018 广东金刚玻璃科技股份有限公司</div>
+      <div class="tips">Copyright © 2019 广东金刚玻璃科技股份有限公司</div>
     </el-form>    
   </div>
 </template>

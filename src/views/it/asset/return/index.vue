@@ -2,7 +2,7 @@
 	<div>
 		<div style='margin:10px 0px'>
 			<el-button-group>
-				<el-button type='primary' @click='create' icon='el-icon-edit'>创建领用单</el-button>
+				<el-button type='primary' @click='create' icon='el-icon-edit'>创建交还单</el-button>
 				<el-button @click='printBatch' icon='el-icon-printer'>批量打印</el-button>
 			</el-button-group>
 			
@@ -24,9 +24,9 @@
 </template>
 
 <script>
-import list from '@/components/it/asset/use/list'
-import editDialog from '@/components/it/asset/use/editDialog'
-import printRecord from '@/components/it/asset/use/printRecord'
+import list from '@/components/it/asset/return/list'
+import editDialog from '@/components/it/asset/return/editDialog'
+import printRecord from '@/components/it/asset/return/printRecord'
 
 export default {
 	components:{ 
@@ -36,7 +36,6 @@ export default {
 	},
 	data(){
 		return {
-			tabName:'summary',
 			toInvoiceProjectTotal:0,
 			toInvoiceProjectLoading: true,
 			companyList:[],
@@ -79,7 +78,7 @@ export default {
 		},
 		printBatch(){
 			if(this.$refs.list.selectionList.length==0){
-				this.$message.warning('未选择领用单')
+				this.$message.warning('未选择交还单')
 				return false
 			}
 			let ids = this.$refs.list.selectionList.map(d=>{
@@ -88,17 +87,6 @@ export default {
 			this.$refs.printRecord.open().then(that=>{
 				that.getData({ids:ids.join(',')})
 			})
-		},
-		copy({row}){
-			this.$refs.editDialog.open().then(that=>{
-				that.create().then(res=>{
-					let copyData = this.$commonJs.obj.copyByKey(row,['model','company_id','supplier_name','buy_date','price','amount','sn','remarks'])
-					that.assign(copyData).clearValidate()
-				})
-			})
-		},
-		test2(){
-			this.$refs.list.$refs.tableList.clearSelection()
 		}
 	}
 }

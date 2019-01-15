@@ -23,7 +23,7 @@
 				</el-button-group>
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
-				<el-form-item label='领用编号' prop='record_no'>
+				<el-form-item label='记录编号' prop='record_no'>
 					<el-input v-model='queryParams.record_no' clearable></el-input>
 				</el-form-item>
 				<span v-show='queryShowMore'>
@@ -76,7 +76,13 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column prop='no' label='领用单编号' width='110'>
+			<el-table-column align='center' prop='no' label='记录类型' width='80'>
+				<template slot-scope='{row}'>
+					<el-tag v-show='row.record_type=="USE"' type="danger">领用</el-tag>
+					<el-tag v-show='row.record_type=="RETURN"' type="success">交还</el-tag>
+				</template>
+			</el-table-column>
+			<el-table-column prop='no' label='记录编号' width='110'>
 				<template slot-scope='{row}'>
 					<span class='c-link' @click='openDetailsDialog(row)'>{{row.no}}</span>
 				</template>
@@ -85,33 +91,25 @@
 				prop='record_date' 
 				width='100' 
 				sortable='custom' 
-				label='领用日期' />
+				label='记录日期' />
+			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />	
 			<el-table-column 
 				prop='dep' 
 				width='100' 
-				label='领用部门' 
+				label='部门' 
 				show-overflow-tooltip />
 			<el-table-column 
 				prop='emp' 
 				width='90' 
-				label='领用人' 
+				label='员工' 
 				show-overflow-tooltip />
 			<el-table-column 
 				prop='amount' 
-				align='center'
-				label='领用数量' 
+				align='right'
+				label='数量' 
 				sortable='custom' 
-				width='100'>
-					<template slot-scope='{row}'>
-						<span class='c-link' @click='openRecordDetailDialog(row)'>{{row.amount}}</span>
-					</template>
-			</el-table-column>
-			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />
-			<el-table-column 
-				prop='company_name' 
-				min-width='120' 
-				label='记录所属公司' 
-				show-overflow-tooltip />		
+				width='70'>					
+			</el-table-column>			
 			<el-table-column 
 				width='90' 
 				prop='create_user_name' 
@@ -142,17 +140,17 @@
 	    @size-change='sizeChange'
 	    @current-change='getData' />
 	  <!--/ 分页 -->
-	  <detail-list-dialog hide-record-fields :in-dialog='inDialog' ref='detailListDialog'/>
-	  <record-details :in-dialog='inDialog' ref='recordDetails'/>
+	  <use-record-details :in-dialog='inDialog' ref='useRecordDetails'/>
+		<return-record-details :in-dialog='inDialog' ref='returnRecordDetails'/>
 	</div>
 </template>
 <script>
-import assetApi from '@/api/it/assetUseRecord'
-import detailListDialog from './detail/listDialog'
-import recordDetails from './details'
+import assetApi from '@/api/it/assetUseRecordDetail'
+import useRecordDetails from '../use/details'
+import returnRecordDetails from '../return/details'
 
 export default {
-	components:{ detailListDialog, recordDetails },
+	components:{ useRecordDetails, returnRecordDetails },
 	props:{
 		size:{
 			type:String,
@@ -187,6 +185,10 @@ export default {
 		showSelection:{
 			type:Boolean,
 			default:false
+		},
+		sortProp:{
+			type:String,
+			default:'submit_time'
 		}
 	},
 	data(){
@@ -201,6 +203,7 @@ export default {
 			summaryData:{},
 			selectionList:[],
 			queryShowMore:this.showMore,
+			initParams:{},
 			//查询条件字段
 			queryParams:{
 				no:'',//项目编号
@@ -219,7 +222,7 @@ export default {
 			requestParams:{
 				pageSize:10,//分页大小
 				currentPage:1,//当前页
-				sortProp:'',
+				sortProp:this.sortProp,
 				sortOrder:'',
 				noPage:this.noPage?1:0
 			}
@@ -236,7 +239,8 @@ export default {
   },
 	methods:{
 		//初始化数据
-		initData(){
+		initData(params={}){
+			this.initParams = {...params}
 			this.resetQuery()
 		},
 		//刷新数据
@@ -266,7 +270,7 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			assetApi.getList(this.requestParams).then(res=>{
+			assetApi.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
 				this.list = res.data.list
 				this.dataTotal = res.data.total
 				this.summaryData = res.data.summary
@@ -291,7 +295,6 @@ export default {
 		//重置查询条件
 		resetQuery(){
 			this.$refs.formQuery.resetFields()
-			this.queryParams = {...this.queryParams,...this.params}
 			this.requestParams.currentPage=1
 			this.query()
 		},
@@ -312,15 +315,11 @@ export default {
 		clear(){
 			this.list = []
 		},
-		openRecordDetailDialog(row){
-			this.$refs.detailListDialog.open().then(that=>{
-				that.initData({record_id:row.id})
-			})
-		},
 		openDetailsDialog(row){
-			this.$refs.recordDetails.open().then(that=>{
-				that.initData(row)
-			})
+			let name = row.record_type=='USE'?'useRecordDetails':'returnRecordDetails'
+			this.$refs[name].open().then(that=>{
+				that.getDetails(row.record_id)
+			})			
 		}
 	}
 }

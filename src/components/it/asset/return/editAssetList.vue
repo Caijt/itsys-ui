@@ -4,8 +4,8 @@
 			:model='form' ref='form' class='c-form-mini' status-icon>
 			<div style='margin-bottom: 5px'>
 				<el-button-group>
-					<el-button type='primary' @click='openSelectAssetDialog'>选择资产</el-button>
-					<el-tooltip content='对勾选的资产填充最大领用数量'>
+					<el-button type='primary' @click='openSelectAssetDiaog'>选择资产</el-button>
+					<el-tooltip content='对勾选的资产填充最大交还数量'>
 						<el-button @click='fillMax'>最大值</el-button>
 					</el-tooltip>	
 					<el-button @click='remove'>删除选中</el-button>
@@ -29,18 +29,14 @@
 	      <el-table-column prop='no' label='资产编号' width='110' show-overflow-tooltip />
 	      <el-table-column prop='model' label='资产型号' min-width='150' show-overflow-tooltip />
 	      <el-table-column prop='type_name' label='资产类型' width='100' show-overflow-tooltip />
-	      <el-table-column prop='buy_date' label='购入日期' sortable width='100' show-overflow-tooltip />
-	      <el-table-column prop='price' sortable align='right' label='资产金额' width='120'>
-	        <template slot-scope='{row}'>
-	          ￥ {{row.price}}
-	        </template>
+	      <el-table-column prop='use_dep' sortable label='领用部门' width='100' />
+	      <el-table-column prop='use_emp' sortable label='领用人' width='100' />
+	      <el-table-column prop='use_amount' fixed='right' align='right' sortable label='领用数量' width='100'>
 	      </el-table-column>
-	      <el-table-column prop='remain' fixed='right' sortable label='库存量' width='100'>
-	      </el-table-column>
-	      <el-table-column prop='payment_price' label='领用数量' width='100' fixed='right'>
+	      <el-table-column prop='payment_price' label='交还数量' width='100' fixed='right'>
 					<template slot-scope='{row}'>
-						<el-form-item style='margin-bottom: 0px' prop='use_amount' :rules='getAmountRules(row)'>
-							<el-input v-model.number='row.use_amount' :placeholder='row.remain'>
+						<el-form-item style='margin-bottom: 0px' prop='return_amount' :rules='getAmountRules(row)'>
+							<el-input v-model.number='row.return_amount' :placeholder='row.used'>
 							</el-input>
 						</el-form-item>
 					</template>
@@ -50,18 +46,18 @@
 	      <!--/ slot[column]-->
 	    </el-table>
 			</el-form>
-			<asset-list-dialog show-selection :params='{isFree:1}' :in-dialog='inDialog' ref='assetListDialog'>
+			<asset-use-status-list-dialog show-selection :in-dialog='inDialog' ref='assetUseStatusListDialog'>
 				<div slot='footer' >
 					<el-button type='primary' @click='selectAsset'>选择</el-button>
 				</div>
-			</asset-list-dialog>
+			</asset-use-status-list-dialog>
 			<contract-info :in-dialog='inDialog' ref='contractInfo' />
 	</div>
 </template>
 
 <script>
 	import paymentProjectApi from '@/api/cw/receivePaymentProject'
-	import assetListDialog from '@/components/it/asset/listDialog'
+	import assetUseStatusListDialog from '@/components/it/asset/useStatus/listDialog'
 	import contractInfo from '@/components/yyzx/contract/info'
 
 	const formInit = {
@@ -70,7 +66,7 @@
 	}
 	export default {
 		components:{ 
-			assetListDialog,
+			assetUseStatusListDialog,
 			contractInfo
 		},
 		props:{
@@ -168,12 +164,12 @@
 	    },
 			getAmountRules(row){
 				let v = (rule,value,callback)=>{
-					if(isNaN(row.use_amount)){
+					if(isNaN(row.return_amount)){
 						callback(new Error('请输入数字'))
-					}else	if(Number(row.use_amount)<=0){
-						callback(new Error('领用数量必须大于0'))
-					}else if(Number(row.use_amount) > Number(row.remain)){
-						callback(new Error('领用数量大于资产剩余数量'))
+					}else	if(Number(row.return_amount)<=0){
+						callback(new Error('交还数量必须大于0'))
+					}else if(Number(row.return_amount) > Number(row.use_amount)){
+						callback(new Error('交还数量大于领用数量'))
 					}else{
 						callback()
 					}
@@ -243,39 +239,41 @@
 			},
 			fillMax(){
 				this.selectionList.forEach(item=>{
-					item.use_amount = item.arrears_price
+					item.return_amount = item.use_amount
 				})
 			},
-			openSelectAssetDialog(){
+			openSelectAssetDiaog(){
 				let selectedIds = this.list.map(item=>{
-					return item.id
+					return item.use_id
 				})
-				this.$refs.assetListDialog.open().then(that=>{
+				this.$refs.assetUseStatusListDialog.open().then(that=>{
 					that.$refs.list.initData({
 						not_ids:selectedIds.join(',')
 					})
 				})
 			},
 			selectAsset(row){
-				let selectionList = this.$refs.assetListDialog.$refs.list.selectionList
+				let selectionList = this.$refs.assetUseStatusListDialog.$refs.list.selectionList
 				if(selectionList.length==0){
 					this.$message.warning('未选择资产')
 					return false
 				}
 				let toPushList = selectionList.map(item=>{
 					return {
+						use_id:item.use_id,
 						id:item.id,
 						no:item.no,
 						model:item.model,
 						type_name:item.type_name,
 						buy_date:item.buy_date,
-						remain:item.remain,
-						price:item.price,
-						use_amount:1
+						use_amount:item.use_amount,
+						return_amount:item.use_amount,
+						use_dep:item.dep,
+						use_emp:item.emp
 					}
 				})
 				this.list.push(...toPushList)
-				this.$refs.assetListDialog.close()				
+				this.$refs.assetUseStatusListDialog.close()				
 			},
 			remove(){
 				this.selectionList.forEach(item=>{

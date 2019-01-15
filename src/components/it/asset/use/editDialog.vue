@@ -18,7 +18,7 @@
 				<el-form-item label='所属公司' prop='company_id'>
 					<el-select 
 						v-model='form.company_id' 
-						placeholder='选择资产所属公司'
+						placeholder='选择记录所属公司'
 						filterable
 						style='width: 80%'
 						:loading='companyLoading'>
@@ -33,21 +33,21 @@
 				</el-form-item>
 				<el-row :gutter='10'>
 					<el-col :span='8'>
-						<el-form-item label='领用日期' prop='use_date'>
+						<el-form-item label='领用日期' prop='record_date'>
 							<el-date-picker 
-								v-model='form.use_date' 
+								v-model='form.record_date' 
 								value-format='yyyy-MM-dd' 
 								style='width: 100%' />
 						</el-form-item>
 					</el-col>
 					<el-col :span='8'>
 						<el-form-item label='领用部门' prop='dep'>
-							<el-input  placeholder='' />
+							<el-input v-model='form.dep' :disabled='isSubmit' placeholder='' />
 						</el-form-item>
 					</el-col>
 					<el-col :span='8'>
 						<el-form-item label='领用员工' prop='emp'>
-							<el-input  placeholder='' />
+							<el-input v-model='form.emp' :disabled='isSubmit' placeholder='' />
 						</el-form-item>
 					</el-col>
 					<el-col :span='8'></el-col>
@@ -58,14 +58,17 @@
 				</el-form-item>
 				<el-form-item label='附件' prop='remarks'>
 					<attach-upload ref='attachUpload' :params='attachParams' @uploaded='uploaded'></attach-upload>
-					<attach-list ref='attachList' show-del></attach-list>
+					<attach-list  ref='attachList' show-del></attach-list>
 				</el-form-item>
 			</el-form>
 			<divider title='领用资产列表'></divider>
-			<edit-asset-list in-dialog ref='editAssetList'/>
+			<asset-list no-page hide-query hide-record-fields in-dialog v-show='isSubmit' ref='assetList' />
+			<edit-asset-list in-dialog v-show='!isSubmit' ref='editAssetList'/>
+			
 		</div>
 			<div slot="footer" v-loading='loading'>
-		    <el-button type='primary'  @click='save(0)' :loading='loading'>保存</el-button>
+				<el-button @click='save(0)' v-if='isSubmit' :loading='loading'>保存</el-button>
+				<el-button type='primary' v-else @click='save(1)' :loading='loading'>提交</el-button>
 		    <el-button @click="show=false">关 闭</el-button>
 	  	</div>
 		</el-dialog>
@@ -78,6 +81,7 @@
 	import attachUpload from '@/components/common/attach/upload'
 	import attachList from '@/components/common/attach/textList'
 	import editAssetList from './editAssetList'
+	import assetList from './detail/list'
 
 	const formInit = {		
 		model:'',		
@@ -94,7 +98,8 @@
 		components:{ 
 			attachUpload,
 			attachList,
-			editAssetList
+			editAssetList,
+			assetList
 		},
 		props:{
 			inDialog:{
@@ -113,7 +118,7 @@
 				rules:{
 					company_id:[{ required:true, message:'请选择资产所属公司' }],	
 					model:[{ required:true, message:'请填写资产型号' }],
-					use_date:[{ required:true, message:'请填写购买日期' }]
+					record_date:[{ required:true, message:'请填写领用日期' }]
 				},
 				params:{
 					no:null
@@ -130,6 +135,9 @@
 		computed:{
 			isEdit(){
 				return this.form.id? true:false
+			},
+			isSubmit(){
+				return this.form.input_status>=1
 			},
 			title(){
 				let title = 'IT资产领用单'
@@ -166,11 +174,16 @@
 					this.resolve = resolve
 				}) 
 			},
-			closeDialog(){				
+			closeDialog(){	
 				if(this.updated){
 					this.$emit('updated')
 				}
 				this.resetFields()
+				if(this.isSubmit){
+					this.$refs.assetList.clear()
+				}else{
+					this.$refs.editAssetList.clear()	
+				}				
 			},
 			create(){
 				this.loading = true
@@ -195,6 +208,9 @@
 				if(data.attach_ids){
 					this.$refs.attachList.initData({ attach_ids:data.attach_ids})
 				}
+				if(this.isSubmit){
+					this.$refs.assetList.initData({record_id:this.form.id})
+				}
 				this.clearValidate()
 			},
 			assign(data){
@@ -204,21 +220,21 @@
 			},
 			save(status=0){
 				this.$refs.form.validate(valid=>{
-					if(valid){
-						if(this.$refs.editAssetList.list==0){
-							this.$message.warning('请选择领用的资产')
-							return false
-						}
-						let assetList = this.$refs.editAssetList.list.map(item=>{
-							return {
-								asset_id: item.id,
-								use_amount:item.use_amount
-							}
-						})
-						this.form.asset_list = assetList
-						this.form.input_status = status
+					if(valid&&(this.isSubmit||this.$refs.editAssetList.validate())){
+						this.form.action = status
 						if(status){
-							this.$confirm('确定提交此IT资产吗？提交后资产只能报废不能删除！','提示',{
+							if(this.$refs.editAssetList.list==0){
+								this.$message.warning('请选择领用的资产')
+								return false
+							}
+							let assetList = this.$refs.editAssetList.list.map(item=>{
+								return {
+									asset_id: item.id,
+									amount:item.use_amount
+								}
+							})
+							this.form.asset_list = assetList
+							this.$confirm('确定提交此IT资产领用单吗？提交后领用部门、领用员工及领用资产不能修改！','提示',{
 								type: 'warning'
 							}).then(()=>{
 								this.update()
@@ -233,13 +249,14 @@
 			},
 			update(){
 				this.loading = true
-				let messageText = this.form.input_status?'提交成功':'保存成功'
+				let messageText = this.form.action?'提交成功':'保存成功'
 				assetUseRecordApi.update(this.form).then(res=>{
-					this.form.no = res.data
+					this.form.no = res.data.no
+					this.form.input_status = res.data.input_status
 					this.loading = false
 					this.$message.success(messageText)
 					this.updated = true
-					if(this.form.input_status==1){
+					if(this.form.action==1){
 						this.show=false									
 					}
 				}).catch(res=>{

@@ -1,13 +1,14 @@
 <template>
 	<el-dialog 
 		class='c-dialog-fixed'
-		title='资产列表' 
+		title='资产领用状态列表' 
 		width='80%'		
 		:visible.sync='show'
 		:append-to-body='inDialog'
 		@open='openDialog'
 		@close='closeDialog'>
 		<list 
+			:hide-asset-fields='hideAssetFields'
 			:show-selection='showSelection'
 			max-height='300' 
 			:params='params' 
@@ -32,6 +33,10 @@
 				default:false
 			},
 			showSelection:{
+				type:Boolean,
+				default:false
+			},
+			hideAssetFields:{
 				type:Boolean,
 				default:false
 			},
