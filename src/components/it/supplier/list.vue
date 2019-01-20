@@ -21,45 +21,20 @@
           	</el-button>
           </el-tooltip>
 				</el-button-group>
-				<!-- <span><el-button type='primary' @click='query' icon='el-icon-search' size='mini'></el-button></span>
-				<span><el-button @click='resetQuery' size='mini'>重置</el-button ></span>
-				<el-tooltip content='导出Excel' placement='top'>
-					<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-				</el-tooltip>				 
-        <el-tooltip content='显示更多查询条件' placement='top'>
-          <el-button @click='queryShowMore=!queryShowMore' size='mini'>
-          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
-          </el-button>
-        </el-tooltip> -->
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
-				<el-form-item label='资产编号' prop='no'>
-					<el-input v-model='queryParams.no' clearable></el-input>
-				</el-form-item>
+				<el-form-item label='名称' prop='name'>
+					<el-input v-model='queryParams.name' clearable></el-input>
+				</el-form-item>		
 				<div v-show='queryShowMore'>
-					<el-form-item label='资产型号' prop='model'>
-						<el-input v-model='queryParams.model' clearable></el-input>
-					</el-form-item>
-					<el-form-item label='领用人' prop='emp'>
-						<el-input v-model='queryParams.emp' clearable></el-input>
-					</el-form-item>
-					<el-form-item label='领用部门' prop='emp'>
-						<el-input v-model='queryParams.dep' clearable></el-input>
-					</el-form-item>
-					<el-form-item label='购买日期'>
-						<el-row style='width:300px'>
-							<el-col :span="11">
-								<el-form-item prop='buy_date_begin'>
-					      	<el-date-picker v-model='queryParams.buy_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
-					    	</el-form-item>
-					    </el-col>
-					    <el-col :span="2">至</el-col>
-					    <el-col :span="11">
-					    	<el-form-item prop='buy_date_end'>
-					    		<el-date-picker v-model='queryParams.buy_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
-					      </el-form-item>
-					    </el-col>
-				  	</el-row>
+					<el-form-item label='地址' prop='address'>
+						<el-input v-model='queryParams.address' clearable></el-input>
+					</el-form-item>		
+					<el-form-item label='联系人' prop='contacts'>
+						<el-input v-model='queryParams.contacts' clearable></el-input>
+					</el-form-item>		
+					<el-form-item label='付款银行' prop='bank'>
+						<el-input v-model='queryParams.bank' clearable></el-input>
 					</el-form-item>
 				</div>
 			</el-form>
@@ -73,10 +48,9 @@
 			highlight-current-row
 			border 
 			stripe
-			row-key='use_id'
+			row-key='id'
 			:size='size'
-			:max-height='maxHeight' 
-			show-summary
+			:max-height='maxHeight' 			
 			@selection-change='selectionChange'
 			:summary-method='getSummaryData'
 			@sort-change='sortChange'>			
@@ -86,58 +60,22 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column v-if='!hideAssetFields' prop='no' label='资产编号' width='100'>
+			<el-table-column prop='name' label='供应商名称' min-width='120' show-overflow-tooltip/>			
+			<el-table-column prop='address' label='地址' sortable='custom' width='120' show-overflow-tooltip/>
+			<el-table-column prop='supplier_type' label='合作类型' sortable='custom' width='120' show-overflow-tooltip>
 				<template slot-scope='{row}'>
-					<span class='c-link' @click='openDetails(row)'>{{row.no}}</span>
+					{{row.supplier_type.replace('ASSET','资产供应商').replace('CONTRACT','合同合作商')}}
 				</template>
 			</el-table-column>
+			<el-table-column prop='contacts' label='联系人' sortable='custom' width='100' show-overflow-tooltip/>
+			<el-table-column prop='bank' label='付款银行' sortable='custom' width='100' show-overflow-tooltip/>
+			<el-table-column prop='remarks' label='备注' sortable='custom' width='100' show-overflow-tooltip/>
+			<el-table-column prop='company_name' label='所属公司' min-width='120' show-overflow-tooltip/>
 			<el-table-column 
-				v-if='!hideAssetFields'
-				prop='model' 
-				min-width='150' 
-				label='资产型号' 
-				show-overflow-tooltip />
-			<el-table-column 
-				v-if='!hideAssetFields'
-				prop='type_name' 
-				width='100' 
-				label='资产类型' 
-				show-overflow-tooltip />			
-			<el-table-column v-if='!hideAssetFields' prop='buy_date' label='购入日期' sortable='custom' width='100' />
-			
-			<el-table-column prop='dep_name' label='领用部门' sortable='custom' min-width='120' show-overflow-tooltip />
-			<el-table-column prop='employee_name' label='领用员工' sortable='custom' min-width='120' show-overflow-tooltip />
-			<el-table-column 
-				prop='use_amount' 
-				label='领用量' 
-				align='right'
-				sortable='custom' 
-				width='90' />
-			<el-table-column v-if='!hideAssetFields' prop='remarks' label='备注' width='120' show-overflow-tooltip />
-			<el-table-column 
-				v-if='!hideAssetFields'
-				prop='supplier_name' 
-				label='供应商' 
-				width='100' 
-				show-overflow-tooltip />
-			<el-table-column 
-				v-if='!hideAssetFields'
-				prop='sn' 
-				label='序列号' 
-				width='100' 
-				show-overflow-tooltip />
-			<el-table-column 
-				v-if='!hideAssetFields'
-				prop='company_name' 
-				min-width='120' 
-				label='资产所属公司' 
-				show-overflow-tooltip />		
-			<el-table-column 
-				v-if='!hideAssetFields'
 				prop='create_user_name' 
+				width='90' 
 				label='录入员' />
 			<el-table-column 
-				v-if='!hideAssetFields'
 				prop='create_time' 
 				width='120' 
 				label='创建时间' 
@@ -147,7 +85,6 @@
 				</template>
 			</el-table-column>
 			<el-table-column 
-				v-if='!hideAssetFields'
 				prop='update_time' 
 				label='最近更新时间' 
 				width='120' 
@@ -172,15 +109,20 @@
 	    @size-change='sizeChange'
 	    @current-change='getData' />
 	  <!--/ 分页 -->
-	  <asset-details v-if='!hideAssetFields' :in-dialog='inDialog' ref='assetDetails' />
+	  <asset-details :in-dialog='inDialog' ref='assetDetails' />
+	  <dep-dialog :in-dialog='inDialog' ref='depDialog' show-select @select='selectDep' />
 	</div>
 </template>
 <script>
-import assetApi from '@/api/it/assetUseStatus'
+import api from '@/api/it/supplier'
 import assetDetails from '@/components/it/asset/details'
+import depDialog from '@/components/hr/dep/treeDialog'
 
+const initQueryParamsLabel = {
+	dep_name:''
+}
 export default {
-	components:{ assetDetails },
+	components:{ assetDetails, depDialog },
 	props:{
 		size:{
 			type:String,
@@ -215,10 +157,6 @@ export default {
 		showSelection:{
 			type:Boolean,
 			default:false
-		},
-		hideAssetFields:{
-			type:Boolean,
-			default:false
 		}
 	},
 	data(){
@@ -234,17 +172,12 @@ export default {
 			selectionList:[],
 			queryShowMore:this.showMore,
 			initParams:{},
+			queryParamsLabel:{
+				dep_name:''
+			},
 			//查询条件字段
 			queryParams:{
-				no:'',//项目编号
-				project_name:'',//项目名称
-				invoice_no:'',//开票号
-				remarks:'',
-				invoice_company_name:'',//开票号
-				contract_no:'',//合同编号
-				customer_name:'',//客户单位				
-				company_name:'',//业绩公司
-				salesman:'',//业务员
+				no:'',//项目编号				
 				invoice_date_begin:'',
 				invoice_date_end:''
 			},
@@ -300,10 +233,10 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			assetApi.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
+			api.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
 				this.list = res.data.list
 				this.dataTotal = res.data.total
-				this.summaryData = res.data.summary
+				this.summaryData = res.data.summary || {}
 				this.loading = false
 				this.$emit('loaded',{ 
 					total:this.dataTotal,
@@ -325,8 +258,9 @@ export default {
 		//重置查询条件
 		resetQuery(){
 			this.$refs.formQuery.resetFields()
+			this.queryParamsLabel = { ...initQueryParamsLabel }
 			// this.queryParams = {...this.queryParams,...this.params}
-			this.requestParams.currentPage=1
+			this.requestParams.currentPage = 1
 			this.query()
 		},
 		openDetails(row){
@@ -341,10 +275,37 @@ export default {
 		},
 		//导出excel
 		exportExcel(){
-			assetApi.exportExcel(this.requestParams)
+			api.exportExcel(this.requestParams)
 		},
 		clear(){
 			this.list = []
+		},
+		del(row){
+			let confirmText = '确定删除此供应商吗？'
+			this.$confirm(confirmText,'提示',{
+				type: 'warning'
+			}).then(()=>{
+				api.del(row.id).then(res=>{
+					this.reload()
+					this.$message.success('删除成功')
+					this.$emit('del')
+				})
+			})
+		},
+		openUseStatusDialog(row){
+			this.$refs.assetUseStatusDialog.open().then(that=>{
+				that.initData({asset_id:row.id})
+			})
+		},
+		openSelectDepDialog(){
+			this.$refs.depDialog.open().then(that=>{
+				that.initData()
+			})
+		},
+		selectDep(data){
+			this.queryParamsLabel.dep_name = data.name
+			this.queryParams.dep_id = data.id
+			this.$refs.depDialog.close()
 		}
 	}
 }

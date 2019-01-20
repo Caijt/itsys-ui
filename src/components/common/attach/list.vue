@@ -106,7 +106,8 @@ export default {
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
-				noPage:this.noPage?1:0
+				noPage:this.noPage?1:0,
+				isAttachIds:1,
 			}	
 		}
 	},

@@ -5,7 +5,6 @@
 		class='c-dialog-fixed'
 		:visible.sync='show'
 		:append-to-body='inDialog'
-		width='60%'
 		@open='openDialog'
 		@close='closeDialog'>
 		<div v-loading='loading'>
@@ -20,7 +19,7 @@
 						v-model='form.company_id' 
 						placeholder='选择资产所属公司'
 						filterable
-						style='width: 80%'
+						style='width: 100%'
 						:loading='companyLoading'>
 						<el-option
 							v-for='item in companyList'
@@ -35,8 +34,25 @@
 					<el-input v-model='form.model' placeholder='资产具体型号'>
 					</el-input>
 				</el-form-item>
-				<el-form-item label='供应商' prop='supplier_name'>
-					<el-input v-model='form.supplier_name' placeholder='资产从哪个经销商购买' style='width:80%'>
+				<el-form-item label='资产类型' prop='type_id'>
+					<el-input v-model='form.type_name' placeholder='点击选择' readonly @click.native='openSelectTypeDialog'>
+						<i 
+							style='cursor: pointer;'
+							v-show='form.type_id' 
+							slot="suffix" 
+							class="el-input__icon el-icon-close" 
+							@click.stop='form.type_name="";form.type_id=null'></i>
+						<el-button slot="append" @click.stop='createType'>创建</el-button>
+					</el-input>
+				</el-form-item>
+				<el-form-item label='供应商' prop='supplier_id'>
+					<el-input v-model='form.supplier_name' placeholder='点击选择' readonly @click.native='openSelectSupplierDialog'>
+						<i 
+							style='cursor: pointer;'
+							v-show='form.supplier_id' 
+							slot="suffix" 
+							class="el-input__icon el-icon-close" 
+							@click.stop='form.supplier_name="";form.supplier_id=null'></i>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='购入日期' prop='buy_date'>
@@ -66,7 +82,7 @@
 				</el-form-item>
 				<el-form-item label='附件' prop='remarks'>
 					<attach-upload ref='attachUpload' :params='attachParams' @uploaded='uploaded'></attach-upload>
-					<attach-list ref='attachList' show-del></attach-list>
+					<attach-list ref='attachList' show-del @del='updated=true'></attach-list>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -75,33 +91,43 @@
 		    <el-button @click="show=false">关 闭</el-button>
 	  	</div>
 		</el-dialog>
-		
+		<type-dialog :in-dialog='inDialog' ref='typeDialog' show-select @select='selectType'/>
+		<type-edit-dialog :in-dialog='inDialog' ref='typeEditDialog'/>
+		<supplier-dialog :in-dialog='inDialog' show-select ref='supplierDialog' @select='selectSupplier'/>
 	</div>
 </template>
 <script>
 	import assetApi from '@/api/it/asset'
 	import companyApi from '@/api/yyzx/company'
-	import factoryApi from '@/api/yyzx/factory'
 	import attachUpload from '@/components/common/attach/upload'
 	import attachList from '@/components/common/attach/textList'
-	
+	import typeDialog from './type/treeDialog'
+	import typeEditDialog from './type/editDialog'
+	import supplierDialog from '@/components/it/supplier/listDialog'
 
 	const formInit = {		
 		model:'',		
 		company_id:'',
-		orders:[],
 		remarks:'',
 		id:null,
 		no:'',
 		input_status:-1	,
+		action:null,
 		buy_date:new Date(),
 		price:0,
-		amount:1
+		amount:1,
+		type_name:'',
+		type_id:null,
+		supplier_name:'',
+		supplier_id:null
 	}
 	export default {
 		components:{ 
 			attachUpload,
-			attachList
+			attachList,
+			typeDialog,
+			typeEditDialog,
+			supplierDialog
 		},
 		props:{
 			inDialog:{
@@ -119,6 +145,7 @@
 				form:{ ...formInit },
 				rules:{
 					company_id:[{ required:true, message:'请选择资产所属公司' }],	
+					type_id:[{ required:true, message:'请选择资产类型' }],	
 					model:[{ required:true, message:'请填写资产型号' }],
 					buy_date:[{ required:true, message:'请填写购买日期' }],
 					price:[{ type:'number',message:'请输入数字' }],
@@ -155,7 +182,6 @@
 		},
 		mounted(){
 			this.getCompanyList()
-			this.getFactoryList()
 		},
 		methods:{
 			//
@@ -164,14 +190,6 @@
 				companyApi.getEnumList().then(res=>{
 					this.companyList = res.data
 					this.companyLoading = false
-				})
-			},
-			//
-			getFactoryList(){
-				this.factoryLoading = true
-				factoryApi.getEnumList({inUser:1}).then(res=>{
-					this.factoryList = res.data
-					this.factoryLoading = false
 				})
 			},
 			openDialog(){
@@ -226,8 +244,7 @@
 			save(status=0){
 				this.$refs.form.validate(valid=>{
 					if(valid){
-						this.form.order_no = this.form.orders.join(',')
-						this.form.input_status = status
+						this.form.action = status
 						if(status){
 							this.$confirm('确定提交此IT资产吗？提交后资产只能报废不能删除！','提示',{
 								type: 'warning'
@@ -246,11 +263,12 @@
 				this.loading = true
 				let messageText = this.form.input_status?'提交成功':'保存成功'
 				assetApi.update(this.form).then(res=>{
-					this.form.no = res.data
+					this.form.no = res.data.no
+					this.form.input_status = res.data.input_status
 					this.loading = false
 					this.$message.success(messageText)
 					this.updated = true
-					if(this.form.input_status==1){
+					if(this.form.action==1){
 						this.show=false									
 					}
 				}).catch(res=>{
@@ -275,29 +293,34 @@
 				this.updated = true
 				this.$refs.attachList.push(res)
 			},
-			del({ row,$index }){
-	      let confirmText = '确定删除此任务吗？'
-	      this.$confirm(confirmText,'提示',{
-	        type: 'warning'
-	      }).then(()=>{
-	      	this.loading = true
-	        assetApi.del(this.form.id).then(res=>{
-	          this.$message.success('删除成功')
-	          this.$emit('updated')
-	          this.loading = false
-	          this.show = false
-	        }).catch(res=>{
-	        	this.loading = false
-	        })
-	      })
-    	},
-    	productUpdated(){
-    		this.updated = true
-    		this.$refs.productList.reload()
-    	},
-    	openImportDialog(){
-				this.$refs.importDialog.assign({task_id:this.form.id}).open()
+			openSelectTypeDialog(){
+				this.$refs.typeDialog.open().then(that=>{
+					that.initData()
+				})
 			},
+			selectType(data){
+				this.form.type_name = data.name
+				this.form.type_id = data.id
+				this.$refs.typeDialog.close()
+			},
+			createType(){
+				this.$refs.typeEditDialog.open().then(that=>{
+					that.create()
+				})
+			},
+			openSelectSupplierDialog(){
+				this.$refs.supplierDialog.open().then(that=>{
+					that.initData({
+						inCompany:1,
+						supplier_type:'ASSET'
+					})
+				})
+			},
+			selectSupplier(row){
+				this.form.supplier_id = row.id
+				this.form.supplier_name = row.name
+				this.$refs.supplierDialog.close()
+			}
 		}
 	}
 </script>

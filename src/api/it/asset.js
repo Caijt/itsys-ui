@@ -79,8 +79,10 @@ export default {
 	update(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'input_status',
+			'action',
 			'company_id',
+			'type_id',
+			'supplier_id',
 			'model',
 			'supplier_name',
 			'buy_date',

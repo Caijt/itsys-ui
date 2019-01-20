@@ -85,6 +85,7 @@ export default {
 			queryShowMore:false,			
 			//数据请求的参数
 			requestParams:{
+				isAttachIds:1,
 				noPage:1
 			}	
 		}

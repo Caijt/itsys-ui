@@ -3,7 +3,7 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/asset_use_record' 
+const BASE_URL = baseUrl +'/network' 
 
 export default {
 	getPrintQrcode(id){
@@ -54,10 +54,10 @@ export default {
 			params
 		})
 	},
-	getList(params){
+	getTreeList(params={}){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
-			url: BASE_URL + '/getList',
+			url: BASE_URL + '/getTreeList',
 			method:'get',
 			params
 		})
@@ -88,12 +88,18 @@ export default {
 		data = commonJs.obj.copyByKey(data,[
 			'id',
 			'action',
+			'parent_id',
 			'company_id',
-			'record_date',
-			'remarks',
-			'dep_id',
-			'employee_id',
-			'asset_list'
+			'name',
+			'model',
+			'type',
+			'order',
+			'position',
+			'admin_address',
+			'ip',
+			'account',
+			'password',
+			'remarks'
 		])
 		return request({
 			url: BASE_URL + '/update',
@@ -110,65 +116,12 @@ export default {
 			}
 		})
 	},
-	undo(id){
-		return request({
-			url: BASE_URL + '/undo',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undoReview(id){
-		return request({
-			url: BASE_URL + '/undoReview',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
 	getSummaryData(params){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getSummaryData',
 			method:'get',
 			params
-		})
-	},
-	loadFinish(task_id){
-		return request({
-			url: BASE_URL + '/loadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	undoLoadFinish(task_id){
-		return request({
-			url: BASE_URL + '/undoLoadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	review(data){
-		data = commonJs.obj.copyByKey(data,['id'])
-		return request({
-			url: BASE_URL + '/review',
-			method:'post',
-			data
-		})
-	},
-	driverSupply(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id','driver_unit','driver_no','driver_name','driver_tel'])
-		return request({
-			url: BASE_URL + '/driverSupply',
-			method:'post',
-			data
 		})
 	},
 	exportExcel(params){
@@ -192,4 +145,13 @@ export default {
 			params
 		})
 	},
+	getFieldList({ field, keyword }){
+		return request({
+			url: BASE_URL + '/getFieldList',
+			method:'get',
+			params:{ 
+				field,keyword
+			}
+		})
+	}
 }

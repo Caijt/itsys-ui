@@ -98,12 +98,12 @@
 				sortable='custom' 
 				label='交还日期' />
 			<el-table-column 			
-				prop='dep' 
+				prop='dep_name' 
 				width='100' 
 				label='交还部门' 
 				show-overflow-tooltip />
 			<el-table-column 				
-				prop='emp' 
+				prop='employee_name' 
 				width='90' 
 				label='交还人' 
 				show-overflow-tooltip />

@@ -29,8 +29,8 @@
 	      <el-table-column prop='no' label='资产编号' width='110' show-overflow-tooltip />
 	      <el-table-column prop='model' label='资产型号' min-width='150' show-overflow-tooltip />
 	      <el-table-column prop='type_name' label='资产类型' width='100' show-overflow-tooltip />
-	      <el-table-column prop='use_dep' sortable label='领用部门' width='100' />
-	      <el-table-column prop='use_emp' sortable label='领用人' width='100' />
+	      <el-table-column prop='dep_name' sortable label='领用部门' width='100' />
+	      <el-table-column prop='employee_name' sortable label='领用人' width='100' />
 	      <el-table-column prop='use_amount' fixed='right' align='right' sortable label='领用数量' width='100'>
 	      </el-table-column>
 	      <el-table-column prop='payment_price' label='交还数量' width='100' fixed='right'>
@@ -268,8 +268,10 @@
 						buy_date:item.buy_date,
 						use_amount:item.use_amount,
 						return_amount:item.use_amount,
-						use_dep:item.dep,
-						use_emp:item.emp
+						dep_name:item.dep_name,
+						employee_name:item.employee_name,
+						dep_id:item.dep_id,
+						employee_id:item.employee_id
 					}
 				})
 				this.list.push(...toPushList)

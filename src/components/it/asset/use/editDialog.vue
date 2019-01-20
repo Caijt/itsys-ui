@@ -20,7 +20,7 @@
 						v-model='form.company_id' 
 						placeholder='选择记录所属公司'
 						filterable
-						style='width: 80%'
+						style='width: 100%'
 						:loading='companyLoading'>
 						<el-option
 							v-for='item in companyList'
@@ -41,13 +41,39 @@
 						</el-form-item>
 					</el-col>
 					<el-col :span='8'>
-						<el-form-item label='领用部门' prop='dep'>
-							<el-input v-model='form.dep' :disabled='isSubmit' placeholder='' />
+						<el-form-item label='领用部门' prop='dep_id'>
+							<el-input 
+								v-model='form.dep_name' 
+								readonly 
+								:disabled='isSubmit' 
+								placeholder='点击选择'
+								@click.native='openSelectDepDialog'>
+								<i 
+									v-show='form.dep_id&&!isSubmit'
+									style='cursor: pointer;'
+									class='el-icon-close el-input__icon'
+									slot='suffix'
+									@click.stop='form.dep_name="";form.dep_id=null'
+									/>
+							</el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span='8'>
-						<el-form-item label='领用员工' prop='emp'>
-							<el-input v-model='form.emp' :disabled='isSubmit' placeholder='' />
+						<el-form-item label='领用员工' prop='employee_id'>
+							<el-input 
+								v-model='form.employee_name' 
+								readonly 
+								:disabled='isSubmit' 
+								placeholder='点击选择'
+								@click.native='openSelectEmployeeDialog'>
+								<i 
+									v-show='form.employee_id&&!isSubmit'
+									style='cursor: pointer;'
+									class='el-icon-close el-input__icon'
+									slot='suffix'
+									@click.stop='form.employee_name="";form.employee_id=null'
+									/>
+							</el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span='8'></el-col>
@@ -66,14 +92,21 @@
 			<edit-asset-list in-dialog v-show='!isSubmit' ref='editAssetList'/>
 			
 		</div>
-			<div slot="footer" v-loading='loading'>
-				<el-button @click='save(0)' v-if='isSubmit' :loading='loading'>保存</el-button>
-				<el-button type='primary' v-else @click='save(1)' :loading='loading'>提交</el-button>
-		    <el-button @click="show=false">关 闭</el-button>
-	  	</div>
-		</el-dialog>
-		
-	</div>
+		<div slot="footer" v-loading='loading'>
+			<el-button @click='save(0)' v-if='isSubmit' :loading='loading'>保存</el-button>
+			<el-button type='primary' v-else @click='save(1)' :loading='loading'>提交</el-button>
+	    <el-button @click="show=false">关 闭</el-button>
+  	</div>
+	</el-dialog>
+	<dep-dialog ref='depDialog' show-select @select='selectDep'></dep-dialog>
+	<employee-dialog ref='employeeDialog'>
+		<el-table-column slot='column' label='操作' align='center' width='60' fixed='right'>
+			<template slot-scope='{row}'>
+				<el-button type='text' @click='selectEmployee(row)'>选择</el-button>
+			</template>
+		</el-table-column>
+	</employee-dialog>
+</div>
 </template>
 <script>
 	import assetUseRecordApi from '@/api/it/assetUseRecord'
@@ -82,24 +115,29 @@
 	import attachList from '@/components/common/attach/textList'
 	import editAssetList from './editAssetList'
 	import assetList from './detail/list'
+	import depDialog from '@/components/hr/dep/treeDialog'
+	import employeeDialog from '@/components/hr/employee/listDialog'
 
-	const formInit = {		
-		model:'',		
-		company_id:'',
-		remarks:'',
+	const formInit = {
+	
 		id:null,
 		no:'',
 		input_status:-1	,
 		use_date:new Date(),
-		price:0,
-		amount:1
+		dep_id:null,
+		dep_name:'',
+		employee_id:null,
+		employee_name:'',
+		remarks:''
 	}
 	export default {
 		components:{ 
 			attachUpload,
 			attachList,
 			editAssetList,
-			assetList
+			assetList,
+			depDialog,
+			employeeDialog
 		},
 		props:{
 			inDialog:{
@@ -117,6 +155,8 @@
 				form:{ ...formInit },
 				rules:{
 					company_id:[{ required:true, message:'请选择资产所属公司' }],	
+					dep_id:[{ required:true, message:'请选择领用部门' }],	
+					employee_id:[{ required:true, message:'请选择领用员工' }],	
 					model:[{ required:true, message:'请填写资产型号' }],
 					record_date:[{ required:true, message:'请填写领用日期' }]
 				},
@@ -280,6 +320,36 @@
 			uploaded(res){
 				this.updated = true
 				this.$refs.attachList.push(res)
+			},
+			openSelectDepDialog(){
+				this.$refs.depDialog.open().then(that=>{
+					that.initData()
+				})
+			},
+			selectDep(data){
+				this.form.dep_name = data.name
+				this.form.dep_id = data.id
+				this.$refs.depDialog.close()
+			},
+			openSelectEmployeeDialog(){
+				this.$refs.employeeDialog.open().then(that=>{
+					if(this.form.dep_id){
+						that.$refs.list.queryParams.dep_id = this.form.dep_id
+						that.$refs.list.queryParamsLabel.dep_name = this.form.dep_name
+						that.$refs.list.query()
+					}else{
+						that.initData()
+					}					
+				})
+			},
+			selectEmployee(data){
+				this.form.employee_name = data.name
+				this.form.employee_id = data.id
+				if(!this.form.dep_id){
+					this.form.dep_id = data.dep_id
+					this.form.dep_name = data.dep_name
+				}
+				this.$refs.employeeDialog.close()
 			}
 		}
 	}

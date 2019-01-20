@@ -1,15 +1,14 @@
 <template>
-	<div>
+<div>
 	<el-dialog 
 		:title='title'
 		class='c-dialog-fixed'
 		:visible.sync='show'
 		:append-to-body='inDialog'
-		width='80%'
 		@open='openDialog'
 		@close='closeDialog'>
 		<div v-loading='loading'>
-			<divider title='交还信息'></divider>
+			<divider title='供应商信息'></divider>
 			<el-form 
 				:model='form' :rules='rules' 
 				ref='form' label-width='85px' 
@@ -18,9 +17,9 @@
 				<el-form-item label='所属公司' prop='company_id'>
 					<el-select 
 						v-model='form.company_id' 
-						placeholder='选择记录所属公司'
+						placeholder='选择供应商所属公司'
 						filterable
-						style='width: 80%'
+						style='width: 100%'
 						:loading='companyLoading'>
 						<el-option
 							v-for='item in companyList'
@@ -31,64 +30,68 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-row :gutter='10'>
-					<el-col :span='8'>
-						<el-form-item label='交还日期' prop='record_date'>
-							<el-date-picker 
-								v-model='form.record_date' 
-								value-format='yyyy-MM-dd' 
-								style='width: 100%' />
-						</el-form-item>
-					</el-col>
-				</el-row>					
-				<el-form-item label='交还备注' prop='remarks' >
+				<el-form-item label='名称' prop='name' >
+					<el-input v-model='form.name' placeholder=''>
+					</el-input>
+				</el-form-item>
+				<el-form-item label='地址' prop='address' >
+					<el-input v-model='form.address' placeholder=''>
+					</el-input>
+				</el-form-item>
+				<el-form-item label='合作类型' prop='supplierTypeList'>
+					<el-checkbox-group v-model="form.supplierTypeList">
+				    <el-checkbox label="ASSET">资产供应商</el-checkbox>
+				    <el-checkbox label="CONTRACT">合同合作商</el-checkbox>
+				  </el-checkbox-group>
+				</el-form-item>
+				<el-form-item label='联系人' prop='contacts' >
+					<el-input type='textarea' v-model='form.contacts' placeholder='供应合作商的联系人，可填写多个'>
+					</el-input>
+				</el-form-item>
+				<el-form-item label='付款银行' prop='bank' >
+					<el-input type='textarea' v-model='form.bank' placeholder='供应合作商的付款银行信息，可填写多个'>
+					</el-input>
+				</el-form-item>
+				<el-form-item label='备注' prop='remarks' >
 					<el-input type='textarea' v-model='form.remarks' placeholder=''>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='附件' prop='remarks'>
 					<attach-upload ref='attachUpload' :params='attachParams' @uploaded='uploaded'></attach-upload>
-					<attach-list  ref='attachList' show-del></attach-list>
+					<attach-list ref='attachList' show-del @del='updated=true'></attach-list>
 				</el-form-item>
 			</el-form>
-			<divider title='交还资产列表'></divider>
-			<asset-list no-page hide-query hide-record-fields in-dialog v-show='isSubmit' ref='assetList' />
-			<edit-asset-list in-dialog v-show='!isSubmit' ref='editAssetList'/>
-			
 		</div>
-			<div slot="footer" v-loading='loading'>
-				<el-button @click='save(0)' v-if='isSubmit' :loading='loading'>保存</el-button>
-				<el-button type='primary' v-else @click='save(1)' :loading='loading'>提交</el-button>
-		    <el-button @click="show=false">关 闭</el-button>
-	  	</div>
-		</el-dialog>
-		
-	</div>
+		<div slot="footer" v-loading='loading'>
+	    <el-button type='primary'  @click='save(0)' :loading='loading'>保存</el-button>
+	    <el-button @click="show=false">关 闭</el-button>
+  	</div>
+	</el-dialog>
+</div>
 </template>
 <script>
-	import assetReturnRecordApi from '@/api/it/assetReturnRecord'
-	import companyApi from '@/api/yyzx/company'
+	import api from '@/api/it/supplier'
+	import companyApi from '@/api/sys/company'
 	import attachUpload from '@/components/common/attach/upload'
 	import attachList from '@/components/common/attach/textList'
-	import editAssetList from './editAssetList'
-	import assetList from './detail/list'
 
 	const formInit = {		
-		model:'',		
-		company_id:'',
-		remarks:'',
 		id:null,
+		input_status:-1,
+		company_id:null,
 		no:'',
-		input_status:-1	,
-		use_date:new Date(),
-		price:0,
-		amount:1
+		name:'',
+		address:'',
+		contacts:'',
+		bank:'',
+		remarks:'',
+		supplier_type:'',
+		supplierTypeList:[]
 	}
 	export default {
 		components:{ 
 			attachUpload,
-			attachList,
-			editAssetList,
-			assetList
+			attachList
 		},
 		props:{
 			inDialog:{
@@ -105,18 +108,14 @@
 				data:{ },				
 				form:{ ...formInit },
 				rules:{
-					company_id:[{ required:true, message:'请选择资产所属公司' }],	
-					model:[{ required:true, message:'请填写资产型号' }],
-					record_date:[{ required:true, message:'请填写交还日期' }]
-				},
-				params:{
-					no:null
+					name:[{ required:true, message:'请填写供应商名称' }],
+					company_id:[{ required:true, message:'请选择所属公司' }],
 				},
 				updated:false,
 				companyList:[],
 				companyLoading:false,
 				attachParams:{
-					table_name:'it_asset',
+					table_name:'it_supplier',
 					table_id:null
 				}
 			}
@@ -125,13 +124,10 @@
 			isEdit(){
 				return this.form.id? true:false
 			},
-			isSubmit(){
-				return this.form.input_status>=1
-			},
 			title(){
-				let title = 'IT资产交还单'
-				if(this.form.input_status>=0&&this.form.no){
-					title += ' [ '+this.form.no+' ]'
+				let title = '供应商信息'
+				if(this.form.input_status>=0){
+					title += ' [ 修改 ]'
 				}else{
 					title += ' [ 新增 ]'
 				}
@@ -141,15 +137,7 @@
 		mounted(){
 			this.getCompanyList()
 		},
-		methods:{
-			//
-			getCompanyList(){
-				this.companyLoading = true
-				companyApi.getEnumList().then(res=>{
-					this.companyList = res.data
-					this.companyLoading = false
-				})
-			},
+		methods:{			
 			openDialog(){
 				this.$nextTick(()=>{
 					if(this.resolve){
@@ -163,30 +151,34 @@
 					this.resolve = resolve
 				}) 
 			},
-			closeDialog(){	
+			closeDialog(){				
 				if(this.updated){
-					this.$emit('updated')
+					this.$emit('updated',this.form)
 				}
 				this.resetFields()
-				if(this.isSubmit){
-					this.$refs.assetList.clear()
-				}else{
-					this.$refs.editAssetList.clear()	
-				}				
+				this.$refs.attachUpload.clear()
+				this.$refs.attachList.clear()
+			},
+			getCompanyList(){
+				this.companyLoading = true
+				companyApi.getList({inCompany:1,noPage:1}).then(res=>{
+					this.companyList = res.data.list
+					this.companyLoading = false
+				})
 			},
 			create(){
 				this.loading = true
 				return new Promise((resolve,reject)=>{
-					assetReturnRecordApi.create().then(res=>{
+					api.create().then(res=>{
 						this.initData( res.data )
-					 	this.loading = false
+						this.loading = false
 						resolve()
 					})
 				})
 			},
 			getForm(id){
 				this.loading = true
-				assetReturnRecordApi.getForm(id).then(res=>{
+				api.getForm(id).then(res=>{
 					this.initData(res.data)
 					this.loading = false
 				})
@@ -197,42 +189,22 @@
 				if(data.attach_ids){
 					this.$refs.attachList.initData({ attach_ids:data.attach_ids})
 				}
-				if(this.isSubmit){
-					this.$refs.assetList.initData({record_id:this.form.id})
-				}
 				this.clearValidate()
 			},
 			assign(data){
 				this.form = { ...this.form, ...data }
 				this.form.price = Number(this.form.price)
+				if(this.form.supplier_type){
+					this.form.supplierTypeList = this.form.supplier_type.split(',')
+				}				
 				return this
 			},
 			save(status=0){
 				this.$refs.form.validate(valid=>{
-					if(valid&&(this.isSubmit||this.$refs.editAssetList.validate())){
+					if(valid){
+						this.form.supplier_type = this.form.supplierTypeList.join(',')
 						this.form.action = status
-						if(status){
-							if(this.$refs.editAssetList.list==0){
-								this.$message.warning('请选择交还的资产')
-								return false
-							}
-							let assetList = this.$refs.editAssetList.list.map(item=>{
-								return {
-									asset_id: item.id,
-									amount:item.return_amount,
-									dep_id:item.dep_id,
-									employee_id:item.employee_id
-								}
-							})
-							this.form.asset_list = assetList
-							this.$confirm('确定提交此IT资产交还单吗？提交后交还资产不能再修改！','提示',{
-								type: 'warning'
-							}).then(()=>{
-								this.update()
-							})
-						}else{
-							this.update()
-						}
+						this.update()
 					}else{
 						return false
 					}
@@ -241,8 +213,7 @@
 			update(){
 				this.loading = true
 				let messageText = this.form.action?'提交成功':'保存成功'
-				assetReturnRecordApi.update(this.form).then(res=>{
-					this.form.no = res.data.no
+				api.update(this.form).then(res=>{
 					this.form.input_status = res.data.input_status
 					this.loading = false
 					this.$message.success(messageText)
@@ -255,6 +226,10 @@
 					console.log(res)
 				})
 			},
+			uploaded(res){
+				this.updated = true
+				this.$refs.attachList.push(res)
+			},
 			clearValidate(){
 				this.$nextTick(()=>{
 					this.$refs.form && this.$refs.form.clearValidate()
@@ -263,14 +238,27 @@
 			resetFields(){
 				this.updated = false
 				this.form = { ...formInit }
+				this.form.supplierTypeList = []
 				this.clearValidate()
-				this.$refs.attachUpload.clear()
-				this.$refs.attachList.clear()
 				return this
 			},	
-			uploaded(res){
-				this.updated = true
-				this.$refs.attachList.push(res)
+			openSelectDepDialog(){
+				this.$refs.depDialog.open().then(that=>{
+					that.initData()
+				})
+			},
+			selectDep(data){
+				this.form.dep_id = data.id
+				this.form.dep_name = data.name
+				this.$refs.depDialog.close()
+			},
+			clearParentDep(){
+				this.form.parent_id = null
+				this.form.parent_dep = ''
+			},
+			isSelect(data){
+				let parentIds = (data.parent_ids||'').split(',')
+				return data.id==this.form.id || parentIds.indexOf(this.form.id.toString())>=0
 			}
 		}
 	}

@@ -36,13 +36,28 @@
 				<el-form-item label='资产编号' prop='no'>
 					<el-input v-model='queryParams.no' clearable></el-input>
 				</el-form-item>
-				<span v-show='queryShowMore'>
-					<el-form-item label='业绩公司' prop='company_name'>
-						<el-input v-model='queryParams.company_name' clearable></el-input>
-					</el-form-item>
-					<el-form-item label='业务员' prop='salesman'>
-						<el-input v-model='queryParams.salesman' clearable></el-input>
-					</el-form-item>
+				<el-form-item label='资产类型' prop='type_id'>
+					<el-input 
+						v-model='queryParamsLabel.type_name' 
+						readonly clearable
+						placeholder='点击选择' 
+						@click.native='openSelectTypeDialog'>
+						<i 
+							style='cursor: pointer;'
+							v-show='queryParams.type_id' 
+							slot="suffix" 
+							class="el-input__icon el-icon-close" 
+							@click.stop='queryParamsLabel.type_name="";queryParams.type_id=""'></i>
+					</el-input>
+				</el-form-item>
+				<el-form-item label='子类型' prop='hasSubType'>
+					<el-switch
+					  v-model="queryParams.hasSubType"
+					  :inactive-value="0"
+					  :active-value="1">
+					</el-switch>
+				</el-form-item>
+				<div v-show='queryShowMore'>
 					<el-form-item label='购买日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
@@ -58,7 +73,7 @@
 					    </el-col>
 				  	</el-row>
 					</el-form-item>
-				</span>
+				</div>
 			</el-form>
 		</div> 
 		<!--/ 查询条件 -->		
@@ -102,8 +117,13 @@
 				prop='type_name' 
 				width='100' 
 				label='资产类型' 
-				show-overflow-tooltip />			
+				show-overflow-tooltip />
 			<el-table-column prop='buy_date' label='购买日期' sortable='custom' width='100' />
+			<el-table-column 
+				prop='supplier_name' 
+				label='供应商' 
+				width='100' 
+				show-overflow-tooltip />
 			<el-table-column prop='price' label='金额' sortable='custom' width='100' align='right'>
 				<template slot-scope='{row}'>
 					<span>￥{{ row.price }}</span>
@@ -121,15 +141,10 @@
 			</el-table-column>
 			<el-table-column prop='use_dep' label='最后领用人' sortable='custom' width='120' show-overflow-tooltip>
 				<template slot-scope='{row}'>
-					<span>{{row.use_dep}} / {{row.use_emp}}</span>
+					<span>{{row.use_dep_name}} / {{row.use_employee_name}}</span>
 				</template>
 			</el-table-column>
 			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />
-			<el-table-column 
-				prop='supplier_name' 
-				label='供应商' 
-				width='100' 
-				show-overflow-tooltip />
 			<el-table-column 
 				prop='sn' 
 				label='序列号' 
@@ -179,6 +194,7 @@
 	  <!--/ 分页 -->
 	  <asset-details :in-dialog='inDialog' ref='assetDetails' />
 	  <asset-use-status-dialog :in-dialog='inDialog' hide-asset-fields ref='assetUseStatusDialog'/>
+	  <type-dialog :in-dialog='inDialog' ref='typeDialog' show-select @select='selectType'/>
 	</div>
 </template>
 <script>
@@ -186,9 +202,12 @@ import assetApi from '@/api/it/asset'
 import assetDetails from '@/components/it/asset/details'
 import assetUseStatusDialog from './useStatus/listDialog'
 import statusTag from './statusTag'
-
+import typeDialog from './type/treeDialog'
+const initQueryParamsLabel = {
+	type_name:''
+}
 export default {
-	components:{ assetDetails, assetUseStatusDialog, statusTag },
+	components:{ assetDetails, assetUseStatusDialog, statusTag, typeDialog },
 	props:{
 		size:{
 			type:String,
@@ -238,19 +257,15 @@ export default {
 			selectionList:[],
 			queryShowMore:this.showMore,
 			initParams:{},
+			queryParamsLabel:{},
 			//查询条件字段
 			queryParams:{
 				no:'',//项目编号
-				project_name:'',//项目名称
-				invoice_no:'',//开票号
+
 				remarks:'',
-				invoice_company_name:'',//开票号
-				contract_no:'',//合同编号
-				customer_name:'',//客户单位				
-				company_name:'',//业绩公司
-				salesman:'',//业务员
-				invoice_date_begin:'',
-				invoice_date_end:''
+				hasSubType:1,
+				buy_date_begin:'',
+				buy_date_end:''
 			},
 			//数据请求的参数
 			requestParams:{
@@ -329,6 +344,7 @@ export default {
 		//重置查询条件
 		resetQuery(){
 			this.$refs.formQuery.resetFields()
+			this.queryParamsLabel = {...initQueryParamsLabel}
 			// this.queryParams = {...this.queryParams,...this.params}
 			this.requestParams.currentPage=1
 			this.query()
@@ -367,6 +383,16 @@ export default {
 			this.$refs.assetUseStatusDialog.open().then(that=>{
 				that.initData({asset_id:row.id})
 			})
+		},
+		openSelectTypeDialog(){
+			this.$refs.typeDialog.open().then(that=>{
+				that.initData()
+			})
+		},
+		selectType(data){
+			this.queryParams.type_id = data.id
+			this.queryParamsLabel.type_name = data.name
+			this.$refs.typeDialog.close()
 		}
 	}
 }

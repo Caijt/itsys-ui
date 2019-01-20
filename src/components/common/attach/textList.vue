@@ -58,6 +58,7 @@ export default {
 			queryShowMore:false,			
 			//数据请求的参数
 			requestParams:{
+				isAttachIds:1,
 				noPage:1
 			}	
 		}
@@ -104,6 +105,7 @@ export default {
             type: 'success',
             message: '删除成功!'
           });
+          this.$emit('del')
       	})
       })
 		},

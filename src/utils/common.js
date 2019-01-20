@@ -75,6 +75,27 @@ export default {
 				callback()
 			}
 		}
+	},
+	toTreeData(data){
+		let rootList=[]
+		data.forEach((item,index)=>{
+			if(item.parent_id==null){
+				rootList.push(item)
+			}
+		})
+    function convertTree(treeData){
+      treeData.forEach(d=>{
+        data.forEach((item,index)=>{
+          if(item.parent_id && item.parent_id == d.id){
+            if(!d.children) d.children = []
+            d.children.push(item)
+          }
+        })
+        if(d.children) convertTree(d.children)
+      })
+    }
+    convertTree(rootList)
+    return rootList
 	}
 	
 }

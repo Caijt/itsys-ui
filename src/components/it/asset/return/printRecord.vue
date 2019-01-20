@@ -51,8 +51,8 @@
 								<td>{{a.asset_no}}</td>
 								<td>{{a.asset_model}}</td>
 								<td>{{a.asset_type_name}}</td>
-								<td>{{a.dep}}</td>
-								<td>{{a.emp}}</td>
+								<td>{{a.dep_name}}</td>
+								<td>{{a.employee_name}}</td>
 								<td style='text-align: center'>{{Number(a.amount)}}</td>								
 							</tr>
 						</table>

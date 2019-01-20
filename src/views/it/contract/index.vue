@@ -2,8 +2,7 @@
 	<div>
 		<div style='margin:10px 0px'>
 			<el-button-group>
-				<el-button type='primary' @click='create' icon='el-icon-edit'>资产录入</el-button>
-				<el-button @click='printBatch' icon='el-icon-printer'>打印标签</el-button>
+				<el-button type='primary' @click='create' icon='el-icon-edit'>合同录入</el-button>
 			</el-button-group>
 			
 			<!-- <el-badge :value='toInvoiceProjectTotal'>
@@ -11,41 +10,28 @@
 			</el-badge> -->
 		</div>
 		<list ref='list' init show-selection>
-    	<el-table-column slot='column' label='操作' fixed='right' align='center' width='100'>
-				<template slot-scope='scope'>
-					<el-button  size='mini' type='text' icon='el-icon-edit' @click='edit(scope)' />	
-					<el-button  size='mini' type='text' icon='el-icon-delete' @click='del(scope)'/>
-					<el-dropdown style='margin-left:10px'>
-					  <el-button type="text" icon='el-icon-more'/>
-					  <el-dropdown-menu slot="dropdown">
-					  	<el-dropdown-item @click.native='copy(scope)' >复制</el-dropdown-item>
-					    <el-dropdown-item @click.native='print(scope)'>打印标签</el-dropdown-item>
-					    <!-- <el-dropdown-item>领用交还</el-dropdown-item>
-					    <el-dropdown-item>维修</el-dropdown-item> -->
-					  </el-dropdown-menu>
-					</el-dropdown>
+    	<el-table-column slot='column' label='操作' fixed='right' align='center' width='70'>
+				<template slot-scope='{row}'>
+					<el-button  size='mini' type='text' icon='el-icon-edit' @click='edit(row)' />	
+					<el-button  size='mini' type='text' icon='el-icon-delete' @click='del(row)'/>
 				</template>
 			</el-table-column>
   	</list>
 		<edit-dialog ref='editDialog' @updated='reload'></edit-dialog>
-		<print-label ref='printLabel' />
 	</div>
 </template>
 
 <script>
-import list from '@/components/it/asset/list'
-import editDialog from '@/components/it/asset/editDialog'
-import printLabel from '@/components/it/asset/printLabel'
+import list from '@/components/it/contract/list'
+import editDialog from '@/components/it/contract/editDialog'
 
 export default {
 	components:{ 
 		list, 
-		editDialog,
-		printLabel
+		editDialog
 	},
 	data(){
 		return {
-			tabName:'summary',
 			toInvoiceProjectTotal:0,
 			toInvoiceProjectLoading: true,
 			companyList:[],
@@ -70,14 +56,14 @@ export default {
 				that.create()
 			})
 		},
-		edit({row}){
+		edit(row){
 			this.$refs.editDialog.open().then(that=>{
 				that.initData(row)
 			})
 		},
 		//删除
-		del(scope){
-			this.$refs.list.del(scope)
+		del(row){
+			this.$refs.list.del(row)
 		},
 		openSummaryListDialog(){
 			this.$refs.summaryListDialog.open({ hasDelivery:1,toInvoice:1})
@@ -105,7 +91,7 @@ export default {
 		copy({row}){
 			this.$refs.editDialog.open().then(that=>{
 				that.create().then(res=>{
-					let copyData = this.$commonJs.obj.copyByKey(row,['model','company_id','type_id','type_name','supplier_id','supplier_name','buy_date','price','amount','sn','remarks'])
+					let copyData = this.$commonJs.obj.copyByKey(row,['model','company_id','supplier_name','buy_date','price','amount','sn','remarks'])
 					that.assign(copyData).clearValidate()
 				})
 			})

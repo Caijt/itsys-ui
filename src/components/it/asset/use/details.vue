@@ -37,12 +37,12 @@
 						</el-col>
 						<el-col :span='8'>
 							<el-form-item label='领用部门'>
-								<span>{{form.dep}}</span>
+								<span>{{form.dep_name}}</span>
 							</el-form-item>
 						</el-col>
 						<el-col :span='8'>
 							<el-form-item label='领用员工'>
-								<span>{{form.emp}}</span>
+								<span>{{form.employee_name}}</span>
 							</el-form-item>
 						</el-col>
 						<el-col :span='24'>

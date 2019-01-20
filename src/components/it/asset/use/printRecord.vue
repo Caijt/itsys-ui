@@ -33,8 +33,8 @@
 							</div>
 							<div style='display: flex'>
 								<div style='flex:1'>领用日期：{{item.record_date}}</div>
-								<div style='flex:1'>领用部门：{{item.dep}}</div>
-								<div style='flex:1'>领用员工：{{item.emp}}</div>
+								<div style='flex:1'>领用部门：{{item.dep_name}}</div>
+								<div style='flex:1'>领用员工：{{item.employee_name}}</div>
 							</div>
 							<div>领用备注：{{item.remarks}}</div>
 						</div>						

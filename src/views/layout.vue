@@ -12,11 +12,20 @@
 				style='border:none'
 				ref='elHeader'>
 			  <el-menu-item 
-			  	v-for='m in $store.state.user.routers' 
+			  	v-for='m in $store.state.user.routers.slice(0,maxHeaderMenu)' 
 			  	:index="m.path" 
 			  	:key='m.meta.id'>
 					{{ m.meta.title }}
 				</el-menu-item>
+				<el-submenu index="/more" v-if='$store.state.user.routers.length>maxHeaderMenu'>
+			    <template slot="title">更多</template>
+			    <el-menu-item 
+			    	v-for='m in $store.state.user.routers.slice(maxHeaderMenu)'
+			    	:index="m.path" 
+			  		:key='m.meta.id'>
+			    	{{ m.meta.title }}
+			    </el-menu-item>
+			  </el-submenu>
 				<el-submenu index="/my" style='float:right;'>
 			    <template slot="title">{{$store.state.user.name}}</template>
 			    <!-- <el-menu-item index="/my/setting" >配置</el-menu-item> -->
@@ -94,7 +103,8 @@
 				headerHeight:'60px',
 				openedMenus:[],
 				currentMenus:[],
-				menuPath:''
+				menuPath:'',
+				maxHeaderMenu:10
 			}
 		},
 		created(){
@@ -179,6 +189,9 @@
 </script>
 <style lang='scss'>
 	._layout-header.el-menu--horizontal > .el-menu-item.is-active{
+		border-bottom-width:4px;
+	}
+	._layout-header.el-menu--horizontal > .el-submenu.is-active > .el-submenu__title{
 		border-bottom-width:4px;
 	}
 	._layout-nav .el-menu-item.is-active{
