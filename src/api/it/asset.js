@@ -6,6 +6,7 @@ import qs from 'qs'
 const BASE_URL = baseUrl +'/asset' 
 
 export default {
+	excelUploadUrl:BASE_URL+'/importExcel',
 	getPrintQrcode(id){
 		return BASE_URL+'/getPrintQrcode/id/'+id
 	},
@@ -84,11 +85,13 @@ export default {
 			'type_id',
 			'supplier_id',
 			'model',
-			'supplier_name',
+			'diy_no',			
 			'buy_date',
 			'price',
 			'amount',
 			'sn',
+			'is_stock_warning',
+			'stock_warning_id',
 			'remarks'
 		])
 		return request({

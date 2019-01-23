@@ -28,15 +28,6 @@ export default {
 			}
 		})
 	},
-	getTaskForm(id){
-		return request({
-			url: BASE_URL + '/getTaskForm',
-			method:'get',
-			params:{
-				id
-			}
-		})
-	},
 	getPrint(id){
 		return request({
 			url: BASE_URL + '/getPrint',
@@ -44,14 +35,6 @@ export default {
 			params:{
 				id
 			}
-		})
-	},
-	getSummary(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getSummary',
-			method:'get',
-			params
 		})
 	},
 	getList(params){
@@ -66,14 +49,6 @@ export default {
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getPrintRecordList',
-			method:'get',
-			params
-		})
-	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getProductList',
 			method:'get',
 			params
 		})
@@ -93,6 +68,7 @@ export default {
 			'remarks',
 			'dep_id',
 			'employee_id',
+			'place',
 			'asset_list'
 		])
 		return request({

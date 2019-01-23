@@ -25,10 +25,10 @@
 					<div class="inside-box">
 						<div style='display: flex'>
 							<div>
-								<img class='qrcode' :src="getQrcodeImg(item.no)" v-on:load='imgLoad'/>
+								<img class='qrcode' :src="getQrcodeImg(item.id)" v-on:load='imgLoad'/>
 							</div>
-							<div style='margin-left:5px;flex:1'>
-								<div style='font-weight: 16px;text-align: center;font-weight: bold;margin-bottom: 5px'>IT资产标签</div>
+							<div style='margin-left:5px;flex:1;height:90px;overflow: hidden;'>
+								<div style='font-weight: 16px;text-align: center;font-weight: bold;margin-bottom: 5px'>金刚玻璃IT资产</div>
 								<dl style='font-size: 12px'>
 									<dt>编号：</dt>
 									<dd>{{item.no}}</dd>
@@ -37,7 +37,7 @@
 								</dl>
 							</div>
 						</div>
-					</div>				
+					</div>
 				</div>
 			</div>
 			<!-- <div style='clear: both'></div> -->
@@ -116,11 +116,11 @@
 					this.buttonLoading = false
 				})
 			},
-			getQrcodeImg(no){
-				return assetApi.getPrintQrcode(no)
+			getQrcodeImg(id){
+				return assetApi.getPrintQrcode(id)
 			},
 			imgLoad(){
-				this.imgLoadCount++
+				this.imgLoadCount ++
 			},
 			print(){
 				window.print()
@@ -140,8 +140,11 @@
 		.inside-box{
 			border-radius:4px;
 			box-sizing: border-box;
-			border:1px solid black;
+			border:1px solid #DCDFE6;
 			padding:10px;
+			.qrcode{
+
+			}
 		}
 	}
 	dl{

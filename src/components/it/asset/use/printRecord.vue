@@ -36,6 +36,7 @@
 								<div style='flex:1'>领用部门：{{item.dep_name}}</div>
 								<div style='flex:1'>领用员工：{{item.employee_name}}</div>
 							</div>
+							<div>使用地点：{{item.place}}</div>
 							<div>领用备注：{{item.remarks}}</div>
 						</div>						
 						<table class='c-table' style='border:2px solid #000'>

@@ -47,33 +47,22 @@
 				</el-form-item>
 				<!-- 更多条件 -->
 				<div v-if='queryShowMore'>
-					<el-form-item label='回款编号' prop='payment_no'>
-	          <el-input v-model.trim='queryParams.payment_no' clearable></el-input>
-	        </el-form-item>
-	        <el-form-item label='客户名称' prop='customer_name'>
-	          <el-input v-model.trim='queryParams.customer_name' clearable></el-input>
-	        </el-form-item>
-	        <el-form-item label='客户类别' prop='customer_type'>
-            <el-input v-model.trim='queryParams.customer_type' clearable></el-input>
-          </el-form-item>
-          <el-form-item label='收款公司' prop='company_name'>
-            <el-input v-model.trim='queryParams.company_name' clearable></el-input>
-          </el-form-item>  
-          <el-form-item label='回款形式' prop='payment_method'>
-            <el-input v-model.trim='queryParams.payment_method' clearable></el-input>
-          </el-form-item>
-          <el-form-item label='回款合同' prop='contract_no'>
-            <el-input v-model.trim='queryParams.contract_no' clearable></el-input>
-          </el-form-item>
-          <el-form-item label='业务员' prop='salesman'>
-            <el-input v-model.trim='queryParams.salesman' clearable></el-input>
-          </el-form-item>
-          <el-form-item label='区域' prop='area'>
-            <el-input v-model.trim='queryParams.area' clearable></el-input>
-          </el-form-item>
-          <el-form-item label='备注' prop='remarks'>
-            <el-input v-model.trim='queryParams.remarks' clearable></el-input>
-          </el-form-item>
+					<el-form-item label='所属公司' prop='company_ids'>
+						<el-select 
+							v-model='queryParams.company_ids' 
+							placeholder='选择资产所属公司'
+							multiple
+   				 		collapse-tags
+							:loading='companyLoading'>
+							<el-option
+								v-for='item in companyList'
+								:key='item.id'
+								:label='item.name'
+								:value='item.id'
+								v-show='item.is_disabled?false:true'
+							></el-option>
+						</el-select>
+					</el-form-item>	
 				</div>
 				<!--/ 更多条件-->
 			</el-form>			
@@ -83,6 +72,7 @@
 </template>
 <script>
 	import assetApi from '@/api/it/asset'
+	import companyApi from '@/api/sys/company'
 	export default{
 		props:{
 			params:{
@@ -101,11 +91,14 @@
 			return {
 				queryShowMore:false,
 				echarts:null,
+				companyList:[],
+				companyList:true,
 				initParams:{},
 				queryParams:{
 					unit:'month',
 					time_begin:'',
-					time_end:''
+					time_end:'',
+					company_ids:[]
 				},
 				requestParams:{
 
@@ -134,6 +127,7 @@
 	  },
 		mounted(){
 			this.initChart()
+			this.getCompanyList()
 		},
 		methods:{
 			initChart(){
@@ -176,6 +170,13 @@
 			    	}
 			    ]
 				});				
+			},
+			getCompanyList(){
+				this.companyLoading = true
+				companyApi.getList({inCompany:1,noPage:1}).then(res=>{
+					this.companyList = res.data.list
+					this.companyLoading = false
+				})
 			},
 			getData(){
 				this.echarts.showLoading()

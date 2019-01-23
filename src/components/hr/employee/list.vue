@@ -41,7 +41,7 @@
 				</el-form-item>
 				<div v-show='queryShowMore'>
 					<el-form-item label='部门' prop='dep_id'>
-						<el-input v-model='queryParamsLabel.dep_name' readonly clearable @click.native='openSelectDepDialog'>
+						<el-input v-model='queryParamsLabel.dep_name' placeholder='点击选择' readonly clearable @click.native='openSelectDepDialog'>
 							<i 
 								style='cursor: pointer;'
 								v-show='queryParams.dep_id' 

@@ -28,8 +28,15 @@
 						</el-form-item>
 					</el-col>
 				</el-row>
-				<el-form-item label='维修供应商' prop='supplier_name'>
-					<el-input v-model='form.supplier_name' placeholder=''/>
+				<el-form-item label='维修供应商' prop='supplier_id'>
+					<el-input v-model='form.supplier_name' placeholder='点击选择' readonly @click.native='openSelectSupplierDialog'>
+						<i 
+							style='cursor: pointer;'
+							v-show='form.supplier_id' 
+							slot="suffix" 
+							class="el-input__icon el-icon-close" 
+							@click.stop='form.supplier_name="";form.supplier_id=null'></i>
+					</el-input>
 				</el-form-item>
 				<el-form-item label='故障描述' prop='reason' >
 					<el-input type='textarea' v-model='form.reason' placeholder=''>
@@ -71,19 +78,20 @@
 		    <el-button @click="show=false">关 闭</el-button>
 	  	</div>
 		</el-dialog>
-		<asset-list-dialog :params='{isFree:1,isRepair:0}' :in-dialog='inDialog' ref='assetListDialog'>
+		<asset-list-dialog :params='{isRepair:0}' :in-dialog='inDialog' ref='assetListDialog'>
 			<el-table-column slot='column' fixed='right' width='60' align='center' label='操作'>
 				<template slot-scope='{row}'>
 					<el-button type='text' @click='selectAsset(row)'>选择</el-button>
 				</template>
 			</el-table-column>
 		</asset-list-dialog>
+		<supplier-dialog :in-dialog='inDialog' show-select ref='supplierDialog' @select='selectSupplier'/>
 	</div>
 </template>
 <script>
 	import assetRepairRecordApi from '@/api/it/assetRepairRecord'
 	import assetListDialog from '../listDialog'
-
+	import supplierDialog from '@/components/it/supplier/listDialog'
 	const formInit = {		
 		model:'',		
 		asset_id:null,
@@ -92,11 +100,14 @@
 		input_status:-1	,
 		repair_date:new Date(),
 		price:0,
-		status:0
+		status:0,
+		supplier_id:null,
+		supplier_name:''
 	}
 	export default {
 		components:{
-			assetListDialog
+			assetListDialog,
+			supplierDialog
 		},
 		props:{
 			inDialog:{
@@ -252,6 +263,19 @@
 				this.form.asset_no = row.no
 				this.$refs.assetListDialog.close()
 			},
+			openSelectSupplierDialog(){
+				this.$refs.supplierDialog.open().then(that=>{
+					that.initData({
+						inCompany:1,
+						supplier_type:'ASSET'
+					})
+				})
+			},
+			selectSupplier(row){
+				this.form.supplier_id = row.id
+				this.form.supplier_name = row.name
+				this.$refs.supplierDialog.close()
+			}
 		}
 	}
 </script>

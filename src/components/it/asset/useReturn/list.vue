@@ -92,14 +92,14 @@
 				width='100' 
 				sortable='custom' 
 				label='记录日期' />
-			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />	
+			
 			<el-table-column 
-				prop='dep' 
+				prop='dep_name' 
 				width='100' 
 				label='部门' 
 				show-overflow-tooltip />
 			<el-table-column 
-				prop='emp' 
+				prop='employee_name' 
 				width='90' 
 				label='员工' 
 				show-overflow-tooltip />
@@ -109,7 +109,9 @@
 				label='数量' 
 				sortable='custom' 
 				width='70'>					
-			</el-table-column>			
+			</el-table-column>		
+			<el-table-column prop='place' label='使用/归还地点' width='120' show-overflow-tooltip />	
+			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />		
 			<el-table-column 
 				width='90' 
 				prop='create_user_name' 
@@ -224,7 +226,8 @@ export default {
 				currentPage:1,//当前页
 				sortProp:this.sortProp,
 				sortOrder:'',
-				noPage:this.noPage?1:0
+				noPage:this.noPage?1:0,
+				inCompany:1
 			}
 		}
 	},

@@ -36,6 +36,11 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span='24'>
+							<el-form-item label='归还地点'>
+								<span>{{form.place}}</span>
+							</el-form-item>
+						</el-col>
+						<el-col :span='24'>
 							<el-form-item label='交还备注'>
 								<span>{{form.remarks}}</span>
 							</el-form-item>

@@ -82,11 +82,9 @@ export default {
 			'action',
 			'asset_id',
 			'repair_date',
-			'supplier_name',
+			'supplier_id',
 			'reason',
 			'status',
-			'model',
-			'supplier_name',
 			'finish_date',
 			'price',
 			'content'

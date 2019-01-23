@@ -17,7 +17,7 @@
 	      v-loading='loading'
 	      border 
 	      stripe
-	      row-key='product_id'    
+	      row-key='detail_id'    
 	      :max-height='maxHeight'
 	      @selection-change='selectionChange'>
 	      <el-table-column
@@ -26,11 +26,14 @@
 	        align="center"
 	        width="35">
 		      </el-table-column>
-	      <el-table-column prop='no' label='资产编号' width='110' show-overflow-tooltip />
-	      <el-table-column prop='model' label='资产型号' min-width='150' show-overflow-tooltip />
-	      <el-table-column prop='type_name' label='资产类型' width='100' show-overflow-tooltip />
+	      <el-table-column prop='asset_no' label='资产编号' width='110' show-overflow-tooltip />
+	      <el-table-column prop='asset_model' label='资产型号' min-width='150' show-overflow-tooltip />
+	      <el-table-column prop='asset_type_name' label='资产类型' width='100' show-overflow-tooltip />
+	      <el-table-column prop='use_date' sortable label='领用日期' width='100' />
 	      <el-table-column prop='dep_name' sortable label='领用部门' width='100' />
 	      <el-table-column prop='employee_name' sortable label='领用人' width='100' />
+	      <el-table-column prop='use_place' sortable label='使用地点' width='120' show-overflow-tooltip/>
+	      <el-table-column prop='use_remarks' sortable label='领用备注' width='120' show-overflow-tooltip/>
 	      <el-table-column prop='use_amount' fixed='right' align='right' sortable label='领用数量' width='100'>
 	      </el-table-column>
 	      <el-table-column prop='payment_price' label='交还数量' width='100' fixed='right'>
@@ -244,11 +247,11 @@
 			},
 			openSelectAssetDiaog(){
 				let selectedIds = this.list.map(item=>{
-					return item.use_id
+					return item.detail_id
 				})
 				this.$refs.assetUseStatusListDialog.open().then(that=>{
 					that.$refs.list.initData({
-						not_ids:selectedIds.join(',')
+						not_detail_ids:selectedIds.join(',')
 					})
 				})
 			},
@@ -260,13 +263,15 @@
 				}
 				let toPushList = selectionList.map(item=>{
 					return {
-						use_id:item.use_id,
-						id:item.id,
-						no:item.no,
-						model:item.model,
-						type_name:item.type_name,
-						buy_date:item.buy_date,
+						detail_id:item.detail_id,
+						asset_id:item.asset_id,
+						asset_no:item.asset_no,
+						asset_model:item.asset_model,
+						asset_type_name:item.asset_type_name,
+						use_date:item.use_date,
 						use_amount:item.use_amount,
+						use_place:item.use_place,
+						use_remarks:item.use_remarks,
 						return_amount:item.use_amount,
 						dep_name:item.dep_name,
 						employee_name:item.employee_name,

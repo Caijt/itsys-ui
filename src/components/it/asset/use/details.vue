@@ -46,6 +46,11 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span='24'>
+							<el-form-item label='使用地点'>
+								<span>{{form.place}}</span>
+							</el-form-item>
+						</el-col>
+						<el-col :span='24'>
 							<el-form-item label='领用备注'>
 								<span>{{form.remarks}}</span>
 							</el-form-item>

@@ -61,12 +61,12 @@
 				align='center' 
 				width='35' />
 			<el-table-column prop='name' label='供应商名称' min-width='120' show-overflow-tooltip/>			
-			<el-table-column prop='address' label='地址' sortable='custom' width='120' show-overflow-tooltip/>
 			<el-table-column prop='supplier_type' label='合作类型' sortable='custom' width='120' show-overflow-tooltip>
 				<template slot-scope='{row}'>
 					{{row.supplier_type.replace('ASSET','资产供应商').replace('CONTRACT','合同合作商')}}
 				</template>
 			</el-table-column>
+			<el-table-column prop='address' label='地址' sortable='custom' width='120' show-overflow-tooltip/>
 			<el-table-column prop='contacts' label='联系人' sortable='custom' width='100' show-overflow-tooltip/>
 			<el-table-column prop='bank' label='付款银行' sortable='custom' width='100' show-overflow-tooltip/>
 			<el-table-column prop='remarks' label='备注' sortable='custom' width='100' show-overflow-tooltip/>
@@ -187,7 +187,8 @@ export default {
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
-				noPage:this.noPage?1:0
+				noPage:this.noPage?1:0,
+				inCompany:1
 			}
 		}
 	},

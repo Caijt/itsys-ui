@@ -68,7 +68,7 @@ export default {
 	},
 	methods:{
 		initData(p){
-			this.requestParams = { noPage:1,...this.params,...p}
+			this.requestParams = { ...this.requestParams,...this.params,...p}
 			this.getData()
 		},
 		reload(){

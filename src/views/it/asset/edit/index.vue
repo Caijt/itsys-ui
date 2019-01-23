@@ -1,15 +1,27 @@
 <template>
 	<div>
+		<el-alert 
+	    title="如果需查询某个部门或员工具体领用哪些资产，请到资产领用状态列表中进行查询"
+	    type="warning"
+	    show-icon
+	    style='margin-bottom:10px'>
+	    <div>
+	    	<el-button type='text' size='mini' @click='$router.push("/it/asset/query/useStatus")'>[ 资产领用状态列表 ]</el-button>
+	    </div>
+	  </el-alert>
 		<div style='margin:10px 0px'>
 			<el-button-group>
 				<el-button type='primary' @click='create' icon='el-icon-edit'>资产录入</el-button>
 				<el-button @click='printBatch' icon='el-icon-printer'>打印标签</el-button>
+				<el-button @click='openImportDialog'>Excel导入</el-button>
 			</el-button-group>
-			
-			<!-- <el-badge :value='toInvoiceProjectTotal'>
-				<el-button size='small' type='danger' :loading='toInvoiceProjectLoading' @click='openSummaryListDialog'>待开票项目</el-button>
-			</el-badge> -->
 		</div>
+		<el-tabs v-model='tabName' @tab-click='tabClick'>
+			<el-tab-pane label='全部' name='ALL'></el-tab-pane>
+			<el-tab-pane label='闲置' name='FREE'></el-tab-pane>
+			<el-tab-pane label='维修' name='REPAIR'></el-tab-pane>
+			<el-tab-pane label='报废' name='SCRAP'></el-tab-pane>
+		</el-tabs>
 		<list ref='list' init show-selection>
     	<el-table-column slot='column' label='操作' fixed='right' align='center' width='100'>
 				<template slot-scope='scope'>
@@ -29,6 +41,7 @@
   	</list>
 		<edit-dialog ref='editDialog' @updated='reload'></edit-dialog>
 		<print-label ref='printLabel' />
+		<import-dialog ref='importDialog' @updated='reload'/>
 	</div>
 </template>
 
@@ -36,16 +49,18 @@
 import list from '@/components/it/asset/list'
 import editDialog from '@/components/it/asset/editDialog'
 import printLabel from '@/components/it/asset/printLabel'
+import importDialog from '@/components/it/asset/importDialog'
 
 export default {
 	components:{ 
 		list, 
 		editDialog,
-		printLabel
+		printLabel,
+		importDialog
 	},
 	data(){
 		return {
-			tabName:'summary',
+			tabName:'ALL',
 			toInvoiceProjectTotal:0,
 			toInvoiceProjectLoading: true,
 			companyList:[],
@@ -112,6 +127,17 @@ export default {
 		},
 		test2(){
 			this.$refs.list.$refs.tableList.clearSelection()
+		},
+		openImportDialog(){
+			this.$refs.importDialog.open()
+		},
+		tabClick(){
+			let status = []
+			if(this.tabName!='ALL'){
+				status = [this.tabName]
+			}		
+			this.$refs.list.queryParams.abnormal_status = status
+			this.$refs.list.query()
 		}
 	}
 }

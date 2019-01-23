@@ -45,6 +45,10 @@
 						<el-button slot="append" @click.stop='createType'>创建</el-button>
 					</el-input>
 				</el-form-item>
+				<el-form-item label='标识号' prop='diy_no' >
+					<el-input v-model='form.diy_no' placeholder='企业内部一些自定义的标识号'>
+					</el-input>
+				</el-form-item>
 				<el-form-item label='供应商' prop='supplier_id'>
 					<el-input v-model='form.supplier_name' placeholder='点击选择' readonly @click.native='openSelectSupplierDialog'>
 						<i 
@@ -61,16 +65,42 @@
 						value-format='yyyy-MM-dd' 
 						style='width: 30%' />
 				</el-form-item>
-				<el-form-item label='入库数量' prop='amount' >
-					<el-input v-model.number='form.amount' style='width: 30%'>
-					</el-input>
-				</el-form-item>
 				<el-form-item label='价格' prop='price' >
 					<el-input v-model.number='form.price' style='width: 30%'>
 						<span slot="prefix">￥</span>
 					</el-input>
 					<span style='font-size: 12px'>该资产总价格，非单价</span>
 				</el-form-item>
+				<el-form-item label='入库数量' prop='amount' >
+					<el-input v-model.number='form.amount' style='width: 30%'>
+					</el-input>
+				</el-form-item>
+				<el-row :gutter='10'>
+					<el-col :span='12' >
+						<el-form-item label='库存预警' prop='is_stock_warning' >
+							<el-tooltip content='是否关联库存预警种类'>
+								<el-switch 
+									v-model='form.is_stock_warning'
+									:active-value='1'
+							    :inactive-value='0' />
+							</el-tooltip>
+						</el-input>
+				</el-form-item>
+					</el-col>
+					<el-col :span='12' v-if='form.is_stock_warning'>
+						<el-form-item label='库存种类' prop='stock_warning_id'>
+					<el-input v-model='form.stock_warning_name' placeholder='点击选择' readonly @click.native='openSelectStockWarningDialog'>
+						<i 
+							style='cursor: pointer;'
+							v-show='form.stock_warning_id' 
+							slot="suffix" 
+							class="el-input__icon el-icon-close" 
+							@click.stop='form.stock_warning_name="";form.stock_warning_id=null'></i>
+					</el-input>
+				</el-form-item>
+					</el-col>
+				</el-row>
+				
 				<el-form-item label='序列号' prop='sn' >
 					<el-input v-model='form.sn' placeholder='资产出厂编号' style='width: 30%'>
 					</el-input>
@@ -94,16 +124,18 @@
 		<type-dialog :in-dialog='inDialog' ref='typeDialog' show-select @select='selectType'/>
 		<type-edit-dialog :in-dialog='inDialog' ref='typeEditDialog'/>
 		<supplier-dialog :in-dialog='inDialog' show-select ref='supplierDialog' @select='selectSupplier'/>
+		<stock-warning-dialog :in-dialog='inDialog' show-select ref='stockWarningDialog' @select='selectStockWarning'/>
 	</div>
 </template>
 <script>
 	import assetApi from '@/api/it/asset'
-	import companyApi from '@/api/yyzx/company'
+	import companyApi from '@/api/sys/company'
 	import attachUpload from '@/components/common/attach/upload'
 	import attachList from '@/components/common/attach/textList'
 	import typeDialog from './type/treeDialog'
 	import typeEditDialog from './type/editDialog'
 	import supplierDialog from '@/components/it/supplier/listDialog'
+	import stockWarningDialog from './stockWarning/listDialog'
 
 	const formInit = {		
 		model:'',		
@@ -119,7 +151,10 @@
 		type_name:'',
 		type_id:null,
 		supplier_name:'',
-		supplier_id:null
+		supplier_id:null,
+		stock_warning_name:'',
+		stock_warning_id:null,
+		is_stock_warning:0
 	}
 	export default {
 		components:{ 
@@ -127,7 +162,8 @@
 			attachList,
 			typeDialog,
 			typeEditDialog,
-			supplierDialog
+			supplierDialog,
+			stockWarningDialog
 		},
 		props:{
 			inDialog:{
@@ -146,6 +182,7 @@
 				rules:{
 					company_id:[{ required:true, message:'请选择资产所属公司' }],	
 					type_id:[{ required:true, message:'请选择资产类型' }],	
+					stock_warning_id:[{ required:true, message:'请选择库存种类' }],	
 					model:[{ required:true, message:'请填写资产型号' }],
 					buy_date:[{ required:true, message:'请填写购买日期' }],
 					price:[{ type:'number',message:'请输入数字' }],
@@ -187,8 +224,8 @@
 			//
 			getCompanyList(){
 				this.companyLoading = true
-				companyApi.getEnumList().then(res=>{
-					this.companyList = res.data
+				companyApi.getList({inCompany:1,noPage:1}).then(res=>{
+					this.companyList = res.data.list
 					this.companyLoading = false
 				})
 			},
@@ -239,6 +276,7 @@
 			assign(data){
 				this.form = { ...this.form, ...data }
 				this.form.price = Number(this.form.price)
+				this.form.is_stock_warning = this.form.stock_warning_id?1:0
 				return this
 			},
 			save(status=0){
@@ -320,6 +358,18 @@
 				this.form.supplier_id = row.id
 				this.form.supplier_name = row.name
 				this.$refs.supplierDialog.close()
+			},
+			openSelectStockWarningDialog(){
+				this.$refs.stockWarningDialog.open().then(that=>{
+					that.initData({
+						inCompany:1
+					})
+				})
+			},
+			selectStockWarning(row){
+				this.form.stock_warning_id = row.id
+				this.form.stock_warning_name = row.name
+				this.$refs.stockWarningDialog.close()
 			}
 		}
 	}

@@ -81,6 +81,7 @@ export default {
 			'id',
 			'action',
 			'company_id',
+			'supplier_id',
 			'no',
 			'name',
 			'price',

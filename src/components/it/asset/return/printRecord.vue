@@ -34,6 +34,7 @@
 							<div style='display: flex'>
 								<div style='flex:1'>交还日期：{{item.record_date}}</div>
 							</div>
+							<div>归还地点：{{item.place}}</div>
 							<div>交还备注：{{item.remarks}}</div>
 						</div>						
 						<table class='c-table' style='border:2px solid #000'>

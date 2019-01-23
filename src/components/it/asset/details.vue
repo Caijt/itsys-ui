@@ -22,8 +22,13 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span='8'>
-							<el-form-item label='资产状态' class='no-border'>
+							<el-form-item label='异常状态' class='no-border'>
 								<status-tag :asset='form'/>
+							</el-form-item>
+						</el-col>
+						<el-col :span='8'>
+							<el-form-item label='标识号'>
+								<span>{{form.diy_no}}</span>
 							</el-form-item>
 						</el-col>
 					</el-row>
@@ -105,7 +110,7 @@
 					<el-tab-pane label='领用状态'  name='useStatus'>
 						<asset-use-status-list in-dialog hide-query no-page hide-asset-fields ref='assetUseStatusList'/>
 					</el-tab-pane>
-					<el-tab-pane label='领用交还记录' name='use'>
+					<el-tab-pane label='领用记录' name='use'>
 						<asset-use-return-list in-dialog sort-prop='submit_time' hide-query no-page ref='assetUseReturnList'/>
 					</el-tab-pane>
 					<el-tab-pane label='维修记录' name='repair'>

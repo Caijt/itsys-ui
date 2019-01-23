@@ -34,30 +34,65 @@
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
 				<el-form-item label='资产编号' prop='no'>
-					<el-input v-model='queryParams.no' clearable></el-input>
+					<el-input v-model.trim='queryParams.no' clearable></el-input>
 				</el-form-item>
-				<el-form-item label='资产类型' prop='type_id'>
-					<el-input 
-						v-model='queryParamsLabel.type_name' 
-						readonly clearable
-						placeholder='点击选择' 
-						@click.native='openSelectTypeDialog'>
-						<i 
-							style='cursor: pointer;'
-							v-show='queryParams.type_id' 
-							slot="suffix" 
-							class="el-input__icon el-icon-close" 
-							@click.stop='queryParamsLabel.type_name="";queryParams.type_id=""'></i>
-					</el-input>
-				</el-form-item>
-				<el-form-item label='子类型' prop='hasSubType'>
-					<el-switch
-					  v-model="queryParams.hasSubType"
-					  :inactive-value="0"
-					  :active-value="1">
-					</el-switch>
-				</el-form-item>
+				<el-form-item label='资产型号' prop='model'>
+					<el-input v-model.trim='queryParams.model' clearable></el-input>
+				</el-form-item>				
 				<div v-show='queryShowMore'>
+					<el-form-item label='资产状态' prop='abnormal_status'>
+						<el-select v-model='queryParams.abnormal_status' collapse-tags multiple clearable>
+							<el-option value='FREE' label='闲置'></el-option>
+							<el-option value='REPAIR' label='维修'></el-option>
+							<el-option value='SCRAP' label='报废'></el-option>
+						</el-select>
+					</el-form-item>		
+					<el-form-item label='标识号' prop='diy_no'>
+						<el-input v-model.trim='queryParams.diy_no' clearable></el-input>
+					</el-form-item>		
+					<el-form-item label='资产类型' prop='type_id'>
+						<el-input 
+							v-model='queryParamsLabel.type_name' 
+							readonly clearable
+							placeholder='点击选择' 
+							@click.native='openSelectTypeDialog'>
+							<i 
+								style='cursor: pointer;'
+								v-show='queryParams.type_id' 
+								slot="suffix" 
+								class="el-input__icon el-icon-close" 
+								@click.stop='queryParamsLabel.type_name="";queryParams.type_id=""'></i>
+						</el-input>
+					</el-form-item>
+					<el-form-item label='子类型' prop='hasSubType'>
+						<el-switch
+						  v-model="queryParams.hasSubType"
+						  :inactive-value="0"
+						  :active-value="1">
+						</el-switch>
+					</el-form-item>
+					<el-form-item label='备注' prop='remarks'>
+						<el-input v-model.trim='queryParams.remarks' clearable></el-input>
+					</el-form-item>		
+					<el-form-item label='序列号' prop='sn'>
+						<el-input v-model.trim='queryParams.sn' clearable></el-input>
+					</el-form-item>	
+					<el-form-item label='所属公司' prop='company_ids'>
+						<el-select 
+							v-model='queryParams.company_ids' 
+							placeholder='选择资产所属公司'
+							multiple
+   				 		collapse-tags
+							:loading='companyLoading'>
+							<el-option
+								v-for='item in companyList'
+								:key='item.id'
+								:label='item.name'
+								:value='item.id'
+								v-show='item.is_disabled?false:true'
+							></el-option>
+						</el-select>
+					</el-form-item>	
 					<el-form-item label='购买日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
@@ -73,6 +108,25 @@
 					    </el-col>
 				  	</el-row>
 					</el-form-item>
+					<el-form-item label='资产价格'>
+            <el-row style='width:300px'>
+              <el-col :span="11">
+                <el-form-item prop='price_begin'>
+                  <el-input v-model='queryParams.price_begin' placeholder='最小值' clearable>
+                    <span slot="prefix">￥</span>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2">至</el-col>
+              <el-col :span="11">
+                <el-form-item prop='price_end'>
+                  <el-input v-model='queryParams.price_end' placeholder='最小值' clearable>
+                    <span slot="prefix">￥</span>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form-item>
 				</div>
 			</el-form>
 		</div> 
@@ -103,7 +157,7 @@
 					<span class='c-link' @click='openDetails(row)'>{{row.no}}</span>
 				</template>
 			</el-table-column>
-			<el-table-column label='资产状态' align='center' width='100'>
+			<el-table-column label='异常状态' align='center' width='100'>
 				<template slot-scope='{row}'>
 					<status-tag :asset='row'/>
 				</template>
@@ -117,6 +171,11 @@
 				prop='type_name' 
 				width='100' 
 				label='资产类型' 
+				show-overflow-tooltip />
+			<el-table-column 
+				prop='diy_no' 
+				width='100' 
+				label='标识号' 
 				show-overflow-tooltip />
 			<el-table-column prop='buy_date' label='购买日期' sortable='custom' width='100' />
 			<el-table-column 
@@ -139,7 +198,8 @@
 					<span class='c-link' @click='openUseStatusDialog(row)'>{{row.remain}} / {{row.avaiable_amount}} / {{row.amount}}</span>
 				</template>
 			</el-table-column>
-			<el-table-column prop='use_dep' label='最后领用人' sortable='custom' width='120' show-overflow-tooltip>
+			<el-table-column prop='stock_warning_name' label='库存种类' sortable='custom' width='100' show-overflow-tooltip />
+			<el-table-column prop='use_dep_name' label='近期领用人' sortable='custom' width='120' show-overflow-tooltip>
 				<template slot-scope='{row}'>
 					<span>{{row.use_dep_name}} / {{row.use_employee_name}}</span>
 				</template>
@@ -198,7 +258,8 @@
 	</div>
 </template>
 <script>
-import assetApi from '@/api/it/asset'
+import api from '@/api/it/asset'
+import companyApi from '@/api/sys/company'
 import assetDetails from '@/components/it/asset/details'
 import assetUseStatusDialog from './useStatus/listDialog'
 import statusTag from './statusTag'
@@ -214,7 +275,7 @@ export default {
 			default:''
 		},
 		maxHeight:{
-			default:350
+			default:400
 		},
 		params:{
 			default:()=>({})
@@ -256,16 +317,19 @@ export default {
 			summaryData:{},
 			selectionList:[],
 			queryShowMore:this.showMore,
+			companyList:[],
+			companyLoading:true,
 			initParams:{},
 			queryParamsLabel:{},
 			//查询条件字段
 			queryParams:{
 				no:'',//项目编号
-
+				abnormal_status:[],
 				remarks:'',
 				hasSubType:1,
 				buy_date_begin:'',
-				buy_date_end:''
+				buy_date_end:'',
+				company_ids:[]
 			},
 			//数据请求的参数
 			requestParams:{
@@ -273,7 +337,8 @@ export default {
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
-				noPage:this.noPage?1:0
+				noPage:this.noPage?1:0,
+				inCompany:1
 			}
 		}
 	},
@@ -284,7 +349,8 @@ export default {
     if(this.init){
       this.inited = true
       this.initData()
-    }    
+    }
+    this.getCompanyList()
   },
 	methods:{
 		//初始化数据
@@ -304,6 +370,13 @@ export default {
 		selectionChange(valueArrary){
 			this.selectionList = valueArrary
 		},
+		getCompanyList(){
+			this.companyLoading = true
+			companyApi.getList({inCompany:1,noPage:1}).then(res=>{
+				this.companyList = res.data.list
+				this.companyLoading = false
+			})
+		},
 		getSummaryData({columns,data}){
       let sum = []
       let labelIndex = this.showSelection?1:0
@@ -319,7 +392,7 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			assetApi.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
+			api.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
 				this.list = res.data.list
 				this.dataTotal = res.data.total
 				this.summaryData = res.data.summary
@@ -338,7 +411,8 @@ export default {
 				this.requestParams = {...this.requestParams,[key]:value}
 			}else{
 				this.requestParams = {...this.requestParams,...this.queryParams}
-			}			
+			}
+			this.requestParams.currentPage =1
 			this.getData()
 		},
 		//重置查询条件
@@ -346,7 +420,6 @@ export default {
 			this.$refs.formQuery.resetFields()
 			this.queryParamsLabel = {...initQueryParamsLabel}
 			// this.queryParams = {...this.queryParams,...this.params}
-			this.requestParams.currentPage=1
 			this.query()
 		},
 		openDetails(row){
@@ -361,7 +434,7 @@ export default {
 		},
 		//导出excel
 		exportExcel(){
-			assetApi.exportExcel(this.requestParams)
+			api.exportExcel(this.requestParams)
 		},
 		clear(){
 			this.list = []
@@ -371,7 +444,7 @@ export default {
 			this.$confirm(confirmText,'提示',{
 				type: 'warning'
 			}).then(()=>{
-				assetApi.del(row.id).then(res=>{
+				api.del(row.id).then(res=>{
 					// this.list.splice($index,1)
 					this.reload()
 					this.$message.success('删除成功')

@@ -19,7 +19,7 @@
 						v-model='form.company_id' 
 						placeholder='选择合同所属公司'
 						filterable
-						style='width: 80%'
+						style='width: 100%'
 						:loading='companyLoading'>
 						<el-option
 							v-for='item in companyList'
@@ -36,6 +36,16 @@
 				</el-form-item>
 				<el-form-item label='合同名称' prop='name' >
 					<el-input v-model='form.name' placeholder=''>
+					</el-input>
+				</el-form-item>
+				<el-form-item label='供应商' prop='supplier_id'>
+					<el-input v-model='form.supplier_name' placeholder='点击选择' readonly @click.native='openSelectSupplierDialog'>
+						<i 
+							style='cursor: pointer;'
+							v-show='form.supplier_id' 
+							slot="suffix" 
+							class="el-input__icon el-icon-close" 
+							@click.stop='form.supplier_name="";form.supplier_id=null'></i>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='合同金额' prop='price' >
@@ -84,13 +94,15 @@
 	    <el-button @click="show=false">关 闭</el-button>
   	</div>
 	</el-dialog>
+	<supplier-dialog :in-dialog='inDialog' show-select ref='supplierDialog' @select='selectSupplier'/>
 </div>
 </template>
 <script>
 	import contractApi from '@/api/it/contract'
-	import companyApi from '@/api/yyzx/company'
+	import companyApi from '@/api/sys/company'
 	import attachUpload from '@/components/common/attach/upload'
 	import attachList from '@/components/common/attach/textList'
+	import supplierDialog from '@/components/it/supplier/listDialog'
 
 	const formInit = {		
 		id:null,
@@ -98,6 +110,8 @@
 		company_id:null,
 		no:'',
 		name:'',
+		supplier_id:null,
+		supplier_name:'',
 		price:0,
 		sign_date:new Date(),
 		begin_date:new Date(),
@@ -108,7 +122,8 @@
 	export default {
 		components:{ 
 			attachUpload,
-			attachList
+			attachList,
+			supplierDialog
 		},
 		props:{
 			inDialog:{
@@ -128,6 +143,7 @@
 					no:[{ required:true, message:'请填写合同编号' }],
 					name:[{ required:true, message:'请填写合同名称' }],
 					company_id:[{ required:true, message:'请选择所属公司' }],
+					supplier_id:[{ required:true, message:'请选择供应合作商' }],
 					sign_date:[{ required:true, message:'请填写合同签订日期' }],
 					begin_date:[{ required:true, message:'请填写合同生效日期' }],
 					price:[{ type:'number',message:'请输入数字' }],
@@ -189,8 +205,8 @@
 			},
 			getCompanyList(){
 				this.companyLoading = true
-				companyApi.getEnumList().then(res=>{
-					this.companyList = res.data
+				companyApi.getList({inCompany:1,noPage:1}).then(res=>{
+					this.companyList = res.data.list
 					this.companyLoading = false
 				})
 			},
@@ -264,24 +280,19 @@
 				this.form = { ...formInit }
 				this.clearValidate()
 				return this
-			},	
-			openSelectDepDialog(){
-				this.$refs.depDialog.open().then(that=>{
-					that.initData()
+			},
+			openSelectSupplierDialog(){
+				this.$refs.supplierDialog.open().then(that=>{
+					that.initData({
+						inCompany:1,
+						supplier_type:'CONTRACT'
+					})
 				})
 			},
-			selectDep(data){
-				this.form.dep_id = data.id
-				this.form.dep_name = data.name
-				this.$refs.depDialog.close()
-			},
-			clearParentDep(){
-				this.form.parent_id = null
-				this.form.parent_dep = ''
-			},
-			isSelect(data){
-				let parentIds = (data.parent_ids||'').split(',')
-				return data.id==this.form.id || parentIds.indexOf(this.form.id.toString())>=0
+			selectSupplier(row){
+				this.form.supplier_id = row.id
+				this.form.supplier_name = row.name
+				this.$refs.supplierDialog.close()
 			}
 		}
 	}

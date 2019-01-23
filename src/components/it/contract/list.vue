@@ -102,6 +102,7 @@
 				width='35' />
 			<el-table-column prop='no' label='合同编号' width='110' show-overflow-tooltip/>
 			<el-table-column prop='name' label='合同名称' min-width='120' show-overflow-tooltip/>			
+			<el-table-column prop='supplier_name' label='供应合作商' min-width='120' show-overflow-tooltip/>			
 			<el-table-column prop='price' label='金额' sortable='custom' width='100' align='right'>
 				<template slot-scope='{row}'>
 					<span>￥{{ row.price }}</span>
@@ -225,9 +226,7 @@ export default {
 			queryParams:{
 				no:'',//项目编号				
 				invoice_date_begin:'',
-				invoice_date_end:'',
-				dep_id:'',
-				hasSubDep:1
+				invoice_date_end:''
 			},
 			//数据请求的参数
 			requestParams:{
@@ -235,7 +234,8 @@ export default {
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
-				noPage:this.noPage?1:0
+				noPage:this.noPage?1:0,
+				inCompany:1
 			}
 		}
 	},

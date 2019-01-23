@@ -41,7 +41,10 @@
 			return {
 				filterText:'',
 				loading:false,
-				data:[]
+				data:[],
+				requestParams:{
+					inCompany:1
+				}
 			}
 		},
 		watch: {
@@ -52,7 +55,7 @@
 		methods:{
 			getTreeList(){
 				this.loading = true
-				networkApi.getTreeList().then(res=>{
+				networkApi.getTreeList({...this.requestParams}).then(res=>{
 					this.data = this.$commonJs.toTreeData(res.data.list)
 					this.loading = false
 				})

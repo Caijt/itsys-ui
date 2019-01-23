@@ -91,6 +91,7 @@ export default {
 			'company_id',
 			'record_date',
 			'remarks',
+			'place',
 			'asset_list'
 		])
 		return request({

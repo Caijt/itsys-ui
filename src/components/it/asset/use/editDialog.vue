@@ -76,8 +76,10 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span='8'></el-col>
-				</el-row>					
+				</el-row>		
+				<el-form-item label='使用地点' prop='place'>
+					<el-input v-model='form.place' placeholder='资产在领用后使用的地点'></el-input>
+				</el-form-item>			
 				<el-form-item label='领用备注' prop='remarks' >
 					<el-input type='textarea' v-model='form.remarks' placeholder=''>
 					</el-input>
@@ -110,7 +112,7 @@
 </template>
 <script>
 	import assetUseRecordApi from '@/api/it/assetUseRecord'
-	import companyApi from '@/api/yyzx/company'
+	import companyApi from '@/api/sys/company'
 	import attachUpload from '@/components/common/attach/upload'
 	import attachList from '@/components/common/attach/textList'
 	import editAssetList from './editAssetList'
@@ -128,6 +130,7 @@
 		dep_name:'',
 		employee_id:null,
 		employee_name:'',
+		place:'',
 		remarks:''
 	}
 	export default {
@@ -196,8 +199,8 @@
 			//
 			getCompanyList(){
 				this.companyLoading = true
-				companyApi.getEnumList().then(res=>{
-					this.companyList = res.data
+				companyApi.getList({ inCompany:1,noPage:1 }).then(res=>{
+					this.companyList = res.data.list
 					this.companyLoading = false
 				})
 			},

@@ -39,6 +39,11 @@
 								value-format='yyyy-MM-dd' 
 								style='width: 100%' />
 						</el-form-item>
+					</el-col>					
+					<el-col :span='8'>
+						<el-form-item label='归还地点' prop='place'>
+							<el-input v-model='form.place' placeholder='资产交还后放置的地点'></el-input>
+						</el-form-item>
 					</el-col>
 				</el-row>					
 				<el-form-item label='交还备注' prop='remarks' >
@@ -66,7 +71,7 @@
 </template>
 <script>
 	import assetReturnRecordApi from '@/api/it/assetReturnRecord'
-	import companyApi from '@/api/yyzx/company'
+	import companyApi from '@/api/sys/company'
 	import attachUpload from '@/components/common/attach/upload'
 	import attachList from '@/components/common/attach/textList'
 	import editAssetList from './editAssetList'
@@ -81,7 +86,8 @@
 		input_status:-1	,
 		use_date:new Date(),
 		price:0,
-		amount:1
+		amount:1,
+		place:''
 	}
 	export default {
 		components:{ 
@@ -145,8 +151,8 @@
 			//
 			getCompanyList(){
 				this.companyLoading = true
-				companyApi.getEnumList().then(res=>{
-					this.companyList = res.data
+				companyApi.getList({ inCompany:1,noPage:1 }).then(res=>{
+					this.companyList = res.data.list
 					this.companyLoading = false
 				})
 			},
@@ -218,10 +224,11 @@
 							}
 							let assetList = this.$refs.editAssetList.list.map(item=>{
 								return {
-									asset_id: item.id,
+									asset_id: item.asset_id,
 									amount:item.return_amount,
 									dep_id:item.dep_id,
-									employee_id:item.employee_id
+									employee_id:item.employee_id,
+									detail_id:item.detail_id
 								}
 							})
 							this.form.asset_list = assetList

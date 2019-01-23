@@ -106,6 +106,7 @@
 						<span class='c-link' @click='openRecordDetailDialog(row)'>{{row.amount}}</span>
 					</template>
 			</el-table-column>
+			<el-table-column prop='place' label='使用地点' width='120' show-overflow-tooltip />
 			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />
 			<el-table-column 
 				prop='company_name' 
@@ -221,7 +222,8 @@ export default {
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
-				noPage:this.noPage?1:0
+				noPage:this.noPage?1:0,
+				inCompany:1
 			}
 		}
 	},

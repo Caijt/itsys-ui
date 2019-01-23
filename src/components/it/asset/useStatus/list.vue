@@ -40,11 +40,26 @@
 					<el-form-item label='资产型号' prop='model'>
 						<el-input v-model='queryParams.model' clearable></el-input>
 					</el-form-item>
-					<el-form-item label='领用人' prop='emp'>
-						<el-input v-model='queryParams.emp' clearable></el-input>
+					
+					<el-form-item label='领用部门' prop='dep_id'>
+						<el-input v-model='queryParamsLabel.dep_name' placeholder='点击选择' readonly clearable @click.native='openSelectDepDialog'>
+							<i 
+								style='cursor: pointer;'
+								v-show='queryParams.dep_id' 
+								slot="suffix" 
+								class="el-input__icon el-icon-close" 
+								@click.stop='queryParamsLabel.dep_name="";queryParams.dep_id=""'></i>
+						</el-input>
 					</el-form-item>
-					<el-form-item label='领用部门' prop='emp'>
-						<el-input v-model='queryParams.dep' clearable></el-input>
+					<el-form-item label='子部门' prop='hasSubDep'>
+						<el-switch
+						  v-model="queryParams.hasSubDep"
+						  :inactive-value="0"
+						  :active-value="1">
+						</el-switch>
+					</el-form-item>
+					<el-form-item label='领用员工' prop='employee_name'>
+						<el-input v-model='queryParams.employee_name' clearable></el-input>
 					</el-form-item>
 					<el-form-item label='购买日期'>
 						<el-row style='width:300px'>
@@ -73,7 +88,7 @@
 			highlight-current-row
 			border 
 			stripe
-			row-key='use_id'
+			row-key='detail_id'
 			:size='size'
 			:max-height='maxHeight' 
 			show-summary
@@ -86,76 +101,40 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column v-if='!hideAssetFields' prop='no' label='资产编号' width='100'>
+			<el-table-column v-if='!hideAssetFields' prop='asset_no' label='资产编号' width='100'>
 				<template slot-scope='{row}'>
-					<span class='c-link' @click='openDetails(row)'>{{row.no}}</span>
+					<span class='c-link' @click='openDetails(row)'>{{row.asset_no}}</span>
 				</template>
 			</el-table-column>
 			<el-table-column 
 				v-if='!hideAssetFields'
-				prop='model' 
+				prop='asset_model' 
 				min-width='150' 
 				label='资产型号' 
 				show-overflow-tooltip />
 			<el-table-column 
 				v-if='!hideAssetFields'
-				prop='type_name' 
+				prop='asset_type_name' 
 				width='100' 
 				label='资产类型' 
-				show-overflow-tooltip />			
-			<el-table-column v-if='!hideAssetFields' prop='buy_date' label='购入日期' sortable='custom' width='100' />
-			
-			<el-table-column prop='dep_name' label='领用部门' sortable='custom' min-width='120' show-overflow-tooltip />
-			<el-table-column prop='employee_name' label='领用员工' sortable='custom' min-width='120' show-overflow-tooltip />
-			<el-table-column 
-				prop='use_amount' 
-				label='领用量' 
-				align='right'
-				sortable='custom' 
-				width='90' />
-			<el-table-column v-if='!hideAssetFields' prop='remarks' label='备注' width='120' show-overflow-tooltip />
-			<el-table-column 
-				v-if='!hideAssetFields'
-				prop='supplier_name' 
-				label='供应商' 
-				width='100' 
-				show-overflow-tooltip />
-			<el-table-column 
-				v-if='!hideAssetFields'
-				prop='sn' 
-				label='序列号' 
-				width='100' 
-				show-overflow-tooltip />
+				show-overflow-tooltip />		
 			<el-table-column 
 				v-if='!hideAssetFields'
 				prop='company_name' 
 				min-width='120' 
 				label='资产所属公司' 
-				show-overflow-tooltip />		
+				show-overflow-tooltip />			
+			<el-table-column prop='use_date' label='领用日期' sortable='custom' width='100' />			
+			<el-table-column prop='dep_name' label='领用部门' sortable='custom' width='120' show-overflow-tooltip />
+			<el-table-column prop='employee_name' label='领用员工' sortable='custom' width='120' show-overflow-tooltip />
+			<el-table-column prop='use_place' label='使用地点' min-width='120' show-overflow-tooltip />
+			<el-table-column prop='use_remarks' label='领用备注' min-width='120' show-overflow-tooltip />
 			<el-table-column 
-				v-if='!hideAssetFields'
-				prop='create_user_name' 
-				label='录入员' />
-			<el-table-column 
-				v-if='!hideAssetFields'
-				prop='create_time' 
-				width='120' 
-				label='创建时间' 
-				sortable='custom'>
-				<template slot-scope='{ row }'>
-					<span>{{ row.create_time | formatDate }}</span>
-				</template>
-			</el-table-column>
-			<el-table-column 
-				v-if='!hideAssetFields'
-				prop='update_time' 
-				label='最近更新时间' 
-				width='120' 
-				sortable='custom'>
-				<template slot-scope='{row}'>
-					<span>{{ row.update_time | formatDate }}</span>
-				</template>
-			</el-table-column>
+				prop='use_amount' 
+				label='使用数量' 
+				align='right'
+				sortable='custom' 
+				width='100' />				
 			<!-- slot[column] -->
 			<slot name='column'></slot>
 			<!--/ slot[column]-->
@@ -173,14 +152,20 @@
 	    @current-change='getData' />
 	  <!--/ 分页 -->
 	  <asset-details v-if='!hideAssetFields' :in-dialog='inDialog' ref='assetDetails' />
+	  <dep-dialog :in-dialog='inDialog' ref='depDialog' show-select @select='selectDep' />
 	</div>
 </template>
 <script>
 import assetApi from '@/api/it/assetUseStatus'
 import assetDetails from '@/components/it/asset/details'
+import depDialog from '@/components/hr/dep/treeDialog'
+
+const initQueryParamsLabel = {
+	dep_name:''
+}
 
 export default {
-	components:{ assetDetails },
+	components:{ assetDetails,depDialog },
 	props:{
 		size:{
 			type:String,
@@ -234,9 +219,12 @@ export default {
 			selectionList:[],
 			queryShowMore:this.showMore,
 			initParams:{},
+			queryParamsLabel:{
+				dep_name:''
+			},
 			//查询条件字段
 			queryParams:{
-				no:'',//项目编号
+				asset_no:'',//项目编号
 				project_name:'',//项目名称
 				invoice_no:'',//开票号
 				remarks:'',
@@ -245,8 +233,7 @@ export default {
 				customer_name:'',//客户单位				
 				company_name:'',//业绩公司
 				salesman:'',//业务员
-				invoice_date_begin:'',
-				invoice_date_end:''
+				hasSubDep:1
 			},
 			//数据请求的参数
 			requestParams:{
@@ -254,7 +241,8 @@ export default {
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
-				noPage:this.noPage?1:0
+				noPage:this.noPage?1:0,
+				inCompany:1
 			}
 		}
 	},
@@ -331,7 +319,7 @@ export default {
 		},
 		openDetails(row){
 			this.$refs.assetDetails.open().then(that=>{
-				that.initData(row)
+				that.getDetails(row.asset_id)
 			})
 		},
 		sortChange({prop,order}){
@@ -345,6 +333,16 @@ export default {
 		},
 		clear(){
 			this.list = []
+		},
+		openSelectDepDialog(){
+			this.$refs.depDialog.open().then(that=>{
+				that.initData()
+			})
+		},
+		selectDep(data){
+			this.queryParamsLabel.dep_name = data.name
+			this.queryParams.dep_id = data.id
+			this.$refs.depDialog.close()
 		}
 	}
 }
