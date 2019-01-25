@@ -167,7 +167,7 @@
 			},
 			assign(data){
 				this.form = { ...this.form, ...data }
-				this.form.price = Number(this.form.price)
+				this.form.sex = Number(this.form.sex)
 				return this
 			},
 			save(status=0){
