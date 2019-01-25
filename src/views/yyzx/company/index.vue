@@ -24,7 +24,7 @@
 			<el-table-column prop='name' label='公司名称' min-width='200'></el-table-column>
 			<el-table-column prop='is_disabled' label='状态' width='80' align='center'>
 				<template slot-scope='{row}'>
-					<el-tag size='small' type='info' v-if='row.is_disabled'>禁用</el-tag>
+					<el-tag size='small' type='info' v-if='row.is_disabled==0'>禁用</el-tag>
 					<el-tag size='small' type='success' v-else>启用</el-tag>
 				</template>
 			</el-table-column>
