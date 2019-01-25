@@ -207,6 +207,7 @@
 			},
 			assign(data){
 				this.form = { ...this.form, ...data }
+				this.form.status = Number(this.form.status)
 				this.form.price = Number(this.form.price)
 				return this
 			},

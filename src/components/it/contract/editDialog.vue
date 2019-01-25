@@ -229,6 +229,7 @@
 			},
 			initData(data){
 				this.assign(data)
+
 				this.attachParams.table_id = data.id
 				if(data.attach_ids){
 					this.$refs.attachList.initData({ attach_ids:data.attach_ids})
@@ -237,6 +238,7 @@
 			},
 			assign(data){
 				this.form = { ...this.form, ...data }
+				this.form.is_remind = Number(this.form.is_remind)
 				this.form.price = Number(this.form.price)
 				return this
 			},

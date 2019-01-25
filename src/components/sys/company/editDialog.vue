@@ -129,7 +129,8 @@
 				this.clearValidate()
 			},
 			assign(data){
-				this.form = { ...this.form, ...data }		
+				this.form = { ...this.form, ...data }	
+				this.form.is_remind = Number(this.form.is_remind)	
 				return this
 			},
 			save(status=0){

@@ -109,7 +109,7 @@
 		},
 		methods:{
 			download(){
-				this.$message.success('系统还在完善中，很快就开放下载...')
+				this.$message.success('目前系统还有一些细节方面需要再完善完善，请再等待一些时间...')
 			}
 		}
 	}

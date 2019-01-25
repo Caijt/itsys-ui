@@ -11,7 +11,7 @@ const sys = {
 	getters: {
 	},
 	mutations: {
-		SET_INITCONFIG( state, initConfig) {
+		SET_INITCONFIG( state, initConfig ) {
 			state.initConfig = initConfig
 		},
 		SET_VERSION( state, version) {

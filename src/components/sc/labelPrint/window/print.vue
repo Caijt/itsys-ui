@@ -15,7 +15,7 @@
 				<div class="inside-box" >
 					<!-- <img src='{$Think.IMG_PATH}common/sz.jpg' style='width:200px'/> -->
 					<div class='box-content'>
-						<img class='qrcode' :src="getQrcodeImg(item.code)" v-on:load='imgLoad'/>
+						<img class='qrcode' v-on:load='imgLoad'/>
 						<div class='box-text'>
 							<div style='display: flex'>
 								<div style='white-space: nowrap;'>系列：</div>

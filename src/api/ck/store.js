@@ -92,7 +92,7 @@ export default {
 	getTotal (params){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
-			url: BASE_URL + '/getTotal ',
+			url: BASE_URL + '/getTotal',
 			method:'get',
 			params
 		})
