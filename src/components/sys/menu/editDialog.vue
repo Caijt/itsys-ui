@@ -148,7 +148,7 @@
 			},
 			assign(data){
 				this.form = { ...this.form, ...data }
-				this.form.price = Number(this.form.price)
+				this.form.order = Number(this.form.order)
 				return this
 			},
 			save(status=0){

@@ -4,8 +4,8 @@
 			<el-row>
 				<el-col :lg='{span:18,offset:3}' :sm='{span:20,offset:2}' :xs='{span:21,offset:1}'>
 					<div style='text-align: center' class="actor">Hello,IT </div>
-					<h1 style='font-size:62px;margin-bottom: 0px'>IT部门信息管理系统</h1>
-					<p style='margin:20px 0px 30px;'>IT资产管理 ● 合同管理 ● 网络结构管理 ● 供应商管理 ● 账号管理</p>
+					<h1 class='demo-title'>IT部门信息管理系统</h1>
+					<p class='demo-sub-title' style='margin:20px 0px 30px;'>IT资产管理 ● 合同管理 ● 网络结构管理 ● 供应商管理 ● 账号管理</p>
 					
 					<div style='padding:20px 0px'>
 						<el-button round size='big'  type='success' @click='$router.push("/login")'>我要体验</el-button>
@@ -132,7 +132,15 @@
 		-webkit-box-shadow: inset 0 3px 7px rgba(0,0,0,.2),inset 0 -3px 7px rgba(0,0,0,.2);
 		-moz-box-shadow: inset 0 3px 7px rgba(0,0,0,.2),inset 0 -3px 7px rgba(0,0,0,.2);
 		box-shadow: inset 0 3px 7px rgba(0,0,0,.2),inset 0 -3px 7px rgba(0,0,0,.2);
+		.demo .title{
+			font-size:25px !important;
+			margin-top: -15px !important;
+		}
 	}
+	.demo-title{
+			font-size:62px;
+			margin-bottom: 0px;
+		}
 	.actor{
 		font-size: 80px;
 		min-height:65px;
@@ -152,10 +160,7 @@
 	.banner-desc h2{font-size:72px;margin:0;color:#fff}
 	.banner-desc p{font-size:14px;opacity:.8;width:420px;line-height:1.8;padding-left:3px}
 	@keyframes blink{0%{opacity:0}to{opacity:1}}
-	.demo .title{
-		font-size:25px !important;
-		margin-top: -15px !important;
-	}
+	
 	.demo-text{
 		padding:15px 0;
 		text-indent:2em;
@@ -166,5 +171,25 @@
 	}
 	.demo-section{
 		padding:30px 0;
+	}
+	@media (max-width:768px){
+		.demo-bg{
+			.demo-title{
+				font-size:42px;
+			}
+			.actor{
+				font-size: 60px;
+				min-height:65px;
+			}
+			.actor:after{
+				width:6px;	
+				height:55px;
+				vertical-align:-5px;
+			}
+			.demo-sub-title{
+				
+			}
+		}
+		
 	}
 </style>
