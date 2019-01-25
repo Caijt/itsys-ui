@@ -83,11 +83,7 @@
 				form:{ ...formInit },
 				rules:{
 					name:[{ required:true, message:'请填写部门名称' }],
-					price:[{ type:'number',message:'请输入数字' }],
-					amount:[
-						{ required:true,message:'请填写资产数量'},
-						{ validator:this.$commonJs.validateRules.et0}
-					]
+					order:[{ type:'number',message:'请输入数字' }]
 				},
 				params:{
 					no:null
@@ -165,7 +161,7 @@
 			},
 			assign(data){
 				this.form = { ...this.form, ...data }
-				this.form.price = Number(this.form.price)
+				this.form.order = Number(this.form.order)
 				return this
 			},
 			save(status=0){
