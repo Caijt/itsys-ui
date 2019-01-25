@@ -219,7 +219,7 @@ export default {
 			params
 		})
 	},
-	getTimeStatistic(params){
+	getTimeStatistic(params={}){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getTimeStatistic',

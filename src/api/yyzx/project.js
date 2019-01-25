@@ -150,5 +150,13 @@ export default {
 				field,keyword
 			}
 		})
-	}
+	},
+	getTimeStatistic(params={}){
+		params = commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getTimeStatistic',
+			method:'get',
+			params
+		})
+	},
 }

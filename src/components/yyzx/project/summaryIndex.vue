@@ -78,7 +78,7 @@
 			    ]
 				});
 				this.echarts.showLoading()
-				projectApi.getNearMonthSummary().then(res=>{
+				projectApi.getTimeStatistic().then(res=>{
 					this.echarts.setOption({	
 						dataset:{
 				    	source:res.data

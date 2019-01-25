@@ -165,8 +165,8 @@
 			    ]
 				});
 				this.echarts.showLoading()
-				let orderData =	orderApi.getNearMonthSummary()
-				let logData =	logApi.getNearMonthSummary()
+				let orderData =	orderApi.getTimeStatistic()
+				let logData =	logApi.getTimeStatistic()
 				Promise.all([orderData,logData]).then(([o,l])=>{
 					this.echarts.setOption({	
 						dataset:[
@@ -221,7 +221,7 @@
 			    ]
 				});
 				this.echarts2.showLoading()
-				logApi.getNearMonthSummary().then(res=>{
+				logApi.getTimeStatistic().then(res=>{
 					this.echarts2.setOption({	
 						dataset:{
 				    	source:res.data

@@ -125,5 +125,13 @@ export default {
 		params = commonJs.obj.removeNullKey(params)
 		let queryStr=qs.stringify(params)
 		window.open( BASE_URL+'/exportSummaryExcel?'+queryStr );
-	}
+	},
+	getTimeStatistic(params={}){
+		params = commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getTimeStatistic',
+			method:'get',
+			params
+		})
+	},
 }
