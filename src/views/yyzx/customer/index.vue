@@ -25,8 +25,8 @@
 			<el-table-column prop='type' label='客户类别' width='100px'></el-table-column>
 			<el-table-column prop='is_disabled' label='状态' width='80' align='center'>
 				<template slot-scope='{row}'>
-					<el-tag size='small' type='info' v-if='row.is_disabled==0'>禁用</el-tag>
-					<el-tag size='small' type='success' v-else>启用</el-tag>
+					<el-tag size='small' type='success' v-if='row.is_disabled==0'>启用</el-tag>
+					<el-tag size='small' type='info'  v-else>禁用</el-tag>
 				</template>
 			</el-table-column>
 			<el-table-column prop='create_time' label='创建时间' align='center' width='140'>
