@@ -130,7 +130,7 @@
 			},
 			assign(data){
 				this.form = { ...this.form, ...data }	
-				this.form.is_remind = Number(this.form.is_remind)	
+				this.form.is_disabled = Number(this.form.is_disabled)	
 				return this
 			},
 			save(status=0){
