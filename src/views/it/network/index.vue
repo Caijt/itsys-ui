@@ -4,8 +4,8 @@
 			<el-button type='primary' @click='create()'>创建网络节点</el-button>
 		</div>		
 		<el-row :gutter='20'>
-			<el-col :span='16'>
-				<network-list ref='networkList' @node-click='nodeClick'>
+			<el-col :span='16'>				
+				<network-list height='500px' ref='networkList' @node-click='nodeClick'>
 					<template slot='right' slot-scope='{node,data}'>
 						<span>
 		          <el-button

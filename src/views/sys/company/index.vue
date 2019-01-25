@@ -2,7 +2,7 @@
 	<div>
 		<div style='margin:10px 0px'>
 			<el-button-group>
-				<el-button type='primary' @click='create' icon='el-icon-edit'>供应商录入</el-button>
+				<el-button type='primary' @click='create' icon='el-icon-edit'>创建公司</el-button>
 			</el-button-group>
 		</div>
 		<list ref='list' init show-selection>
@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import list from '@/components/it/supplier/list'
-import editDialog from '@/components/it/supplier/editDialog'
+import list from '@/components/sys/company/list'
+import editDialog from '@/components/sys/company/editDialog'
 
 export default {
 	components:{ 
@@ -28,10 +28,7 @@ export default {
 	},
 	data(){
 		return {
-			toInvoiceProjectTotal:0,
-			toInvoiceProjectLoading: true,
-			companyList:[],
-			companyLoading:true
+		
 		}
 	},
 	computed:{
@@ -49,7 +46,7 @@ export default {
 		},
 		create(){
 			this.$refs.editDialog.open().then(that=>{
-				that.create()
+				
 			})
 		},
 		edit(row){
@@ -67,23 +64,6 @@ export default {
 		reload(){
 			this.$refs.list.reload()
 		},
-		print({row}){
-			this.$refs.printLabel.open().then(that=>{
-				that.getData({ids:row.id})
-			})
-		},
-		printBatch(){
-			if(this.$refs.list.selectionList.length==0){
-				this.$message.warning('未选择资产数据')
-				return false
-			}
-			let ids = this.$refs.list.selectionList.map(d=>{
-				return d.id
-			})
-			this.$refs.printLabel.open().then(that=>{
-				that.getData({ids:ids.join(',')})
-			})
-		},
 		copy({row}){
 			this.$refs.editDialog.open().then(that=>{
 				that.create().then(res=>{
@@ -91,9 +71,6 @@ export default {
 					that.assign(copyData).clearValidate()
 				})
 			})
-		},
-		test2(){
-			this.$refs.list.$refs.tableList.clearSelection()
 		}
 	}
 }

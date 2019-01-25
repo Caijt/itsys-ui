@@ -7,7 +7,7 @@
       :rules="loginRules" 
       ref="loginForm" 
       class="card-box login-form">
-      <h3 class="title">金刚防火窗产供销管理系统</h3>
+      <h3 class="title">{{$store.state.sys.title}}</h3>
       <el-form-item prop="username">
         <el-input name="username"   type="text" v-model.trim="loginForm.username" autoComplete="on" placeholder="登录用户名" />
       </el-form-item>
@@ -20,13 +20,14 @@
           登录
         </el-button>
       </el-form-item>
-      <div class="tips">Copyright © 2019 广东金刚玻璃科技股份有限公司</div>
+      <div class="tips">Copyright © {{ new Date().getFullYear() }} {{$store.state.sys.company}}</div>
     </el-form>    
   </div>
 </template>
 
 <script>
   import sysConfigApi from '@/api/sys/config'
+
 export default {
   name: 'login',
   data() {
@@ -43,18 +44,20 @@ export default {
       pwdType: 'password'
     }
   },
+  computed:{
+  },
   created(){
-    // sysConfigApi.getValue('version').then(res=>{
-    //   // let remoteVersion = res.data
-    //   // if(remoteVersion !==this.$refs.version.innerText){
-    //   //   this.$confirm('检测本地系统版本与服务器系统版本不一致，是否进行刷新加载更新内容？','更新提示',{
-    //   //     type:'warning',
-    //   //     confirmButtonText: '刷新',
-    //   //   }).then(()=>{
-    //   //     // this.$store.
-    //   //     // window.location.reload()
-    //   //   })
-    //   // }
+    // sysConfigApi.getValue('login').then(res=>{
+    //   let remoteVersion = res.data
+    //   if(remoteVersion !==this.$refs.version.innerText){
+    //     this.$confirm('检测本地系统版本与服务器系统版本不一致，是否进行刷新加载更新内容？','更新提示',{
+    //       type:'warning',
+    //       confirmButtonText: '刷新',
+    //     }).then(()=>{
+    //       // this.$store.
+    //       // window.location.reload()
+    //     })
+    //   }
     // })
   },
   methods: {

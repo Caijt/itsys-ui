@@ -61,7 +61,7 @@
 					<el-form-item label='领用员工' prop='employee_name'>
 						<el-input v-model='queryParams.employee_name' clearable></el-input>
 					</el-form-item>
-					<el-form-item label='购买日期'>
+					<el-form-item label='入库日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
 								<el-form-item prop='buy_date_begin'>

@@ -282,7 +282,7 @@ export default {
 			this.list = []
 		},
 		del(row){
-			let confirmText = '确定删除此库存种类吗？'
+			let confirmText = '确定删除此库存种类吗？删除后会自动清除此库存种类资产的关联关系！'
 			this.$confirm(confirmText,'提示',{
 				type: 'warning'
 			}).then(()=>{

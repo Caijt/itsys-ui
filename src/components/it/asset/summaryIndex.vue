@@ -3,7 +3,7 @@
 		<el-tabs value="summary">
 			<el-tab-pane label="近期资产统计" name="summary">
 				<el-alert 
-			    title="以下数据仅统计近期购买的资产，如需更详细的统计数据，请到相关页面进行查询"
+			    title="以下数据仅统计近期入库的资产，如需更详细的统计数据，请到相关页面进行查询"
 			    type="success"
 			    style='margin-bottom:10px'>
 			    <div>

@@ -50,6 +50,10 @@ export default {
 			})
 		},
 		edit(row){
+			if(row.id==-1){
+				this.$message.error('该用户为系统超级用户，禁止修改！')
+				return false
+			}
 			this.$refs.editDialog.open().then(that=>{
 				that.initData(row)
 			})
@@ -64,23 +68,6 @@ export default {
 		reload(){
 			this.$refs.list.reload()
 		},
-		print({row}){
-			this.$refs.printLabel.open().then(that=>{
-				that.getData({ids:row.id})
-			})
-		},
-		printBatch(){
-			if(this.$refs.list.selectionList.length==0){
-				this.$message.warning('未选择资产数据')
-				return false
-			}
-			let ids = this.$refs.list.selectionList.map(d=>{
-				return d.id
-			})
-			this.$refs.printLabel.open().then(that=>{
-				that.getData({ids:ids.join(',')})
-			})
-		},
 		copy({row}){
 			this.$refs.editDialog.open().then(that=>{
 				that.create().then(res=>{
@@ -89,9 +76,6 @@ export default {
 				})
 			})
 		},
-		test2(){
-			this.$refs.list.$refs.tableList.clearSelection()
-		}
 	}
 }
 </script>

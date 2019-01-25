@@ -2,7 +2,7 @@
 	<div>
 		<div style='margin:10px 0px'>
 			<el-button-group>
-				<el-button type='primary' @click='create' icon='el-icon-edit'>供应商录入</el-button>
+				<el-button type='primary' @click='create' icon='el-icon-edit'>创建更新记录</el-button>
 			</el-button-group>
 		</div>
 		<list ref='list' init show-selection>
@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import list from '@/components/it/supplier/list'
-import editDialog from '@/components/it/supplier/editDialog'
+import list from '@/components/sys/updateRecord/list'
+import editDialog from '@/components/sys/updateRecord/editDialog'
 
 export default {
 	components:{ 
@@ -28,17 +28,10 @@ export default {
 	},
 	data(){
 		return {
-			toInvoiceProjectTotal:0,
-			toInvoiceProjectLoading: true,
-			companyList:[],
-			companyLoading:true
 		}
 	},
 	computed:{
 		//表单是否是编辑状态
-		isFormEdit(){
-			return this.form.id!=null
-		}
 	},
 	mounted(){
 		
@@ -66,23 +59,6 @@ export default {
 		},
 		reload(){
 			this.$refs.list.reload()
-		},
-		print({row}){
-			this.$refs.printLabel.open().then(that=>{
-				that.getData({ids:row.id})
-			})
-		},
-		printBatch(){
-			if(this.$refs.list.selectionList.length==0){
-				this.$message.warning('未选择资产数据')
-				return false
-			}
-			let ids = this.$refs.list.selectionList.map(d=>{
-				return d.id
-			})
-			this.$refs.printLabel.open().then(that=>{
-				that.getData({ids:ids.join(',')})
-			})
 		},
 		copy({row}){
 			this.$refs.editDialog.open().then(that=>{

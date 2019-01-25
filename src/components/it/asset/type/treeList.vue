@@ -6,24 +6,26 @@
 		  v-model="filterText">
 			</el-input>
 		</div>
-		<el-tree 
-			node-key="id"
-			:show-checkbox='showCheckbox'
-			:expand-on-click-node="false"
-			highlight-current 
-			default-expand-all 
-			:data='data' 
-			:props='{label:"name"}' 
-			ref='treeList'
-			:filter-node-method="filterNode"
-			@node-click='nodeClick'>
-			<span class='_tree-node' slot-scope='{node,data}'>
-				<span style='font-size:14px'>{{ node.label}}</span>
-				<span>
-					<slot name='right' :data='data' :node='node'></slot>
+		<div :style='treeStyle'>
+			<el-tree 
+				node-key="id"
+				:show-checkbox='showCheckbox'
+				:expand-on-click-node="false"
+				highlight-current 
+				default-expand-all 
+				:data='data' 
+				:props='{label:"name"}' 
+				ref='treeList'
+				:filter-node-method="filterNode"
+				@node-click='nodeClick'>
+				<span class='_tree-node' slot-scope='{node,data}'>
+					<span style='font-size:14px'>{{ node.label}}</span>
+					<span>
+						<slot name='right' :data='data' :node='node'></slot>
+					</span>
 				</span>
-			</span>
-		</el-tree>
+			</el-tree>
+		</div>
 	</div>
 
 </template>
@@ -33,7 +35,11 @@
 		props:{
 			showCheckbox:{
 				type:Boolean,
-				defalut:false
+				default:false
+			},
+			height:{
+				type:String,
+				default:'auto'
 			}
 		},
 		data(){
@@ -41,6 +47,19 @@
 				filterText:'',
 				loading:false,
 				data:[]
+			}
+		},
+		computed:{
+			treeStyle(){
+				if(this.height=='auto'){
+					return {}
+				}else{
+					return {
+						height:this.height,
+						paddingRight:'15px',
+						overflow:'auto'
+					}
+				}
 			}
 		},
 		watch: {

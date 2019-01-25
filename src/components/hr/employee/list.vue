@@ -77,7 +77,7 @@
 			@sort-change='sortChange'>			
 			<el-table-column 
 				fixed
-				v-if='showSelection'
+				v-if='showCheckbox'
 				type='selection' 
 				align='center' 
 				width='35' />
@@ -148,7 +148,7 @@ export default {
 			default:''
 		},
 		maxHeight:{
-			default:350
+			default:400
 		},
 		params:{
 			default:()=>({})
@@ -173,7 +173,7 @@ export default {
 			type:Boolean,
 			default:false
 		},
-		showSelection:{
+		showCheckbox:{
 			type:Boolean,
 			default:false
 		}
@@ -241,7 +241,7 @@ export default {
 		},
 		getSummaryData({columns,data}){
       let sum = []
-      let labelIndex = this.showSelection?1:0
+      let labelIndex = this.showCheckbox?1:0
       columns.forEach((column,i)=>{
         if(i==labelIndex){
           sum[i]='合计'

@@ -275,6 +275,10 @@ export default {
 			this.list = []
 		},
 		del(row){
+			if(row.id==-1){
+				this.$message.error('该用户为系统超级用户，禁止删除！')
+				return false
+			}
 			let confirmText = '确定删除此用户吗？'
 			this.$confirm(confirmText,'提示',{
 				type: 'warning'

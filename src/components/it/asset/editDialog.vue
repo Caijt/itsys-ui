@@ -48,29 +48,13 @@
 				<el-form-item label='标识号' prop='diy_no' >
 					<el-input v-model='form.diy_no' placeholder='企业内部一些自定义的标识号'>
 					</el-input>
-				</el-form-item>
-				<el-form-item label='供应商' prop='supplier_id'>
-					<el-input v-model='form.supplier_name' placeholder='点击选择' readonly @click.native='openSelectSupplierDialog'>
-						<i 
-							style='cursor: pointer;'
-							v-show='form.supplier_id' 
-							slot="suffix" 
-							class="el-input__icon el-icon-close" 
-							@click.stop='form.supplier_name="";form.supplier_id=null'></i>
-					</el-input>
-				</el-form-item>
-				<el-form-item label='购入日期' prop='buy_date'>
+				</el-form-item>				
+				<el-form-item label='入库日期' prop='inbound_date'>
 					<el-date-picker 
-						v-model='form.buy_date' 
+						v-model='form.inbound_date' 
 						value-format='yyyy-MM-dd' 
 						style='width: 30%' />
-				</el-form-item>
-				<el-form-item label='价格' prop='price' >
-					<el-input v-model.number='form.price' style='width: 30%'>
-						<span slot="prefix">￥</span>
-					</el-input>
-					<span style='font-size: 12px'>该资产总价格，非单价</span>
-				</el-form-item>
+				</el-form-item>				
 				<el-form-item label='入库数量' prop='amount' >
 					<el-input v-model.number='form.amount' style='width: 30%'>
 					</el-input>
@@ -100,14 +84,29 @@
 				</el-form-item>
 					</el-col>
 				</el-row>
-				
+				<el-form-item label='供应商' prop='supplier_id'>
+					<el-input v-model='form.supplier_name' placeholder='点击选择' readonly @click.native='openSelectSupplierDialog'>
+						<i 
+							style='cursor: pointer;'
+							v-show='form.supplier_id' 
+							slot="suffix" 
+							class="el-input__icon el-icon-close" 
+							@click.stop='form.supplier_name="";form.supplier_id=null'></i>
+					</el-input>
+				</el-form-item>
+				<el-form-item label='价格' prop='price' >
+					<el-input v-model.number='form.price' style='width: 30%'>
+						<span slot="prefix">￥</span>
+					</el-input>
+					<span style='font-size: 12px'>该资产总价格，非单价</span>
+				</el-form-item>
 				<el-form-item label='序列号' prop='sn' >
 					<el-input v-model='form.sn' placeholder='资产出厂编号' style='width: 30%'>
 					</el-input>
 					<span style='font-size: 12px'>如果涉及产品保修，请务必填写</span>
 				</el-form-item>
 				<el-form-item label='备注' prop='remarks' >
-					<el-input v-model='form.remarks' placeholder='资产其它备注信息'>
+					<el-input type='textarea' v-model='form.remarks' placeholder='资产其它备注信息'>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='附件' prop='remarks'>
@@ -145,7 +144,7 @@
 		no:'',
 		input_status:-1	,
 		action:null,
-		buy_date:new Date(),
+		inbound_date:new Date(),
 		price:0,
 		amount:1,
 		type_name:'',
@@ -184,7 +183,7 @@
 					type_id:[{ required:true, message:'请选择资产类型' }],	
 					stock_warning_id:[{ required:true, message:'请选择库存种类' }],	
 					model:[{ required:true, message:'请填写资产型号' }],
-					buy_date:[{ required:true, message:'请填写购买日期' }],
+					inbound_date:[{ required:true, message:'请填写入库日期' }],
 					price:[{ type:'number',message:'请输入数字' }],
 					amount:[
 						{ required:true,message:'请填写资产数量'},

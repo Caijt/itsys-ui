@@ -51,8 +51,8 @@
 					</el-row>
 					<el-row :gutter='10'>
 						<el-col :span='8'>
-							<el-form-item label='购买日期' >
-								<span>{{form.buy_date}}</span>
+							<el-form-item label='入库日期' >
+								<span>{{form.inbound_date}}</span>
 							</el-form-item>
 						</el-col>
 						<el-col :span='8'>

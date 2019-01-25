@@ -62,12 +62,18 @@ export default {
 			params
 		})
 	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
+	save(data){
+		data = commonJs.obj.copyByKey(data,[
+			'id',
+			'action',
+			'name',
+			'address',
+			'is_disabled'
+		])
 		return request({
-			url: BASE_URL + '/getProductList',
-			method:'get',
-			params
+			url: BASE_URL + '/save',
+			method:'post',
+			data
 		})
 	},
 	create(){
@@ -105,65 +111,12 @@ export default {
 			}
 		})
 	},
-	undo(id){
-		return request({
-			url: BASE_URL + '/undo',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undoReview(id){
-		return request({
-			url: BASE_URL + '/undoReview',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
 	getSummaryData(params){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getSummaryData',
 			method:'get',
 			params
-		})
-	},
-	loadFinish(task_id){
-		return request({
-			url: BASE_URL + '/loadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	undoLoadFinish(task_id){
-		return request({
-			url: BASE_URL + '/undoLoadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	review(data){
-		data = commonJs.obj.copyByKey(data,['id'])
-		return request({
-			url: BASE_URL + '/review',
-			method:'post',
-			data
-		})
-	},
-	driverSupply(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id','driver_unit','driver_no','driver_name','driver_tel'])
-		return request({
-			url: BASE_URL + '/driverSupply',
-			method:'post',
-			data
 		})
 	},
 	exportExcel(params){
@@ -185,6 +138,15 @@ export default {
 			url: BASE_URL + '/getTimeStatistic',
 			method:'get',
 			params
+		})
+	},
+	checkNameUnique(name,id=null){
+		return request({
+			url: BASE_URL + '/checkNameUnique',
+			method:'get',
+			params:{
+				name,id
+			}
 		})
 	},
 }

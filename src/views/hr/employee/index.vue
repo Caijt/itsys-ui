@@ -7,10 +7,10 @@
 		</div>
 		<el-row :gutter='10'>
 			<el-col :span='6'>
-				<dep-list ref='depList' @node-click='nodeClick'/>
+				<dep-list height='400px' ref='depList' @node-click='nodeClick'/>
 			</el-col>
 			<el-col :span='18'>
-				<employee-list ref='employeeList'>
+				<employee-list show-checkbox ref='employeeList'>
 					<el-table-column fixed='right' label='操作' align='center' width='70' slot='column'>
 						<template slot-scope='{row}'>
 							<el-button  size='mini' type='text' icon='el-icon-edit' @click='edit(row)' />	

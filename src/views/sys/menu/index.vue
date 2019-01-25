@@ -1,11 +1,17 @@
 <template>
 	<div>
-		<div style='margin-bottom: 10px'>
+		<el-alert
+	    title="警告"
+	    type="warning"
+	    description="以下为系统菜单数据，非系统开发人员请不要随意修改菜单信息，否则会导致系统无法打开！"
+	    show-icon>
+	  </el-alert>
+		<div style='margin:10px 0px'>
 			<el-button type='primary' @click='create()'>创建菜单</el-button>
 		</div>		
 		<el-row :gutter='20'>
 			<el-col :span='16'>
-				<network-list ref='networkList' @node-click='nodeClick'>
+				<menu-list height='400px' ref='menuList' @node-click='nodeClick'>
 					<template slot='right' slot-scope='{node,data}'>
 						<span>
 		          <el-button
@@ -25,7 +31,7 @@
 		          </el-button>
 		        </span>
 					</template>
-				</network-list>
+				</menu-list>				
 			</el-col>
 			<el-col :span='8' style='height:100%'>
 				<el-card class="box-card" shadow='hover'>
@@ -36,7 +42,7 @@
 				  <el-form 
 					ref='form' label-width='70px' size='mini' class='c-form-text'>
 						<el-form-item label='菜单名称'>
-							<span>{{ nodeData.name}}</span>
+							<span>{{ nodeData.title}}</span>
 						</el-form-item>
 						<el-form-item label='菜单路径'>
 							<span>{{ nodeData.path }}</span>
@@ -61,11 +67,11 @@
 	</div>
 </template>
 <script>
-	import networkList from '@/components/it/network/treeList'
-	import editDialog from '@/components/it/network/editDialog'
+	import menuList from '@/components/sys/menu/treeList'
+	import editDialog from '@/components/sys/menu/editDialog'
 
 	export default {
-		components:{ networkList, editDialog },
+		components:{ menuList, editDialog },
 		data(){
 			return {
 				form:{},
@@ -73,39 +79,37 @@
 			}
 		},
 		mounted(){
-			this.$refs.networkList.initData()
+			this.$refs.menuList.initData()
 		},
 		methods:{
-			create(data=null){
+			create(data = null){
 				this.$refs.editDialog.open().then(that=>{
-					that.create().then(()=>{
-						if(data){
-							that.assign({
-								parent_id:data.id,
-								parent_node:data.name
-							})
-						}
-					})
+					if(data){
+						that.assign({
+							parent_id:data.id,
+							parent_menu:data.title
+						})
+					}
 				})
 			},
 			edit(node,data){
 				let editData = {...data}
-				editData.parent_node = node.parent.data.name
+				editData.parent_menu = node.parent.data.title
 				this.$refs.editDialog.open().then(that=>{
 					that.initData(editData)
 				})
 			},
 			del(node,data){
-				this.$refs.networkList.del(node,data)
+				this.$refs.menuList.del(node,data)
 			},
 			reload(){
-				this.$refs.networkList.reload()
+				this.$refs.menuList.reload()
 			},	
 			nodeClick(data){
 				this.nodeData = data
 			},
 			onlyShow(){
-				this.$refs.networkList.filter(this.nodeData.name)
+				this.$refs.menuList.filter(this.nodeData.title)
 			}
 		}
 	}

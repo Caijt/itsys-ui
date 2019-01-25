@@ -9,7 +9,8 @@ const user = {
 		name : '',
 		menus: [],
 		routers:[],
-		version:''
+		version:'',
+		sysTitle:''
 	},
 	getters: {
 		hasUserInfo:state=>{
@@ -47,14 +48,17 @@ const user = {
 				}).catch(error=>reject(error))
 			})
 		},
-		getUserInfo({ commit }) {
+		getUserInfo({ commit,dispatch }) {
 			return new Promise(( resolve, reject )=>{
 				authApi.getUserInfo().then( res => {
 					commit('SET_USERID',res.data.userid)
 					commit('SET_NAME',res.data.username)
 					commit('SET_MENUS',res.data.menuList)
 					resolve(res)
-				}).catch(error=>reject(error))
+				}).catch(error=>{
+					dispatch('logout')
+					reject(error)
+				})
 			})
 		},
 		logout({ commit }) {

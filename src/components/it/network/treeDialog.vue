@@ -1,7 +1,7 @@
 <template>
 	<el-dialog 
 		class='c-dialog-fixed'
-		title='部门列表' 		
+		title='网络节点列表' 		
 		:visible.sync='show'
 		:append-to-body='inDialog'
 		@open='openDialog'

@@ -46,17 +46,17 @@
 					<el-form-item label='业务员' prop='salesman'>
 						<el-input v-model='queryParams.salesman' clearable></el-input>
 					</el-form-item>
-					<el-form-item label='购买日期'>
+					<el-form-item label='入库日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
-								<el-form-item prop='buy_date_begin'>
-					      	<el-date-picker v-model='queryParams.buy_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+								<el-form-item prop='inbound_date_begin'>
+					      	<el-date-picker v-model='queryParams.inbound_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					    	</el-form-item>
 					    </el-col>
 					    <el-col :span="2">至</el-col>
 					    <el-col :span="11">
-					    	<el-form-item prop='buy_date_end'>
-					    		<el-date-picker v-model='queryParams.buy_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    	<el-form-item prop='inbound_date_end'>
+					    		<el-date-picker v-model='queryParams.inbound_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					      </el-form-item>
 					    </el-col>
 				  	</el-row>
@@ -117,7 +117,7 @@
 			</el-table-column>
 			<el-table-column prop='asset_model' min-width='150' label='资产型号' show-overflow-tooltip />
 			<el-table-column prop='asset_type_name' width='100' label='资产类型' show-overflow-tooltip />
-			<el-table-column prop='buy_date' width='100' label='购入日期' show-overflow-tooltip />			
+			<el-table-column prop='inbound_date' width='100' label='入库日期' show-overflow-tooltip />			
 			<el-table-column 
 				prop='amount' 
 				align='right'

@@ -74,7 +74,7 @@
 		},
 		computed:{
 			title(){
-				return '玻璃标签打印页面'
+				return 'IT资产标签打印页面'
 			},
 			buttonText(){
 				return this.isEdit?'更 新':'创 建'

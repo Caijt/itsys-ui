@@ -277,12 +277,12 @@
 				return data.id==this.form.id || parentIds.indexOf(this.form.id.toString())>=0
 			},
 			getFieldList(field){
-			return (keyword,callback)=>{
-				networkApi.getFieldList({ field,keyword }).then(res=>{
-					callback(res.data)
-				})
+				return (keyword,callback)=>{
+					networkApi.getFieldList({ field,keyword }).then(res=>{
+						callback(res.data)
+					})
+				}
 			}
-		}
 		}
 	}
 </script>

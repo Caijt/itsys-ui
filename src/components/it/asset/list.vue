@@ -93,17 +93,17 @@
 							></el-option>
 						</el-select>
 					</el-form-item>	
-					<el-form-item label='购买日期'>
+					<el-form-item label='入库日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
-								<el-form-item prop='buy_date_begin'>
-					      	<el-date-picker v-model='queryParams.buy_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+								<el-form-item prop='inbound_date_begin'>
+					      	<el-date-picker v-model='queryParams.inbound_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					    	</el-form-item>
 					    </el-col>
 					    <el-col :span="2">至</el-col>
 					    <el-col :span="11">
-					    	<el-form-item prop='buy_date_end'>
-					    		<el-date-picker v-model='queryParams.buy_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    	<el-form-item prop='inbound_date_end'>
+					    		<el-date-picker v-model='queryParams.inbound_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					      </el-form-item>
 					    </el-col>
 				  	</el-row>
@@ -177,7 +177,17 @@
 				width='100' 
 				label='标识号' 
 				show-overflow-tooltip />
-			<el-table-column prop='buy_date' label='购买日期' sortable='custom' width='100' />
+			<el-table-column prop='inbound_date' label='入库日期' sortable='custom' width='100' />
+			<el-table-column 
+				prop='remain' 
+				label='库存量' 
+				align='right'
+				sortable='custom' 
+				width='100'>
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openUseStatusDialog(row)'>{{row.remain}} / {{row.avaiable_amount}} / {{row.amount}}</span>
+				</template>
+			</el-table-column>
 			<el-table-column 
 				prop='supplier_name' 
 				label='供应商' 
@@ -187,24 +197,13 @@
 				<template slot-scope='{row}'>
 					<span>￥{{ row.price }}</span>
 				</template>
-			</el-table-column>
-			<el-table-column 
-				prop='remain' 
-				label='库存量' 
-				align='right'
-				sortable='custom' 
-				width='110'>
-				<template slot-scope='{row}'>
-					<span class='c-link' @click='openUseStatusDialog(row)'>{{row.remain}} / {{row.avaiable_amount}} / {{row.amount}}</span>
-				</template>
-			</el-table-column>
+			</el-table-column>			
 			<el-table-column prop='stock_warning_name' label='库存种类' sortable='custom' width='100' show-overflow-tooltip />
 			<el-table-column prop='use_dep_name' label='近期领用人' sortable='custom' width='120' show-overflow-tooltip>
 				<template slot-scope='{row}'>
 					<span>{{row.use_dep_name}} / {{row.use_employee_name}}</span>
 				</template>
 			</el-table-column>
-			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />
 			<el-table-column 
 				prop='sn' 
 				label='序列号' 
@@ -214,7 +213,8 @@
 				prop='company_name' 
 				min-width='120' 
 				label='资产所属公司' 
-				show-overflow-tooltip />		
+				show-overflow-tooltip />	
+			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />	
 			<el-table-column 
 				prop='create_user_name' 
 				label='录入员' />
@@ -327,8 +327,8 @@ export default {
 				abnormal_status:[],
 				remarks:'',
 				hasSubType:1,
-				buy_date_begin:'',
-				buy_date_end:'',
+				inbound_date_begin:'',
+				inbound_date_end:'',
 				company_ids:[]
 			},
 			//数据请求的参数

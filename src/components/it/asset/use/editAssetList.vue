@@ -29,7 +29,7 @@
 	      <el-table-column prop='no' label='资产编号' width='110' show-overflow-tooltip />
 	      <el-table-column prop='model' label='资产型号' min-width='150' show-overflow-tooltip />
 	      <el-table-column prop='type_name' label='资产类型' width='100' show-overflow-tooltip />
-	      <el-table-column prop='buy_date' label='购入日期' sortable width='100' show-overflow-tooltip />
+	      <el-table-column prop='inbound_date' label='入库日期' sortable width='100' show-overflow-tooltip />
 	      <el-table-column prop='price' sortable align='right' label='资产金额' width='120'>
 	        <template slot-scope='{row}'>
 	          ￥ {{row.price}}
@@ -268,7 +268,7 @@
 						no:item.no,
 						model:item.model,
 						type_name:item.type_name,
-						buy_date:item.buy_date,
+						inbound_date:item.inbound_date,
 						remain:item.remain,
 						price:item.price,
 						use_amount:1

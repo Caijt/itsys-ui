@@ -70,28 +70,16 @@ export default {
 			params
 		})
 	},
-	create(){
-		return request({
-			url: BASE_URL + '/create',
-			method:'post'
-		})
-	},
-	update(data){
+	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
 			'action',
-			'company_id',
-			'no',
-			'name',
-			'price',
-			'sign_date',
-			'begin_date',
-			'end_date',
-			'is_remind',
-			'remarks'
+			'name',			
+			'remarks',
+			'menu_ids'
 		])
 		return request({
-			url: BASE_URL + '/update',
+			url: BASE_URL + '/save',
 			method:'post',
 			data
 		})
@@ -185,6 +173,15 @@ export default {
 			url: BASE_URL + '/getTimeStatistic',
 			method:'get',
 			params
+		})
+	},
+	checkLoginNameUnique(login_name,id=null){
+		return request({
+			url: BASE_URL + '/checkLoginNameUnique',
+			method:'get',
+			params:{
+				login_name,id
+			}
 		})
 	},
 }
