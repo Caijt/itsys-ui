@@ -1,10 +1,6 @@
-import authApi from '@/api/auth'
-import Cookies from 'js-cookie'
 import configApi from '@/api/sys/config'
 
-const SessionKey = 'PHPSESSID'
-
-const user = {
+const sys = {
 	state: {
 		title : '',
 		version:'',
@@ -51,4 +47,4 @@ const user = {
 		}
 	}
 }
-export default user
+export default sys
