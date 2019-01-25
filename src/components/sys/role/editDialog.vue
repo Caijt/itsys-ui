@@ -22,7 +22,7 @@
 					<el-input type='textarea' v-model='form.remarks' placeholder='此角色的说明'>
 					</el-input>
 				</el-form-item>
-				<el-form-item label='角色菜单' prop='menu_ids' >
+				<el-form-item label='菜单权限' prop='menu_ids' >
 					<menu-list height='350px' show-checkbox ref='menuList'></menu-list>
 				</el-form-item>
 			</el-form>

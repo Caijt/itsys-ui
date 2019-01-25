@@ -71,7 +71,7 @@
 							<el-checkbox-group v-model="form.roleIds">
 								<div v-for='item in roleList' :key='item.id'>
 									<el-checkbox  :label='item.id+""'>{{item.name}}</el-checkbox>
-									<el-button type='text' style='margin-left:10px'> [角色详情] </el-button>
+									<el-button type='text' style='margin-left:10px' @click='openMenuDialog(item)'> [菜单权限] </el-button>
 								</div>				    
 						  </el-checkbox-group>
 						</el-form-item>
@@ -84,6 +84,7 @@
 	    <el-button @click="show=false">关 闭</el-button>
   	</div>
 	</el-dialog>
+	<menu-dialog :in-dialog='inDialog' ref='menuDialog'/>
 </div>
 </template>
 <script>
@@ -91,6 +92,7 @@
 	import companyApi from '@/api/sys/company'
 	import factoryApi from '@/api/sys/factory'
 	import roleApi from '@/api/sys/role'
+	import menuDialog from '@/components/sys/menu/treeDialog'
 
 	const formInit = {		
 		id:null,
@@ -109,6 +111,7 @@
 	}
 	export default {
 		components:{ 
+			menuDialog
 		},
 		props:{
 			inDialog:{
@@ -262,6 +265,11 @@
 				this.form = { ...formInit }
 				this.clearValidate()
 				return this
+			},
+			openMenuDialog(row){
+				this.$refs.menuDialog.open().then(that=>{
+					that.initData({ ids:row.menu_ids, isIds:1 })
+				})
 			}
 		}
 	}

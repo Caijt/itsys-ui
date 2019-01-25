@@ -11,7 +11,7 @@
 		</div>		
 		<el-row :gutter='20'>
 			<el-col :span='16'>
-				<menu-list height='400px' ref='menuList' @node-click='nodeClick'>
+				<menu-list show-path height='400px' ref='menuList' @node-click='nodeClick'>
 					<template slot='right' slot-scope='{node,data}'>
 						<span>
 		          <el-button

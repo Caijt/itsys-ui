@@ -51,7 +51,7 @@
 				width='35' />
 			<el-table-column prop='name' label='角色名称' min-width='120' show-overflow-tooltip/>			
 			<el-table-column prop='remarks' label='角色说明' min-width='120' show-overflow-tooltip/>			
-			<el-table-column prop='factory_names' label='菜单' align='center' sortable='custom' width='100' show-overflow-tooltip>
+			<el-table-column prop='factory_names' label='菜单权限' align='center' sortable='custom' width='100' show-overflow-tooltip>
 				<template slot-scope='{row}'>
 					<span class='c-link' @click='openMenuDialog(row)'>{{ getMenuCount(row.menu_ids) }}</span>
 				</template>
@@ -285,7 +285,7 @@ export default {
 		},
 		openMenuDialog(row){
 			this.$refs.menuDialog.open().then(that=>{
-				that.initData({ ids:row.menu_ids })
+				that.initData({ ids:row.menu_ids, isIds:1 })
 			})
 		}
 	}

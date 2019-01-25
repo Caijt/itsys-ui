@@ -63,6 +63,11 @@
 			<el-table-column prop='factory_names' label='管理工厂' sortable='custom' width='150' show-overflow-tooltip/>
 			<el-table-column prop='company_names' label='管理公司' sortable='custom' width='150' show-overflow-tooltip/>
 			<el-table-column prop='role_names' label='所属角色' sortable='custom' width='150' show-overflow-tooltip/>
+			<el-table-column align='center' label='菜单权限' width='80' show-overflow-tooltip>
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openMenuDialog(row)'>查看</span>
+				</template>
+			</el-table-column>
 			<el-table-column 
 				prop='last_login_time' 
 				width='130' 
@@ -110,13 +115,14 @@
 	    @size-change='sizeChange'
 	    @current-change='getData' />
 	  <!--/ 分页 -->
+	  <menu-dialog :in-dialog='inDialog' ref='menuDialog'/>
 	</div>
 </template>
 <script>
 import api from '@/api/sys/user'
-
+import menuDialog from '@/components/sys/menu/treeDialog'
 export default {
-	components:{  },
+	components:{ menuDialog },
 	props:{
 		size:{
 			type:String,
@@ -304,6 +310,11 @@ export default {
 			this.queryParamsLabel.dep_name = data.name
 			this.queryParams.dep_id = data.id
 			this.$refs.depDialog.close()
+		},
+		openMenuDialog(row){
+			this.$refs.menuDialog.open().then(that=>{
+				that.initData({ role_ids:row.role_ids, isRoleIds:1})
+			})
 		}
 	}
 }

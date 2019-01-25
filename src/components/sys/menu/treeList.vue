@@ -2,7 +2,7 @@
 	<div v-loading='loading'>
 		<div style='margin-bottom: 5px'>
 			<el-input
-		  placeholder="输入网络节点关键字"
+		  placeholder="输入菜单关键字"
 		  clearable
 		  v-model="filterText">
 			</el-input>
@@ -20,7 +20,7 @@
 				:filter-node-method="filterNode"
 				@node-click='nodeClick'>
 				<span class='_tree-node' slot-scope='{node,data}'>
-					<span style='font-size:14px'>{{data.title}} [{{data.path}}]</span>
+					<span style='font-size:14px'>{{data.title}} <span v-if='showPath'>[{{data.path}}]</span></span>
 					<span>
 						<slot name='right' :data='data' :node='node'></slot>
 					</span>
@@ -35,6 +35,10 @@
 	export default {
 		props:{
 			showCheckbox:{
+				type:Boolean,
+				default:false
+			},
+			showPath:{
 				type:Boolean,
 				default:false
 			},
