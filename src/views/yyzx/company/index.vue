@@ -162,6 +162,7 @@ export default {
 		edit({ row }){
 			let r = this.$commonJs.obj.copyByKey(row,['id','name','type','is_disabled'])
 			this.form = { ...formInit, ...r }
+			this.form.is_disabled = Number(this.form.is_disabled)
 			this.dialogShow = true
 		},
 		//创建或修改公司信息
