@@ -23,10 +23,10 @@
 			return {}
 		},
 		created(){
-			this.test()
+			this.qywxAuth()
 		},
 		methods:{
-			test(){
+			qywxAuth(){
 				let last_url =window.location.origin + window.location.pathname+'#/'+this.path
         Cookies.set('last_url',last_url,{path:'/'})
         window.location.replace(authApi.qywxAuthUrl)
