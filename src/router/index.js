@@ -27,11 +27,22 @@ let router = new Router({
       meta: {
         noAuth: true
       }
+    },
+    {
+      path: '/qywxAuth/:path?',
+      name: 'qywxAuth',
+      component: _import('/qywxAuth'),
+      props:true,
+      meta: {
+        title:'微信企业认证',
+        noAuth: true
+      }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(window.location)
   NProgress.start()
   store.dispatch('initSysConfig').then(()=>{
     /* 判断要访问的路由是否需要权限访问 */
