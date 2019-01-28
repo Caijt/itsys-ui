@@ -42,7 +42,6 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(window.location)
   NProgress.start()
   store.dispatch('initSysConfig').then(()=>{
     /* 判断要访问的路由是否需要权限访问 */
