@@ -139,7 +139,7 @@
 		}
 	}
 </script>
-<style lang='scss' scoped>	
+<style lang='less' scoped>	
 	.record-box{
 		color:#000;
 		line-height:1.5;

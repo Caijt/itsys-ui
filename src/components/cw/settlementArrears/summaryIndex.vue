@@ -80,7 +80,7 @@
 		}
 	}
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 	.point .el-table__row{
 		cursor: pointer;
 	}

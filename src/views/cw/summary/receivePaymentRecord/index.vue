@@ -58,7 +58,7 @@
 		}
 	}
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 	._info{
 		margin:20px 0px;
 		text-align: center;

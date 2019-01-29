@@ -133,7 +133,7 @@
 		}
 	}
 </script>
-<style lang='scss'>
+<style lang='less'>
 	._tree-node{
 		display: flex;
 		justify-content: space-between;

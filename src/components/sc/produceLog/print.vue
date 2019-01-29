@@ -188,7 +188,7 @@
 		}
 	}
 </script>
-<style lang='scss' scoped>
+<style lang='less' scoped>
 	._order-print-page{
 		color:#000;
 		font-family: 宋体;

@@ -136,7 +136,7 @@
 		}
 	}
 </script>
-<style lang='scss'>
+<style lang='less'>
 	.certificate-box{
 		position: relative;
 		color:#000;

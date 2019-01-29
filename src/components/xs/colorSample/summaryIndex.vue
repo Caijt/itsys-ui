@@ -109,7 +109,7 @@
 		}
 	}
 </script>
-<style lang='scss'>
+<style lang='less'>
 	._my-bagde{
 		.el-badge__content{
 			top:8px !important;

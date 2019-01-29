@@ -114,7 +114,7 @@
 		}
 	}
 </script>
-<style lang='scss'>
+<style lang='less'>
 	.demo-bg {
 		position: relative;
 		padding: 130px 0px 80px;

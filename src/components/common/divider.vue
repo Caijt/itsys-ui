@@ -35,7 +35,7 @@
 		}
 	}
 </script>
-<style lang='scss' scoped>
+<style lang='less' scoped>
 	.divider-container{
 		display: flex;
 		padding:12px 0px 8px;

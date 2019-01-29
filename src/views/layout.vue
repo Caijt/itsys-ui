@@ -1,5 +1,6 @@
 <template>
 	<el-container style='height:100%' >
+		<meta name="viewport" content="" />
 		<el-header style='padding:0px;box-shadow:0px 0px 8px  rgba(0,0,0,.4);z-index: 1' :height='headerHeight'>
 			<el-menu 
 				class='_layout-header' 
@@ -10,18 +11,18 @@
 				text-color="#fff" 
 				active-text-color="#409EFF" 
 				style='border:none'
-				ref='elHeader'>
+				ref='elHeader'>				
 			  <el-menu-item 
-			  	v-for='m in $store.state.user.routers.slice(0,maxHeaderMenu)' 
+			  	v-for='(m,index) in $store.state.user.routers.slice(0,maxShowHeaderMenu)' 
 			  	:index="m.path" 
 			  	:key='m.meta.id'>
 					{{ m.meta.title }}
 				</el-menu-item>
-				<el-submenu index="/more" v-if='$store.state.user.routers.length>maxHeaderMenu'>
+				<el-submenu index="/more" v-if='$store.state.user.routers.length>maxShowHeaderMenu'>
 			    <template slot="title">更多</template>
 			    <el-menu-item 
-			    	v-for='m in $store.state.user.routers.slice(maxHeaderMenu)'
-			    	:index="m.path" 
+			    	v-for='(m,index) in $store.state.user.routers.slice(maxShowHeaderMenu)'
+		    	 	:index="m.path" 
 			  		:key='m.meta.id'>
 			    	{{ m.meta.title }}
 			    </el-menu-item>
@@ -34,7 +35,7 @@
 			  <el-menu-item  index='' style='float:right' @click='contactDialog=true'>帮助</el-menu-item>
 			</el-menu>
 		</el-header>
-		<el-container style='overflow: auto;'>
+		<el-container style='overflow: auto;background-color: #FFF'>
 			<el-aside style='width:200px;box-shadow:0px 0px 10px  rgba(0,0,0,.12);z-index: 1'>
 				<el-scrollbar class='_scroll'>
 					<el-menu 
@@ -104,10 +105,11 @@
 				openedMenus:[],
 				currentMenus:[],
 				menuPath:'',
-				maxHeaderMenu:10
+				maxShowHeaderMenu:0
 			}
 		},
 		created(){
+			this.maxShowHeaderMenu =  Math.floor(document.body.clientWidth / 100) - 3
 			this.checkVersion()
 		},
 		beforeRouteEnter(to,from,next){
@@ -125,6 +127,7 @@
 			})
 		},
 		mounted(){
+			this.resize()
 			window.addEventListener('resize',this.resize)
 		},
 		destroyed() {
@@ -142,7 +145,7 @@
 			select(index,indexPath){
 				//console.log(this.$refs.menu.defaultActive)
 			},
-			resize(){
+			resize(){			
 				this.headerHeight=this.$refs.elHeader.$el.clientHeight+'px'
 			},
 			itemClick(){
@@ -164,18 +167,18 @@
 		      let localVersion = this.$refs.version.innerText
 		      if(remoteVersion !==localVersion){
 		        this.$confirm('<b>检测本地系统版本与服务器系统版本不一致，是否进行刷新加载更新内容？</b><br/>本地版本：v'+localVersion+'<br/>服务器版本：v'+remoteVersion,'更新提示',{
-		          type:'warning',
-		          dangerouslyUseHTMLString:true,
-		          confirmButtonText: '刷新',
+							type:'warning',
+							dangerouslyUseHTMLString:true,
+							confirmButtonText: '刷新',
 		        }).then(()=>{
 		          window.location.reload()
 		        })
 		      }else{
 		      	if(e){
-		      		this.$message.success('本地系统版本与服务器版本已一致，无需更新')
-		      	}
-		      }
-	    	})
+							this.$message.success('本地系统版本与服务器版本已一致，无需更新')
+						}
+					}
+				})
 			}
 		},
 		computed:{
@@ -187,7 +190,7 @@
 		
 	}
 </script>
-<style lang='scss'>
+<style lang='less'>
 	._layout-header.el-menu--horizontal > .el-menu-item.is-active{
 		border-bottom-width:4px;
 	}
@@ -199,8 +202,8 @@
 		border-right:4px solid #409EFF ;
 	}
 	._scroll{
-		 height:100%;
-		 .el-scrollbar__wrap{
+		height:100%;
+		.el-scrollbar__wrap{
 			overflow-x:auto;
 		}
 	}

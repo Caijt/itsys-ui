@@ -99,7 +99,7 @@
 		}
 	}
 </script>
-<style lang='scss' scoped>	
+<style lang='less' scoped>	
 	.glass-label-box{
 		position: relative;
 		font-size: 14px;

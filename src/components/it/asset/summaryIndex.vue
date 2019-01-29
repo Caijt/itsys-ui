@@ -45,7 +45,6 @@
 	    	<el-alert 
 			    title="以下仅显示近10天内提交的资产领用交还记录，如需更详细的数据，请到相关页面进行查询"
 			    type="success"
-			    show-icon
 			    style='margin-bottom:10px'>
 			    <div>
 			    	<el-button type='text' size='mini' @click='$router.push("/it/asset/stockWarning")'>[ 领用交还明细 ]</el-button>
@@ -145,7 +144,7 @@
 		}
 	}
 </script>
-<style lang='scss'>
+<style lang='less'>
 	._my-bagde{
 		.el-badge__content{
 			top:8px !important;

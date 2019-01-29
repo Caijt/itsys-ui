@@ -111,7 +111,7 @@
 		}
 	}
 </script>
-<style lang='scss' scoped>
+<style lang='less' scoped>
 	.window-qrcode-box{
 		position: relative;
 		font-size: 14px;

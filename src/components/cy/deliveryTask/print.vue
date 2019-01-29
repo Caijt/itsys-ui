@@ -86,7 +86,7 @@
 		}
 	}
 </script>
-<style lang='scss'>
+<style lang='less'>
 	.test2{
 		border:1px solid red;		
 		 
