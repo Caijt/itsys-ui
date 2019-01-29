@@ -23,7 +23,11 @@
 					</el-input>
 				</el-form-item>
 				<el-form-item label='菜单权限' prop='menu_ids' >
-					<menu-list height='350px' show-checkbox ref='menuList'></menu-list>
+					<menu-list height='350px' show-checkbox ref='menuList'>
+						<!-- <template slot='right' slot-scope='{node,data}' v-if='node.checked&&node.isLeaf'>
+							<span style='font-size: 12px'>读[全部] 写[全部] 删[全部]</span>
+						</template> -->
+					</menu-list>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -178,6 +182,9 @@
 				this.$refs.menuList.setCheckedKeys([])
 				this.clearValidate()
 				return this
+			},
+			test(){
+
 			}
 		}
 	}

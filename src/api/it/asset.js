@@ -7,6 +7,8 @@ const BASE_URL = baseUrl +'/asset'
 
 export default {
 	excelUploadUrl:BASE_URL+'/importExcel',
+	uploadAttachUrl:BASE_URL+'/uploadAttach',
+	delAttachUrl:BASE_URL+'/delAttach',
 	getPrintQrcode(id){
 		return BASE_URL+'/getPrintQrcode/id/'+id
 	},
@@ -90,6 +92,7 @@ export default {
 			'price',
 			'amount',
 			'sn',
+			'source',
 			'is_stock_warning',
 			'stock_warning_id',
 			'remarks'
@@ -191,4 +194,13 @@ export default {
 			params
 		})
 	},
+	getFieldList({ field, keyword }){
+		return request({
+			url: BASE_URL + '/getFieldList',
+			method:'get',
+			params:{ 
+				field,keyword
+			}
+		})
+	}
 }

@@ -48,6 +48,10 @@ export default {
 		showDel:{
 			type:Boolean,
 			default:false
+		},
+		delUrl:{
+			type:String,
+			default:undefined
 		}
 	},
 	data(){
@@ -94,12 +98,12 @@ export default {
     	this.dataTotal = 0
     },
     delAttach(item,index){
-			this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+			this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-      	attachApi.del(item.id).then(res=>{
+      	attachApi.del(item.id,this.delUrl).then(res=>{
       		this.list.splice(index,1)
       		this.$message({
             type: 'success',

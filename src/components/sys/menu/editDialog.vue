@@ -37,6 +37,11 @@
 					</el-input>
 					<span style='font-size: 12px'>值越小排越前</span>
 				</el-form-item>
+				<el-form-item label='API' prop='api' >
+					<el-input type='textarea' v-model='form.api' rows='4' placeholder=''>
+					</el-input>
+					<span style='font-size: 12px'>* 调用这些api接口时会进行验证用户是否具有此菜单权限</span>
+				</el-form-item>
 			</el-form>
 		</div>
 		<div slot="footer" v-loading='loading'>

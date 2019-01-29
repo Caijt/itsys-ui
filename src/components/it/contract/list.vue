@@ -12,9 +12,9 @@
 				  <el-tooltip content='重置查询条件' placement='top'>
 					  <el-button icon="el-icon-refresh" @click='resetQuery'></el-button>
 					</el-tooltip>
-				  <el-tooltip content='导出Excel' placement='top'>
+				 <!--  <el-tooltip content='导出Excel' placement='top'>
 				  	<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-					</el-tooltip>
+					</el-tooltip> -->
 				  <el-tooltip content='显示更多查询条件' placement='top'>
 					  <el-button @click='queryShowMore=!queryShowMore' size='mini'>
 	          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
@@ -24,23 +24,26 @@
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
 				<el-form-item label='合同编号' prop='no'>
-					<el-input v-model='queryParams.no' clearable></el-input>
+					<el-input v-model.trim='queryParams.no' clearable></el-input>
 				</el-form-item>
 				<el-form-item label='合同名称' prop='name'>
-					<el-input v-model='queryParams.name' clearable></el-input>
-				</el-form-item>				
+					<el-input v-model.trim='queryParams.name' clearable></el-input>
+				</el-form-item>
 				<div v-show='queryShowMore'>
+					<el-form-item label='供应商' prop='supplier_name'>
+						<el-input v-model.trim='queryParams.supplier_name' clearable></el-input>
+					</el-form-item>
 					<el-form-item label='签订日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
 								<el-form-item prop='sign_date_begin'>
-					      	<el-date-picker v-model='queryParams.sign_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					      	<el-date-picker v-model.trim='queryParams.sign_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					    	</el-form-item>
 					    </el-col>
 					    <el-col :span="2">至</el-col>
 					    <el-col :span="11">
 					    	<el-form-item prop='sign_date_end'>
-					    		<el-date-picker v-model='queryParams.sign_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    		<el-date-picker v-model.trim='queryParams.sign_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					      </el-form-item>
 					    </el-col>
 				  	</el-row>
@@ -49,13 +52,13 @@
 						<el-row style='width:300px'>
 							<el-col :span="11">
 								<el-form-item prop='begin_date_begin'>
-					      	<el-date-picker v-model='queryParams.begin_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					      	<el-date-picker v-model.trim='queryParams.begin_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					    	</el-form-item>
 					    </el-col>
 					    <el-col :span="2">至</el-col>
 					    <el-col :span="11">
 					    	<el-form-item prop='begin_date_end'>
-					    		<el-date-picker v-model='queryParams.begin_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    		<el-date-picker v-model.trim='queryParams.begin_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					      </el-form-item>
 					    </el-col>
 				  	</el-row>
@@ -64,13 +67,13 @@
 						<el-row style='width:300px'>
 							<el-col :span="11">
 								<el-form-item prop='end_date_begin'>
-					      	<el-date-picker v-model='queryParams.end_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					      	<el-date-picker v-model.trim='queryParams.end_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					    	</el-form-item>
 					    </el-col>
 					    <el-col :span="2">至</el-col>
 					    <el-col :span="11">
-					    	<el-form-item prop='begin_date_end'>
-					    		<el-date-picker v-model='queryParams.end_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    	<el-form-item prop='end_date_end'>
+					    		<el-date-picker v-model.trim='queryParams.end_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					      </el-form-item>
 					    </el-col>
 				  	</el-row>
@@ -224,9 +227,15 @@ export default {
 			},
 			//查询条件字段
 			queryParams:{
-				no:'',//项目编号				
-				invoice_date_begin:'',
-				invoice_date_end:''
+				no:'',//
+				name:'',
+				supplier_name:'',
+				sign_date_begin:'',
+				sign_date_end:'',
+				begin_date_begin:'',
+				begin_date_end:'',
+				end_date_begin:'',
+				end_date_end:'',
 			},
 			//数据请求的参数
 			requestParams:{

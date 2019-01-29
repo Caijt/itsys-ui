@@ -12,9 +12,9 @@
 				  <el-tooltip content='重置查询条件' placement='top'>
 					  <el-button icon="el-icon-refresh" @click='resetQuery'></el-button>
 					</el-tooltip>
-				  <el-tooltip content='导出Excel' placement='top'>
+				  <!-- <el-tooltip content='导出Excel' placement='top'>
 				  	<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-					</el-tooltip>
+					</el-tooltip> -->
 				  <el-tooltip content='显示更多查询条件' placement='top'>
 					  <el-button @click='queryShowMore=!queryShowMore' size='mini'>
 	          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
@@ -24,11 +24,26 @@
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
 				<el-form-item label='资产编号' prop='asset_no'>
-					<el-input v-model='queryParams.asset_no' clearable></el-input>
+					<el-input v-model='queryParams.asset_no' clearable style='width: 150px'></el-input>
+				</el-form-item>
+				<el-form-item label='维修状态' prop='status'>
+					<el-select v-model='queryParams.status' clearable>
+						<el-option :value='0' label='维修中'></el-option>
+						<el-option :value='1' label='正常'></el-option>
+					</el-select>
 				</el-form-item>
 				<div v-show='queryShowMore'>
 					<el-form-item label='资产型号' prop='asset_model'>
 						<el-input v-model='queryParams.asset_model' clearable></el-input>
+					</el-form-item>
+					<el-form-item label='供应商' prop='supplier_name'>
+						<el-input v-model='queryParams.supplier_name' clearable></el-input>
+					</el-form-item>
+					<el-form-item label='故障描述' prop='reason'>
+						<el-input v-model='queryParams.reason' clearable></el-input>
+					</el-form-item>
+					<el-form-item label='维修内容' prop='content'>
+						<el-input v-model='queryParams.content' clearable></el-input>
 					</el-form-item>
 					<el-form-item label='维修日期'>
 						<el-row style='width:300px'>
@@ -232,17 +247,16 @@ export default {
 			initParams:{},
 			//查询条件字段
 			queryParams:{
-				no:'',//项目编号
-				project_name:'',//项目名称
-				invoice_no:'',//开票号
+				asset_no:'',//
 				remarks:'',
-				invoice_company_name:'',//开票号
-				contract_no:'',//合同编号
-				customer_name:'',//客户单位				
-				company_name:'',//业绩公司
-				salesman:'',//业务员
-				invoice_date_begin:'',
-				invoice_date_end:''
+				contract_no:'',//
+				customer_name:'',//		
+				company_name:'',//
+				repair_date_begin:'',
+				repair_date_end:'',
+				finish_date_begin:'',
+				finish_date_end:'',
+				status:''
 			},
 			//数据请求的参数
 			requestParams:{

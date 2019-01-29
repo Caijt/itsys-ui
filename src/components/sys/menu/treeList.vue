@@ -18,7 +18,8 @@
 				:props='{label:"title"}' 
 				ref='treeList'
 				:filter-node-method="filterNode"
-				@node-click='nodeClick'>
+				@node-click='nodeClick'
+				@check='check'>
 				<span class='_tree-node' slot-scope='{node,data}'>
 					<span style='font-size:14px'>{{data.title}} <span v-if='showPath'>[{{data.path}}]</span></span>
 					<span>
@@ -95,7 +96,11 @@
         return data.title.toLowerCase().indexOf(value.toLowerCase()) !== -1;
       },
 			nodeClick(data,node,component){
+				// console.log(node.data)
 				this.$emit('node-click',data,node,component)
+			},
+			check(a,b,c){
+				// console.log(a)
 			},
 			clear(){
 				this.data = []

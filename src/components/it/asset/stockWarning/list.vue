@@ -25,6 +25,12 @@
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
 				<el-form-item label='库存种类' prop='name'>
 					<el-input v-model='queryParams.name' clearable></el-input>
+				</el-form-item>	
+				<el-form-item label='库存状态' prop='status'>
+					<el-select v-model='queryParams.status' clearable>
+						<el-option :value='0' label='正常'></el-option>
+						<el-option :value='1' label='库存不足'></el-option>
+					</el-select>
 				</el-form-item>		
 				<div v-show='queryShowMore'>
 					<el-form-item label='备注' prop='remarks'>
@@ -50,7 +56,7 @@
 			@sort-change='sortChange'>			
 			<el-table-column 
 				fixed
-				v-if='showSelection'
+				v-if='showCheckbox'
 				type='selection' 
 				align='center' 
 				width='35' />
@@ -70,10 +76,12 @@
 			<el-table-column prop='remarks' label='备注' min-width='120' show-overflow-tooltip/>
 			<el-table-column prop='company_name' label='所属公司' min-width='120' show-overflow-tooltip/>
 			<el-table-column 
+				v-if='!hideEditFields'
 				prop='create_user_name' 
 				width='90' 
 				label='录入员' />
 			<el-table-column 
+				v-if='!hideEditFields'
 				prop='create_time' 
 				width='120' 
 				label='创建时间' 
@@ -83,6 +91,7 @@
 				</template>
 			</el-table-column>
 			<el-table-column 
+				v-if='!hideEditFields'
 				prop='update_time' 
 				label='最近更新时间' 
 				width='120' 
@@ -154,7 +163,11 @@ export default {
 			type:Boolean,
 			default:false
 		},
-		showSelection:{
+		showCheckbox:{
+			type:Boolean,
+			default:false
+		},
+		hideEditFields:{
 			type:Boolean,
 			default:false
 		}
@@ -177,9 +190,8 @@ export default {
 			},
 			//查询条件字段
 			queryParams:{
-				no:'',//项目编号				
-				invoice_date_begin:'',
-				invoice_date_end:''
+				name:'',//项目编号
+				status:''
 			},
 			//数据请求的参数
 			requestParams:{
@@ -221,7 +233,7 @@ export default {
 		},
 		getSummaryData({columns,data}){
       let sum = []
-      let labelIndex = this.showSelection?1:0
+      let labelIndex = this.showCheckbox?1:0
       columns.forEach((column,i)=>{
         if(i==labelIndex){
           sum[i]='合计'

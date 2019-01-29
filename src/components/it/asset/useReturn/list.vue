@@ -12,9 +12,9 @@
 				  <el-tooltip content='重置查询条件' placement='top'>
 					  <el-button icon="el-icon-refresh" @click='resetQuery'></el-button>
 					</el-tooltip>
-				  <el-tooltip content='导出Excel' placement='top'>
+				  <!-- <el-tooltip content='导出Excel' placement='top'>
 				  	<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-					</el-tooltip>
+					</el-tooltip> -->
 				  <el-tooltip content='显示更多查询条件' placement='top'>
 					  <el-button @click='queryShowMore=!queryShowMore' size='mini'>
 	          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
@@ -26,32 +26,61 @@
 				<el-form-item label='记录编号' prop='record_no'>
 					<el-input v-model='queryParams.record_no' clearable></el-input>
 				</el-form-item>
-				<span v-show='queryShowMore'>
+				<el-form-item label='记录类型' prop='record_type'>
+					<el-select v-model='queryParams.record_type' clearable>
+						<el-option label='领用' value='USE'></el-option>
+						<el-option label='交还' value='RETURN'></el-option>
+					</el-select>
+				</el-form-item>
+				<div v-show='queryShowMore'>
 					<el-form-item label='资产编号' prop='asset_no'>
 						<el-input v-model='queryParams.asset_no' clearable></el-input>
 					</el-form-item>
-					<el-form-item label='业绩公司' prop='company_name'>
-						<el-input v-model='queryParams.company_name' clearable></el-input>
+					<el-form-item label='资产型号' prop='asset_model'>
+						<el-input v-model='queryParams.asset_model' clearable></el-input>
 					</el-form-item>
-					<el-form-item label='业务员' prop='salesman'>
-						<el-input v-model='queryParams.salesman' clearable></el-input>
+					<el-form-item label='部门' prop='dep_id'>
+						<el-input v-model='queryParamsLabel.dep_name' placeholder='点击选择' readonly clearable @click.native='openSelectDepDialog'>
+							<i 
+								style='cursor: pointer;'
+								v-show='queryParams.dep_id' 
+								slot="suffix" 
+								class="el-input__icon el-icon-close" 
+								@click.stop='queryParamsLabel.dep_name="";queryParams.dep_id=""'></i>
+						</el-input>
 					</el-form-item>
-					<el-form-item label='入库日期'>
+					<el-form-item label='子部门' prop='hasSubDep'>
+						<el-switch
+						  v-model="queryParams.hasSubDep"
+						  :inactive-value="0"
+						  :active-value="1">
+						</el-switch>
+					</el-form-item>
+					<el-form-item label='员工' prop='employee_name'>
+						<el-input v-model='queryParams.employee_name' clearable></el-input>
+					</el-form-item>
+					<el-form-item label='地点' prop='place'>
+						<el-input v-model='queryParams.place' clearable></el-input>
+					</el-form-item>
+					<el-form-item label='备注' prop='remarks'>
+						<el-input v-model='queryParams.remarks' clearable></el-input>
+					</el-form-item>
+					<el-form-item label='记录日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
-								<el-form-item prop='inbound_date_begin'>
-					      	<el-date-picker v-model='queryParams.inbound_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+								<el-form-item prop='record_date_begin'>
+					      	<el-date-picker v-model='queryParams.record_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					    	</el-form-item>
 					    </el-col>
 					    <el-col :span="2">至</el-col>
 					    <el-col :span="11">
-					    	<el-form-item prop='inbound_date_end'>
-					    		<el-date-picker v-model='queryParams.inbound_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    	<el-form-item prop='record_date_end'>
+					    		<el-date-picker v-model='queryParams.record_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					      </el-form-item>
 					    </el-col>
 				  	</el-row>
 					</el-form-item>
-				</span>
+				</div>
 			</el-form>
 		</div> 
 		<!--/ 查询条件 -->		
@@ -72,7 +101,7 @@
 			@sort-change='sortChange'>			
 			<el-table-column 
 				fixed
-				v-if='showSelection'
+				v-if='showCheckbox'
 				type='selection' 
 				align='center' 
 				width='35' />
@@ -91,8 +120,23 @@
 				prop='record_date' 
 				width='100' 
 				sortable='custom' 
-				label='记录日期' />
-			
+				label='记录日期' />	
+			<el-table-column 
+				v-if='!hideAssetFields'
+				prop='asset_no' 
+				width='100' 
+				label='资产编号' 
+				show-overflow-tooltip>
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openAssetDetails(row)'>{{row.asset_no}}</span>
+				</template>	
+			</el-table-column>
+			<el-table-column 
+				v-if='!hideAssetFields'
+				prop='asset_model' 
+				width='150' 
+				label='资产型号' 
+				show-overflow-tooltip />		
 			<el-table-column 
 				prop='dep_name' 
 				width='100' 
@@ -102,7 +146,7 @@
 				prop='employee_name' 
 				width='90' 
 				label='员工' 
-				show-overflow-tooltip />
+				show-overflow-tooltip />			
 			<el-table-column 
 				prop='amount' 
 				align='right'
@@ -144,15 +188,22 @@
 	  <!--/ 分页 -->
 	  <use-record-details :in-dialog='inDialog' ref='useRecordDetails'/>
 		<return-record-details :in-dialog='inDialog' ref='returnRecordDetails'/>
+		<dep-dialog :in-dialog='inDialog' ref='depDialog' show-select @select='selectDep' />
+		<asset-details v-if='!hideAssetFields' :in-dialog='inDialog' ref='assetDetails' />
 	</div>
 </template>
 <script>
 import assetApi from '@/api/it/assetUseRecordDetail'
 import useRecordDetails from '../use/details'
 import returnRecordDetails from '../return/details'
+import depDialog from '@/components/hr/dep/treeDialog'
+import assetDetails from '../details'
 
+const initQueryParamsLabel = {
+	dep_name:''
+}
 export default {
-	components:{ useRecordDetails, returnRecordDetails },
+	components:{ useRecordDetails, returnRecordDetails, depDialog, assetDetails },
 	props:{
 		size:{
 			type:String,
@@ -184,7 +235,11 @@ export default {
 			type:Boolean,
 			default:false
 		},
-		showSelection:{
+		hideAssetFields:{
+			type:Boolean,
+			default:false
+		},
+		showCheckbox:{
 			type:Boolean,
 			default:false
 		},
@@ -206,19 +261,19 @@ export default {
 			selectionList:[],
 			queryShowMore:this.showMore,
 			initParams:{},
+			queryParamsLabel:{...initQueryParamsLabel},
 			//查询条件字段
 			queryParams:{
-				no:'',//项目编号
-				project_name:'',//项目名称
-				invoice_no:'',//开票号
+				record_no:'',//
+				record_type:'',
+				asset_no:'',//
+				asset_model:'',//
 				remarks:'',
-				invoice_company_name:'',//开票号
-				contract_no:'',//合同编号
-				customer_name:'',//客户单位				
-				company_name:'',//业绩公司
-				salesman:'',//业务员
-				invoice_date_begin:'',
-				invoice_date_end:''
+				dep_id:null,
+				hasSubDep:1,
+				employee_name:'',
+				record_date_begin:'',
+				record_date_end:''
 			},
 			//数据请求的参数
 			requestParams:{
@@ -260,7 +315,7 @@ export default {
 		},
 		getSummaryData({columns,data}){
       let sum = []
-      let labelIndex = this.showSelection?1:0
+      let labelIndex = this.showCheckbox?1:0
       columns.forEach((column,i)=>{
         if(i==labelIndex){
           sum[i]='合计'
@@ -298,12 +353,13 @@ export default {
 		//重置查询条件
 		resetQuery(){
 			this.$refs.formQuery.resetFields()
+			this.queryParamsLabel = { ...initQueryParamsLabel }
 			this.requestParams.currentPage=1
 			this.query()
 		},
-		openDetails(row){
+		openAssetDetails(row){
 			this.$refs.assetDetails.open().then(that=>{
-				that.initData(row)
+				that.getDetails(row.asset_id)
 			})
 		},
 		sortChange({prop,order}){
@@ -323,6 +379,16 @@ export default {
 			this.$refs[name].open().then(that=>{
 				that.getDetails(row.record_id)
 			})			
+		},
+		openSelectDepDialog(){
+			this.$refs.depDialog.open().then(that=>{
+				that.initData()
+			})
+		},
+		selectDep(data){
+			this.queryParamsLabel.dep_name = data.name
+			this.queryParams.dep_id = data.id
+			this.$refs.depDialog.close()
 		}
 	}
 }

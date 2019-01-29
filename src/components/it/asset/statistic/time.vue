@@ -59,10 +59,13 @@
 								:key='item.id'
 								:label='item.name'
 								:value='item.id'
-								v-show='item.is_disabled?false:true'
+								v-show='item.is_disabled==1?false:true'
 							></el-option>
 						</el-select>
 					</el-form-item>	
+					<el-form-item label='供应商' prop='supplier_name'>
+						<el-input v-model.trim='queryParams.supplier_name' clearable></el-input>
+					</el-form-item>
 				</div>
 				<!--/ 更多条件-->
 			</el-form>			
@@ -98,7 +101,8 @@
 					unit:'month',
 					time_begin:'',
 					time_end:'',
-					company_ids:[]
+					company_ids:[],
+					supplier_name:''
 				},
 				requestParams:{
 

@@ -91,7 +91,8 @@ export default {
 			'title',
 			'path',
 			'order',
-			'parent_id'
+			'parent_id',
+			'api'
 		])
 		return request({
 			url: BASE_URL + '/save',

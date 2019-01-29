@@ -49,6 +49,11 @@ service.interceptors.response.use(
       // 40002：
       if(res.code == 40002) {
       	//错误处理
+        Message({
+          message: res.message,
+          type: 'error',
+          duration: 5 * 1000
+        })
       }
       return Promise.reject(res.message)
     }

@@ -26,7 +26,7 @@
 							:key='item.id'
 							:label='item.name'
 							:value='item.id'
-							v-show='item.is_disabled?false:true'
+							v-show='item.is_disabled==1?false:true'
 						></el-option>
 					</el-select>
 				</el-form-item>
@@ -49,16 +49,22 @@
 					<el-input v-model='form.diy_no' placeholder='企业内部一些自定义的标识号'>
 					</el-input>
 				</el-form-item>				
-				<el-form-item label='入库日期' prop='inbound_date'>
-					<el-date-picker 
-						v-model='form.inbound_date' 
-						value-format='yyyy-MM-dd' 
-						style='width: 30%' />
-				</el-form-item>				
-				<el-form-item label='入库数量' prop='amount' >
-					<el-input v-model.number='form.amount' style='width: 30%'>
-					</el-input>
-				</el-form-item>
+				<el-row :gutter='10'>
+					<el-col :span='12'>
+						<el-form-item label='入库日期' prop='inbound_date'>
+							<el-date-picker 
+								v-model='form.inbound_date' 
+								value-format='yyyy-MM-dd' 
+								style='width: 150px' />
+						</el-form-item>		
+					</el-col>
+					<el-col :span='12'>
+						<el-form-item label='入库数量' prop='amount' >
+							<el-input v-model.number='form.amount'  style='width: 150px'>
+							</el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
 				<el-row :gutter='10'>
 					<el-col :span='12' >
 						<el-form-item label='库存预警' prop='is_stock_warning' >
@@ -94,24 +100,28 @@
 							@click.stop='form.supplier_name="";form.supplier_id=null'></i>
 					</el-input>
 				</el-form-item>
+				<el-form-item label='来源方式' prop='source' >
+					<el-autocomplete v-model='form.source' clearable :fetch-suggestions="getFieldList('source')" style='width: 150px'></el-autocomplete>
+					<span style='font-size: 12px'>* 资产是从什么方式入库</span>
+				</el-form-item>
 				<el-form-item label='价格' prop='price' >
-					<el-input v-model.number='form.price' style='width: 30%'>
+					<el-input v-model.number='form.price' style='width: 150px'>
 						<span slot="prefix">￥</span>
 					</el-input>
-					<span style='font-size: 12px'>该资产总价格，非单价</span>
+					<span style='font-size: 12px'>* 该资产总价格，非单价</span>
 				</el-form-item>
 				<el-form-item label='序列号' prop='sn' >
-					<el-input v-model='form.sn' placeholder='资产出厂编号' style='width: 30%'>
+					<el-input v-model='form.sn' placeholder='资产出厂编号' style='width: 150px'>
 					</el-input>
-					<span style='font-size: 12px'>如果涉及产品保修，请务必填写</span>
-				</el-form-item>
+					<span style='font-size: 12px'>* 如果涉及产品保修，请务必填写</span>
+				</el-form-item>				
 				<el-form-item label='备注' prop='remarks' >
 					<el-input type='textarea' v-model='form.remarks' placeholder='资产其它备注信息'>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='附件' prop='remarks'>
-					<attach-upload ref='attachUpload' :params='attachParams' @uploaded='uploaded'></attach-upload>
-					<attach-list ref='attachList' show-del @del='updated=true'></attach-list>
+					<attach-upload ref='attachUpload' :url='uploadAttachUrl' :params='attachParams' @uploaded='uploaded'></attach-upload>
+					<attach-list ref='attachList' :del-url='delAttachUrl' show-del @del='updated=true'></attach-list>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -197,8 +207,7 @@
 				companyList:[],
 				companyLoading:false,
 				attachParams:{
-					table_name:'it_asset',
-					table_id:null
+					id:null
 				}
 			}
 		},
@@ -214,6 +223,12 @@
 					title += ' [ 新增 ]'
 				}
 				return title
+			},
+			uploadAttachUrl(){
+				return assetApi.uploadAttachUrl
+			},
+			delAttachUrl(){
+				return assetApi.delAttachUrl
 			}
 		},
 		mounted(){
@@ -266,7 +281,7 @@
 			},
 			initData(data){
 				this.assign(data)
-				this.attachParams.table_id = data.id
+				this.attachParams.id = data.id
 				if(data.attach_ids){
 					this.$refs.attachList.initData({ attach_ids:data.attach_ids})
 				}
@@ -369,6 +384,13 @@
 				this.form.stock_warning_id = row.id
 				this.form.stock_warning_name = row.name
 				this.$refs.stockWarningDialog.close()
+			},
+			getFieldList(field){
+				return (keyword,callback)=>{
+					assetApi.getFieldList({ field,keyword }).then(res=>{
+						callback(res.data)
+					})
+				}
 			}
 		}
 	}

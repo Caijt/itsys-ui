@@ -5,7 +5,7 @@
 	    type="success"
 	    style='margin-bottom:10px'>	    
 	  </el-alert>
-		<use-status-list init/>
+		<use-status-list show-more init/>
 	</div>
 </template>
 <script>

@@ -24,9 +24,10 @@ export default {
 	down(id){
 		window.open( BASE_URL+'/download/id/'+id );
 	},
-	del(id){
+	del(id,url=BASE_URL + '/del'){
+		console.log(url)
 		return request({
-			url: BASE_URL + '/del',
+			url,
 			method:'post',
 			data:{
 				id

@@ -111,7 +111,7 @@
 						<asset-use-status-list in-dialog hide-query no-page hide-asset-fields ref='assetUseStatusList'/>
 					</el-tab-pane>
 					<el-tab-pane label='领用记录' name='use'>
-						<asset-use-return-list in-dialog sort-prop='submit_time' hide-query no-page ref='assetUseReturnList'/>
+						<asset-use-return-list in-dialog sort-prop='submit_time' hide-asset-fields hide-query no-page ref='assetUseReturnList'/>
 					</el-tab-pane>
 					<el-tab-pane label='维修记录' name='repair'>
 						<asset-repair-list in-dialog hide-asset-fields sort-prop='repair_date' hide-query no-page ref='assetRepairList' />

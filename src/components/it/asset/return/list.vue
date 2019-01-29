@@ -12,9 +12,9 @@
 				  <el-tooltip content='重置查询条件' placement='top'>
 					  <el-button icon="el-icon-refresh" @click='resetQuery'></el-button>
 					</el-tooltip>
-				  <el-tooltip content='导出Excel' placement='top'>
+				  <!-- <el-tooltip content='导出Excel' placement='top'>
 				  	<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-					</el-tooltip>
+					</el-tooltip> -->
 				  <el-tooltip content='显示更多查询条件' placement='top'>
 					  <el-button @click='queryShowMore=!queryShowMore' size='mini'>
 	          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
@@ -23,19 +23,16 @@
 				</el-button-group>
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
-				<el-form-item label='交还编号' prop='record_no'>
-					<el-input v-model='queryParams.record_no' clearable></el-input>
+				<el-form-item label='交还编号' prop='no'>
+					<el-input v-model='queryParams.no' clearable></el-input>
 				</el-form-item>
 				<span v-show='queryShowMore'>
-					<el-form-item label='资产编号' prop='asset_no'>
-						<el-input v-model='queryParams.asset_no' clearable></el-input>
+					<el-form-item label='归还地点' prop='place'>
+						<el-input v-model='queryParams.place' clearable></el-input>
 					</el-form-item>
-					<el-form-item label='业绩公司' prop='company_name'>
-						<el-input v-model='queryParams.company_name' clearable></el-input>
-					</el-form-item>
-					<el-form-item label='业务员' prop='salesman'>
-						<el-input v-model='queryParams.salesman' clearable></el-input>
-					</el-form-item>
+					<el-form-item label='交还备注' prop='remarks'>
+						<el-input v-model='queryParams.remarks' clearable></el-input>
+					</el-form-item>	
 					<el-form-item label='交还日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">

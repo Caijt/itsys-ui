@@ -63,7 +63,7 @@
 				<router-view style='margin-bottom:25px'/>
 			</el-main>
 			<el-footer height='35px' style='text-align: center;border-top:1px solid #EBEEF5'>
-				<el-button type='text' @click='checkVersion'>Copyright © {{ new Date().getFullYear() }} {{$store.state.sys.company}} | 版本：v<span ref='version'>20190124001</span></el-button>
+				<el-button type='text' @click='checkVersion'>Copyright © {{ new Date().getFullYear() }} {{$store.state.sys.company}} | 版本：v<span ref='version'>20190129001</span></el-button>
 				<!-- <el-button type='text' @click='contactDialog=true'>系统帮助</el-button> -->
 			</el-footer>
 			<el-dialog :visible.sync="contactDialog" title='系统帮助' class='c-dialog-fixed'>

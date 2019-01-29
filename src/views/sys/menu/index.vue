@@ -50,6 +50,9 @@
 						<el-form-item label='排序'>
 							<span>{{ nodeData.order }}</span>
 						</el-form-item>
+						<el-form-item label='API'>
+							<span v-html='$commonJs.textareaToHtml(nodeData.api)'></span>
+						</el-form-item>
 						<el-form-item label='录入员'>
 							<span>{{ nodeData.create_user_name }}</span>
 						</el-form-item>

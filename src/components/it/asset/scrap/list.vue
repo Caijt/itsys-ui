@@ -12,9 +12,9 @@
 				  <el-tooltip content='重置查询条件' placement='top'>
 					  <el-button icon="el-icon-refresh" @click='resetQuery'></el-button>
 					</el-tooltip>
-				  <el-tooltip content='导出Excel' placement='top'>
+				 <!--  <el-tooltip content='导出Excel' placement='top'>
 				  	<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-					</el-tooltip>
+					</el-tooltip> -->
 				  <el-tooltip content='显示更多查询条件' placement='top'>
 					  <el-button @click='queryShowMore=!queryShowMore' size='mini'>
 	          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
@@ -26,9 +26,12 @@
 				<el-form-item label='资产编号' prop='asset_no'>
 					<el-input v-model='queryParams.asset_no' clearable></el-input>
 				</el-form-item>
+				<el-form-item label='资产型号' prop='asset_model'>
+					<el-input v-model='queryParams.asset_model' clearable></el-input>
+				</el-form-item>
 				<div v-show='queryShowMore'>
-					<el-form-item label='资产型号' prop='asset_model'>
-						<el-input v-model='queryParams.asset_model' clearable></el-input>
+					<el-form-item label='报废原因' prop='reason'>
+						<el-input v-model='queryParams.reason' clearable></el-input>
 					</el-form-item>
 					<el-form-item label='报废日期'>
 						<el-row style='width:300px'>
@@ -196,17 +199,11 @@ export default {
 			initParams:{},
 			//查询条件字段
 			queryParams:{
-				no:'',//项目编号
-				project_name:'',//项目名称
-				invoice_no:'',//开票号
-				remarks:'',
-				invoice_company_name:'',//开票号
-				contract_no:'',//合同编号
-				customer_name:'',//客户单位				
-				company_name:'',//业绩公司
-				salesman:'',//业务员
-				invoice_date_begin:'',
-				invoice_date_end:''
+				asset_no:'',//项目编号
+				asset_model:'',//项目名称
+				reason:'',
+				scrap_date_begin:'',
+				scrap_date_end:''
 			},
 			//数据请求的参数
 			requestParams:{
@@ -281,12 +278,12 @@ export default {
 			}else{
 				this.requestParams = {...this.requestParams,...this.queryParams}
 			}			
+			this.requestParams.currentPage=1
 			this.getData()
 		},
 		//重置查询条件
 		resetQuery(){
 			this.$refs.formQuery.resetFields()
-			this.requestParams.currentPage=1
 			this.query()
 		},
 		openDetails(row){
@@ -317,7 +314,7 @@ export default {
 			})
 		},
 		del({ row,$index }){
-			let confirmText = '确定删除此IT资产维修记录吗？'
+			let confirmText = '确定删除此IT资产报废记录吗？'
 			this.$confirm(confirmText,'提示',{
 				type: 'warning'
 			}).then(()=>{

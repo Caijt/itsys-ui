@@ -12,35 +12,24 @@
 				  <el-tooltip content='重置查询条件' placement='top'>
 					  <el-button icon="el-icon-refresh" @click='resetQuery'></el-button>
 					</el-tooltip>
-				  <el-tooltip content='导出Excel' placement='top'>
+				  <!-- <el-tooltip content='导出Excel' placement='top'>
 				  	<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-					</el-tooltip>
+					</el-tooltip> -->
 				  <el-tooltip content='显示更多查询条件' placement='top'>
 					  <el-button @click='queryShowMore=!queryShowMore' size='mini'>
 	          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
           	</el-button>
           </el-tooltip>
 				</el-button-group>
-				<!-- <span><el-button type='primary' @click='query' icon='el-icon-search' size='mini'></el-button></span>
-				<span><el-button @click='resetQuery' size='mini'>重置</el-button ></span>
-				<el-tooltip content='导出Excel' placement='top'>
-					<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-				</el-tooltip>				 
-        <el-tooltip content='显示更多查询条件' placement='top'>
-          <el-button @click='queryShowMore=!queryShowMore' size='mini'>
-          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
-          </el-button>
-        </el-tooltip> -->
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
-				<el-form-item label='资产编号' prop='no'>
-					<el-input v-model='queryParams.no' clearable></el-input>
+				<el-form-item label='资产编号' prop='asset_no'>
+					<el-input v-model='queryParams.asset_no' clearable></el-input>
 				</el-form-item>
 				<div v-show='queryShowMore'>
-					<el-form-item label='资产型号' prop='model'>
-						<el-input v-model='queryParams.model' clearable></el-input>
-					</el-form-item>
-					
+					<el-form-item label='资产型号' prop='asset_model'>
+						<el-input v-model='queryParams.asset_model' clearable></el-input>
+					</el-form-item>					
 					<el-form-item label='领用部门' prop='dep_id'>
 						<el-input v-model='queryParamsLabel.dep_name' placeholder='点击选择' readonly clearable @click.native='openSelectDepDialog'>
 							<i 
@@ -61,17 +50,23 @@
 					<el-form-item label='领用员工' prop='employee_name'>
 						<el-input v-model='queryParams.employee_name' clearable></el-input>
 					</el-form-item>
-					<el-form-item label='入库日期'>
+					<el-form-item label='使用地点' prop='place'>
+						<el-input v-model='queryParams.place' clearable></el-input>
+					</el-form-item>
+					<el-form-item label='领用备注' prop='remarks'>
+						<el-input v-model='queryParams.remarks' clearable></el-input>
+					</el-form-item>
+					<el-form-item label='领用日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
-								<el-form-item prop='buy_date_begin'>
-					      	<el-date-picker v-model='queryParams.buy_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+								<el-form-item prop='use_date_begin'>
+					      	<el-date-picker v-model='queryParams.use_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					    	</el-form-item>
 					    </el-col>
 					    <el-col :span="2">至</el-col>
 					    <el-col :span="11">
-					    	<el-form-item prop='buy_date_end'>
-					    		<el-date-picker v-model='queryParams.buy_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    	<el-form-item prop='use_date_end'>
+					    		<el-date-picker v-model='queryParams.use_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					      </el-form-item>
 					    </el-col>
 				  	</el-row>
@@ -219,21 +214,19 @@ export default {
 			selectionList:[],
 			queryShowMore:this.showMore,
 			initParams:{},
-			queryParamsLabel:{
-				dep_name:''
-			},
+			queryParamsLabel:{...initQueryParamsLabel},
 			//查询条件字段
 			queryParams:{
 				asset_no:'',//项目编号
-				project_name:'',//项目名称
-				invoice_no:'',//开票号
+				asset_model:'',//项目名称
+				dep_id:'',
+				hasSubDep:1,
+				employee_name:'',
+				place:'',
 				remarks:'',
-				invoice_company_name:'',//开票号
-				contract_no:'',//合同编号
-				customer_name:'',//客户单位				
-				company_name:'',//业绩公司
-				salesman:'',//业务员
-				hasSubDep:1
+				employee_name:'',
+				use_date_begin:'',
+				use_date_end:''
 			},
 			//数据请求的参数
 			requestParams:{
@@ -308,13 +301,13 @@ export default {
 			}else{
 				this.requestParams = {...this.requestParams,...this.queryParams}
 			}			
+			this.requestParams.currentPage=1
 			this.getData()
 		},
 		//重置查询条件
 		resetQuery(){
 			this.$refs.formQuery.resetFields()
-			// this.queryParams = {...this.queryParams,...this.params}
-			this.requestParams.currentPage=1
+			this.queryParamsLabel = {...initQueryParamsLabel}
 			this.query()
 		},
 		openDetails(row){

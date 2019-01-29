@@ -21,16 +21,6 @@
           	</el-button>
           </el-tooltip>
 				</el-button-group>
-				<!-- <span><el-button type='primary' @click='query' icon='el-icon-search' size='mini'></el-button></span>
-				<span><el-button @click='resetQuery' size='mini'>重置</el-button ></span>
-				<el-tooltip content='导出Excel' placement='top'>
-					<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-				</el-tooltip>				 
-        <el-tooltip content='显示更多查询条件' placement='top'>
-          <el-button @click='queryShowMore=!queryShowMore' size='mini'>
-          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
-          </el-button>
-        </el-tooltip> -->
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
 				<el-form-item label='资产编号' prop='no'>
@@ -74,9 +64,15 @@
 					<el-form-item label='备注' prop='remarks'>
 						<el-input v-model.trim='queryParams.remarks' clearable></el-input>
 					</el-form-item>		
+					<el-form-item label='来源方式' prop='source'>
+						<el-input v-model.trim='queryParams.source' clearable></el-input>
+					</el-form-item>	
 					<el-form-item label='序列号' prop='sn'>
 						<el-input v-model.trim='queryParams.sn' clearable></el-input>
-					</el-form-item>	
+					</el-form-item>						
+					<el-form-item label='供应商' prop='supplier_name'>
+						<el-input v-model.trim='queryParams.supplier_name' clearable></el-input>
+					</el-form-item>
 					<el-form-item label='所属公司' prop='company_ids'>
 						<el-select 
 							v-model='queryParams.company_ids' 
@@ -89,7 +85,7 @@
 								:key='item.id'
 								:label='item.name'
 								:value='item.id'
-								v-show='item.is_disabled?false:true'
+								v-show='item.is_disabled==1?false:true'
 							></el-option>
 						</el-select>
 					</el-form-item>	
@@ -97,13 +93,13 @@
 						<el-row style='width:300px'>
 							<el-col :span="11">
 								<el-form-item prop='inbound_date_begin'>
-					      	<el-date-picker v-model='queryParams.inbound_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					      	<el-date-picker v-model.trim='queryParams.inbound_date_begin' placeholder='开始日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					    	</el-form-item>
 					    </el-col>
 					    <el-col :span="2">至</el-col>
 					    <el-col :span="11">
 					    	<el-form-item prop='inbound_date_end'>
-					    		<el-date-picker v-model='queryParams.inbound_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
+					    		<el-date-picker v-model.trim='queryParams.inbound_date_end' placeholder='结束日期' value-format='yyyy-MM-dd' style='width: 100%'></el-date-picker>
 					      </el-form-item>
 					    </el-col>
 				  	</el-row>
@@ -112,7 +108,7 @@
             <el-row style='width:300px'>
               <el-col :span="11">
                 <el-form-item prop='price_begin'>
-                  <el-input v-model='queryParams.price_begin' placeholder='最小值' clearable>
+                  <el-input v-model.trim='queryParams.price_begin' placeholder='最小值' clearable>
                     <span slot="prefix">￥</span>
                   </el-input>
                 </el-form-item>
@@ -120,7 +116,7 @@
               <el-col :span="2">至</el-col>
               <el-col :span="11">
                 <el-form-item prop='price_end'>
-                  <el-input v-model='queryParams.price_end' placeholder='最小值' clearable>
+                  <el-input v-model.trim='queryParams.price_end' placeholder='最小值' clearable>
                     <span slot="prefix">￥</span>
                   </el-input>
                 </el-form-item>
@@ -205,16 +201,21 @@
 				</template>
 			</el-table-column>
 			<el-table-column 
+				prop='source' 
+				label='来源方式' 
+				width='100' 
+				show-overflow-tooltip />
+			<el-table-column 
 				prop='sn' 
 				label='序列号' 
 				width='100' 
-				show-overflow-tooltip />
+				show-overflow-tooltip />				
+			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />	
 			<el-table-column 
 				prop='company_name' 
 				min-width='120' 
 				label='资产所属公司' 
-				show-overflow-tooltip />	
-			<el-table-column prop='remarks' label='备注' width='120' show-overflow-tooltip />	
+				show-overflow-tooltip />
 			<el-table-column 
 				prop='create_user_name' 
 				label='录入员' />
@@ -329,7 +330,11 @@ export default {
 				hasSubType:1,
 				inbound_date_begin:'',
 				inbound_date_end:'',
-				company_ids:[]
+				company_ids:[],
+				supplier_name:'',
+				source:'',
+				price_begin:'',
+				price_end:''
 			},
 			//数据请求的参数
 			requestParams:{

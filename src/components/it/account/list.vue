@@ -12,9 +12,9 @@
 				  <el-tooltip content='重置查询条件' placement='top'>
 					  <el-button icon="el-icon-refresh" @click='resetQuery'></el-button>
 					</el-tooltip>
-				  <el-tooltip content='导出Excel' placement='top'>
+				 <!--  <el-tooltip content='导出Excel' placement='top'>
 				  	<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-					</el-tooltip>
+					</el-tooltip> -->
 				  <el-tooltip content='显示更多查询条件' placement='top'>
 					  <el-button @click='queryShowMore=!queryShowMore' size='mini'>
 	          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
@@ -24,17 +24,17 @@
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
 				<el-form-item label='账号名称' prop='name'>
-					<el-input v-model='queryParams.name' clearable></el-input>
+					<el-input v-model.trim='queryParams.name' clearable></el-input>
 				</el-form-item>
 				<el-form-item label='登录地址' prop='login_address'>
-					<el-input v-model='queryParams.login_address' clearable></el-input>
+					<el-input v-model.trim='queryParams.login_address' clearable></el-input>
 				</el-form-item>
 				<div v-show='queryShowMore'>
 					<el-form-item label='登录账号' prop='account'>
-						<el-input v-model='queryParams.account' clearable></el-input>
+						<el-input v-model.trim='queryParams.account' clearable></el-input>
 					</el-form-item>
-					<el-form-item label='账号密码' prop='password'>
-						<el-input v-model='queryParams.password' clearable></el-input>
+					<el-form-item label='备注' prop='remarks'>
+						<el-input v-model.trim='queryParams.remarks' clearable></el-input>
 					</el-form-item>
 				</div>
 			</el-form>
@@ -173,7 +173,10 @@ export default {
 			},
 			//查询条件字段
 			queryParams:{		
-				
+				name:'',
+				login_address:'',
+				account:'',
+				remarks:''
 			},
 			//数据请求的参数
 			requestParams:{

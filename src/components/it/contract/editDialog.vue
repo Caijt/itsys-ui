@@ -26,7 +26,7 @@
 							:key='item.id'
 							:label='item.name'
 							:value='item.id'
-							v-show='item.is_disabled?false:true'
+							v-show='item.is_disabled==1?false:true'
 						></el-option>
 					</el-select>
 				</el-form-item>

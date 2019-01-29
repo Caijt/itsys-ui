@@ -57,6 +57,9 @@ body {
 
 .c-form-condensed .el-form-item{
   margin-bottom: 3px;
+  .el-input{
+    max-width: 150px;
+  }
 }
 .c-form-small .el-form-item{
   margin-bottom: 0px;
