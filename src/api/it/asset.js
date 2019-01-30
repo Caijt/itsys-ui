@@ -88,7 +88,7 @@ export default {
 			'supplier_id',
 			'model',
 			'diy_no',			
-			'buy_date',
+			'inbound_date',
 			'price',
 			'amount',
 			'sn',
