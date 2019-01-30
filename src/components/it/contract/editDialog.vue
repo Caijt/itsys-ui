@@ -31,7 +31,7 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label='合同编号' prop='no' >
-					<el-input v-model='form.no' placeholder='' style='width:30%'>
+					<el-input v-model='form.no' placeholder='' style='width:150px'>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='合同名称' prop='name' >
@@ -49,7 +49,7 @@
 					</el-input>
 				</el-form-item>
 				<el-form-item label='合同金额' prop='price' >
-					<el-input v-model.number='form.price' style='width: 30%'>
+					<el-input v-model.number='form.price' style='width:150px'>
 						<span slot="prefix">￥</span>
 					</el-input>
 				</el-form-item>
@@ -57,19 +57,19 @@
 					<el-date-picker 
 						v-model='form.sign_date' 
 						value-format='yyyy-MM-dd' 
-						style='width: 30%' />
+						style='width:150px' />
 				</el-form-item>
 				<el-form-item label='生效日期' prop='begin_date'>
 					<el-date-picker 
 						v-model='form.begin_date' 
 						value-format='yyyy-MM-dd' 
-						style='width: 30%' />
+						style='width:150px' />
 				</el-form-item>
 				<el-form-item label='失效日期' prop='end_date'>
 					<el-date-picker 
 						v-model='form.end_date' 
-						value-format='yyyy-MM-dd' 
-						style='width: 30%' />
+						value-format='yyyy-MM-dd'						
+						style='width:150px' />
 				</el-form-item>
 				<el-form-item label='失效提醒' prop='is_remind'>
 					<el-switch 
@@ -77,15 +77,15 @@
 						:active-value="1"
     				:inactive-value="0"
 					/>
-					<span style='font-size: 12px'>在合同失效日期前一个月内在IT中心主页上进行提醒显示</span>
+					<span style='font-size: 12px'> * 在合同失效日期前一个月内在IT中心主页上进行提醒显示</span>
 				</el-form-item>
 				<el-form-item label='备注' prop='remarks' >
-					<el-input v-model='form.remarks' placeholder=''>
+					<el-input type='textarea' v-model='form.remarks' placeholder=''>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='附件' prop='remarks'>
-					<attach-upload ref='attachUpload' :params='attachParams' @uploaded='uploaded'></attach-upload>
-					<attach-list ref='attachList' show-del @del='updated=true'></attach-list>
+					<attach-upload ref='attachUpload' :url='uploadAttachUrl' :params='attachParams' @uploaded='uploaded'></attach-upload>
+					<attach-list ref='attachList' :del-url='delAttachUrl' show-del @del='updated=true'></attach-list>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -98,12 +98,13 @@
 </div>
 </template>
 <script>
-	import contractApi from '@/api/it/contract'
+	import api from '@/api/it/contract'
 	import companyApi from '@/api/sys/company'
 	import attachUpload from '@/components/common/attach/upload'
 	import attachList from '@/components/common/attach/textList'
 	import supplierDialog from '@/components/it/supplier/listDialog'
 
+	const todayDate = new Date().toJSON().substr(0,10)
 	const formInit = {		
 		id:null,
 		input_status:-1,
@@ -113,8 +114,8 @@
 		supplier_id:null,
 		supplier_name:'',
 		price:0,
-		sign_date:new Date(),
-		begin_date:new Date(),
+		sign_date:todayDate,
+		begin_date:todayDate,
 		end_date:'',
 		is_remind:0,
 		remarks:''		
@@ -146,11 +147,7 @@
 					supplier_id:[{ required:true, message:'请选择供应合作商' }],
 					sign_date:[{ required:true, message:'请填写合同签订日期' }],
 					begin_date:[{ required:true, message:'请填写合同生效日期' }],
-					price:[{ type:'number',message:'请输入数字' }],
-					price2:[
-						{ required:true,message:'请填写资产数量' },
-						{ validator:this.$commonJs.validateRules.et0}
-					]
+					price:[{ type:'number',message:'请输入数字' }]
 				},
 				params:{
 					no:null
@@ -159,8 +156,7 @@
 				companyList:[],
 				companyLoading:false,
 				attachParams:{
-					table_name:'it_contract',
-					table_id:null
+					id:null
 				}
 			}
 		},
@@ -176,6 +172,12 @@
 					title += ' [ 新增 ]'
 				}
 				return title
+			},
+			uploadAttachUrl(){
+				return api.uploadAttachUrl
+			},
+			delAttachUrl(){
+				return api.delAttachUrl
 			}
 		},
 		mounted(){
@@ -213,7 +215,7 @@
 			create(){
 				this.loading = true
 				return new Promise((resolve,reject)=>{
-					contractApi.create().then(res=>{
+					api.create().then(res=>{
 						this.initData( res.data )
 						this.loading = false
 						resolve()
@@ -222,7 +224,7 @@
 			},
 			getForm(id){
 				this.loading = true
-				contractApi.getForm(id).then(res=>{
+				api.getForm(id).then(res=>{
 					this.initData(res.data)
 					this.loading = false
 				})
@@ -230,7 +232,7 @@
 			initData(data){
 				this.assign(data)
 
-				this.attachParams.table_id = data.id
+				this.attachParams.id = data.id
 				if(data.attach_ids){
 					this.$refs.attachList.initData({ attach_ids:data.attach_ids})
 				}
@@ -255,7 +257,7 @@
 			update(){
 				this.loading = true
 				let messageText = this.form.action?'提交成功':'保存成功'
-				contractApi.update(this.form).then(res=>{
+				api.update(this.form).then(res=>{
 					this.form.input_status = res.data.input_status
 					this.loading = false
 					this.$message.success(messageText)

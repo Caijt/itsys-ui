@@ -16,7 +16,7 @@
 				<el-button @click='openImportDialog'>Excel导入</el-button>
 			</el-button-group>
 		</div>
-		<el-tabs v-model='tabName' @tab-click='tabClick'>
+		<el-tabs  v-model='tabName' @tab-click='tabClick'>
 			<el-tab-pane label='全部' name='ALL'></el-tab-pane>
 			<el-tab-pane label='闲置' name='FREE'></el-tab-pane>
 			<el-tab-pane label='维修' name='REPAIR'></el-tab-pane>
@@ -120,7 +120,7 @@ export default {
 		copy({row}){
 			this.$refs.editDialog.open().then(that=>{
 				that.create().then(res=>{
-					let copyData = this.$commonJs.obj.copyByKey(row,['model','company_id','type_id','type_name','supplier_id','supplier_name','buy_date','price','amount','sn','remarks'])
+					let copyData = this.$commonJs.obj.copyByKey(row,['model','company_id','type_id','type_name','supplier_id','stock_warning_name','stock_warning_id','supplier_name','buy_date','price','amount','sn','source','remarks'])
 					that.assign(copyData).clearValidate()
 				})
 			})

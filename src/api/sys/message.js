@@ -3,11 +3,9 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/contract' 
+const BASE_URL = baseUrl +'/message' 
 
 export default {
-	uploadAttachUrl: BASE_URL+'/uploadAttach',
-	delAttachUrl: BASE_URL+'/delAttach',
 	getPrintQrcode(id){
 		return BASE_URL+'/getPrintQrcode/id/'+id
 	},
@@ -64,37 +62,17 @@ export default {
 			params
 		})
 	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getProductList',
-			method:'get',
-			params
-		})
-	},
-	create(){
-		return request({
-			url: BASE_URL + '/create',
-			method:'post'
-		})
-	},
-	update(data){
+	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
 			'action',
-			'company_id',
-			'supplier_id',
-			'no',
-			'name',
-			'price',
-			'sign_date',
-			'begin_date',
-			'end_date',
-			'is_remind',
-			'remarks'
+			'code',
+			'remarks',
+			'user',
+			'is_disabled'
 		])
 		return request({
-			url: BASE_URL + '/update',
+			url: BASE_URL + '/save',
 			method:'post',
 			data
 		})
@@ -108,65 +86,12 @@ export default {
 			}
 		})
 	},
-	undo(id){
-		return request({
-			url: BASE_URL + '/undo',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undoReview(id){
-		return request({
-			url: BASE_URL + '/undoReview',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
 	getSummaryData(params){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getSummaryData',
 			method:'get',
 			params
-		})
-	},
-	loadFinish(task_id){
-		return request({
-			url: BASE_URL + '/loadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	undoLoadFinish(task_id){
-		return request({
-			url: BASE_URL + '/undoLoadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	review(data){
-		data = commonJs.obj.copyByKey(data,['id'])
-		return request({
-			url: BASE_URL + '/review',
-			method:'post',
-			data
-		})
-	},
-	driverSupply(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id','driver_unit','driver_no','driver_name','driver_tel'])
-		return request({
-			url: BASE_URL + '/driverSupply',
-			method:'post',
-			data
 		})
 	},
 	exportExcel(params){
@@ -188,6 +113,15 @@ export default {
 			url: BASE_URL + '/getTimeStatistic',
 			method:'get',
 			params
+		})
+	},
+	checkNameUnique(name,id=null){
+		return request({
+			url: BASE_URL + '/checkNameUnique',
+			method:'get',
+			params:{
+				name,id
+			}
 		})
 	},
 }

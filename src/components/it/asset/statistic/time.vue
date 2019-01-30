@@ -124,7 +124,7 @@
 		},
 		beforeDestroy() {
 	    if (!this.echarts) {
-	      return
+	      return false
 	    }
 	    this.echarts.dispose();
 	    this.echarts = null;

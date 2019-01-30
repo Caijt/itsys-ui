@@ -43,7 +43,7 @@
 			<!-- <div style='clear: both'></div> -->
 		</div>
 		<span slot="footer">
-			<el-progress v-show='list.length>0' :text-inside="true" :stroke-width="18" :percentage="getImgPercentage" style='margin-bottom:10px' :status="getImgPercentage==100?'success':''"></el-progress>
+			<el-progress v-show='list.length>0' :text-inside="true" :stroke-width="18" :percentage="getImgPercentage" style='margin-bottom:10px' :status="getImgPercentage==100?'success':'text'"></el-progress>
 	    <el-button type='primary' @click="print" v-loading='getImgPercentage!=100' v-show='list.length>0'>打 印</el-button>
 	    <el-tooltip content='开启后，可选择个别标签进行单独打印'>
 	    	<el-checkbox v-model="selectMode" border>选择模式</el-checkbox>

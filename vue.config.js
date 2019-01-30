@@ -1,6 +1,7 @@
 module.exports = {
   outputDir: 'dist',
   publicPath: process.env.NODE_ENV === 'production' ? '' : '/',
+  lintOnSave:false,//关闭eslint规范
   devServer:{
   	port:8080,
   	open:true,

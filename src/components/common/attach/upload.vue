@@ -12,7 +12,7 @@
 	  :before-upload="beforeUpload"
 	  :disabled='disabled'>
 	  <el-button slot="trigger" size="mini" type="primary" :disabled='disabled'>选择{{type=='img'?"图片":"文件"}}</el-button>
-	  <el-button size="mini" type="success" @click="upload" :disabled='disabled' v-if='!hideUploadButton'>上传</el-button>
+	  <el-button size="mini" style='margin-left:5px' type="success" @click="upload" :disabled='disabled' v-if='!hideUploadButton'>上传</el-button>
 	  <span slot="tip" class="el-upload__tip">（请先修改好{{type=='img'?"图片":"文件"}}名再上传，大小不超过10MB）</span>
 	</el-upload>
 </template>

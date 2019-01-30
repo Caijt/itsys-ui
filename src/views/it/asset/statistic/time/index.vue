@@ -2,7 +2,7 @@
 	<div>
 		<el-alert 
 			type='warning'
-			title='以购买日期为统计单位对时段范围内的购买的资产金额及资产数量进行统计'
+			title='以入库日期为统计单位对时段范围内的入库的IT资产金额及IT资产数量进行统计'
 			style='margin-bottom: 15px'
 		/>
 		<time-statistic ref='timeStatistic'/>

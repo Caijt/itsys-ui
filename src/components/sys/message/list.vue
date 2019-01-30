@@ -15,19 +15,19 @@
 				  <!-- <el-tooltip content='导出Excel' placement='top'>
 				  	<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
 					</el-tooltip> -->
-				  <el-tooltip content='显示更多查询条件' placement='top'>
+				 <!--  <el-tooltip content='显示更多查询条件' placement='top'>
 					  <el-button @click='queryShowMore=!queryShowMore' size='mini'>
 	          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
           	</el-button>
-          </el-tooltip>
+          </el-tooltip> -->
 				</el-button-group>
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
-				<el-form-item label='公司名称' prop='name'>
-					<el-input v-model='queryParams.name' clearable></el-input>
+				<el-form-item label='消息编码' prop='code'>
+					<el-input v-model='queryParams.code' clearable></el-input>
 				</el-form-item>
-				<el-form-item label='地址' prop='address'>
-					<el-input v-model='queryParams.address' clearable></el-input>
+				<el-form-item label='说明' prop='remarks'>
+					<el-input v-model='queryParams.remarks' clearable></el-input>
 				</el-form-item>		
 				<div v-show='queryShowMore'>
 				</div>
@@ -54,34 +54,13 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column prop='name' label='公司名称' min-width='120' show-overflow-tooltip/>
+			<el-table-column prop='code' label='消息编码' min-width='120' show-overflow-tooltip/>
+			<el-table-column prop='remarks' label='说明' min-width='120' show-overflow-tooltip/>	
+			<el-table-column prop='user' label='推送用户' min-width='120' show-overflow-tooltip/>	
 			<el-table-column prop='is_disabled' align='center' label='状态' width='80'>
 				<template slot-scope='{row}'>
 					<el-tag type='success' v-if='row.is_disabled==0'>启用</el-tag>
 					<el-tag type='info' v-else>禁用</el-tag>
-				</template>
-			</el-table-column>
-			<el-table-column prop='address' label='地址' min-width='120' show-overflow-tooltip/>	
-			<el-table-column 
-				prop='create_user_name' 
-				width='90' 
-				label='录入员' />
-			<el-table-column 
-				prop='create_time' 
-				width='120' 
-				label='创建时间' 
-				sortable='custom'>
-				<template slot-scope='{ row }'>
-					<span>{{ row.create_time | formatDate }}</span>
-				</template>
-			</el-table-column>
-			<el-table-column 
-				prop='update_time' 
-				label='最近更新时间' 
-				width='120' 
-				sortable='custom'>
-				<template slot-scope='{row}'>
-					<span>{{ row.update_time | formatDate }}</span>
 				</template>
 			</el-table-column>
 			<!-- slot[column] -->
@@ -103,7 +82,7 @@
 	</div>
 </template>
 <script>
-import api from '@/api/sys/company'
+import api from '@/api/sys/message'
 
 export default {
 	components:{  },
@@ -259,7 +238,7 @@ export default {
 			this.list = []
 		},
 		del(row){
-			let confirmText = '确定删除此公司吗？'
+			let confirmText = '确定删除此消息推送吗？'
 			this.$confirm(confirmText,'提示',{
 				type: 'warning'
 			}).then(()=>{

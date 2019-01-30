@@ -33,6 +33,9 @@
 					<el-form-item label='供应商' prop='supplier_name'>
 						<el-input v-model.trim='queryParams.supplier_name' clearable></el-input>
 					</el-form-item>
+					<el-form-item label='备注' prop='remarks'>
+						<el-input v-model.trim='queryParams.remarks' clearable></el-input>
+					</el-form-item>
 					<el-form-item label='签订日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
@@ -120,6 +123,7 @@
 					<el-tag v-else type='info'>否</el-tag>
 				</template>
 			</el-table-column>
+			<el-table-column prop='remarks' label='备注' min-width='120' show-overflow-tooltip/>
 			<el-table-column prop='company_name' label='合同所属公司' min-width='120' show-overflow-tooltip/>
 			<el-table-column 
 				prop='create_user_name' 

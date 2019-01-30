@@ -59,7 +59,8 @@ export default {
 			loading: false,			
 			list:[],
 			dataTotal:0,		
-			queryShowMore:false,			
+			queryShowMore:false,	
+			initParams:{},		
 			//数据请求的参数
 			requestParams:{
 				isAttachIds:1,
@@ -72,7 +73,7 @@ export default {
 	},
 	methods:{
 		initData(p){
-			this.requestParams = { ...this.requestParams,...this.params,...p}
+			this.initParams = { ...p}
 			this.getData()
 		},
 		reload(){
@@ -81,7 +82,7 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			attachApi.getList(this.requestParams,...this.params).then(res=>{
+			attachApi.getList({ ...this.requestParams,...this.params,...this.initParams }).then(res=>{
 				this.list = res.data.list
 				this.dataTotal = res.data.total
 				this.loading = false
