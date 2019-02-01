@@ -25,14 +25,12 @@
 					<div class="_it-asset-label-content">
 						<img class='qrcode' :src="getQrcodeImg(item.id)" v-on:load='imgLoad'/>
 						<div class='_it-asset-label-content-text'>
-							<div>
-								<div class='_it-asset-label-content-text-title'>
-									金刚玻璃IT资产
-								</div>
-								<div style='font-size: 12px'>
-									<div style='margin-bottom: 5px'>No:{{item.no}}</div>
-									<div>{{item.model}}</div>
-								</div>
+							<div class='_it-asset-label-content-text-title'>
+								金刚玻璃IT资产
+							</div>
+							<div style='font-size: 12px'>
+								<div style='margin-bottom: 5px'>No:{{item.no}}</div>
+								<div>{{item.model}}</div>
 							</div>
 						</div>
 					</div>
