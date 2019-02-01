@@ -62,7 +62,7 @@
 			stripe
 			row-key='id'
 			:size='size'
-			:max-height='maxHeight' 
+			:max-height='tableMaxHeight' 
 			show-summary
 			@selection-change='selectionChange'
 			:summary-method='getSummaryData'
@@ -147,7 +147,7 @@ export default {
 			default:''
 		},
 		maxHeight:{
-			default:350
+			default:null
 		},
 		params:{
 			default:()=>({})
@@ -205,13 +205,18 @@ export default {
 			},
 			//数据请求的参数
 			requestParams:{
-				pageSize:10,//分页大小
+				pageSize:this.$store.state.sys.pageSize,//分页大小
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
 				noPage:this.noPage?1:0,
 				inCompany:1
 			}
+		}
+	},
+	computed:{
+		tableMaxHeight(){
+			return this.maxHeight?this.maxHeight:this.$store.state.sys.tableMaxHeight
 		}
 	},
 	created(){

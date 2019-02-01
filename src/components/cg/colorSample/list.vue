@@ -5,16 +5,22 @@
 <template>
   <div>
     <!-- 查询条件 -->
-    <div style='margin-bottom:3px' v-show='!hideQuery'>
-      <div style='float:right;margin-top:3px'>
-        <span><el-button type='primary' @click='query' size='mini'>查询</el-button></span>
-        <span><el-button @click='resetQuery' size='mini'>重置</el-button ></span>
-        <span><el-button @click='exportExcel' size='mini'>导出</el-button ></span>
-        <el-tooltip content='显示更多查询条件' placement='top'>
-          <el-button @click='queryShowMore=!queryShowMore' size='mini'>
-          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
-          </el-button>
-        </el-tooltip>
+    <div style='margin-bottom:2px' v-show='!hideQuery'>
+      <div style='float:right'>
+        <el-button-group>
+          <el-button type='primary' icon="el-icon-search" @click='query'></el-button>
+          <el-tooltip content='重置查询条件' placement='top'>
+            <el-button icon="el-icon-refresh" @click='resetQuery'></el-button>
+          </el-tooltip>
+          <el-tooltip content='导出Excel' placement='top'>
+            <el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
+          </el-tooltip>
+          <el-tooltip content='显示更多查询条件' placement='top'>
+            <el-button @click='queryShowMore=!queryShowMore' size='mini'>
+            <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
+            </el-button>
+          </el-tooltip>
+        </el-button-group>
       </div>
       <el-form ref='formQuery' :model='queryParams' label-width='68px' 
         class='c-form-condensed' inline size='mini'>

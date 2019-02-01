@@ -30,8 +30,12 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label='名称' prop='name' >
-					<el-input v-model='form.name' placeholder=''>
+				<el-form-item label='简称' prop='name' >
+					<el-input v-model='form.name' placeholder='简单容易记住，一般不超过4个字'>
+					</el-input>
+				</el-form-item>
+				<el-form-item label='全称' prop='full_name' >
+					<el-input v-model='form.full_name' placeholder='供应商完整公司名称'>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='地址' prop='address' >
@@ -108,7 +112,8 @@
 				data:{ },				
 				form:{ ...formInit },
 				rules:{
-					name:[{ required:true, message:'请填写供应商名称' }],
+					name:[{ required:true, message:'请填写供应商简称' }],
+					full_name:[{ required:true, message:'请填写供应商完全名称' }],
 					company_id:[{ required:true, message:'请选择所属公司' }],
 				},
 				updated:false,

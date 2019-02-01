@@ -1,7 +1,7 @@
 <template>
 	<el-dialog 
 		class='c-dialog-fixed'
-		title='员工列表' 
+		title='合同列表' 
 		width='80%'		
 		:visible.sync='show'
 		:append-to-body='inDialog'

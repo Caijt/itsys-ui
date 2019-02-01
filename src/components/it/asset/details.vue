@@ -42,22 +42,22 @@
 							<el-form-item label='所属公司'>
 								<span>{{form.company_name}}</span>
 							</el-form-item>
-						</el-col>
-						<el-col :span='24'>
-							<el-form-item label='供应商'>
-								<span>{{form.supplier_name}}</span>
-							</el-form-item>
-						</el-col>
+						</el-col>						
 					</el-row>
 					<el-row :gutter='10'>
 						<el-col :span='8'>
 							<el-form-item label='入库日期' >
 								<span>{{form.inbound_date}}</span>
 							</el-form-item>
-						</el-col>
+						</el-col>	
 						<el-col :span='8'>
-							<el-form-item label='总价格'>
-								<span>￥{{form.price}}</span>
+							<el-form-item label='来源方式' >
+								<span>{{form.source}}</span>
+							</el-form-item>
+						</el-col>						
+						<el-col :span='8' v-if='form.stock_warning_id'>
+							<el-form-item label='库存种类'>
+								<span>{{form.stock_warning_name}}</span>
 							</el-form-item>
 						</el-col>
 					</el-row>
@@ -77,14 +77,24 @@
 								<span>{{form.remain}}</span>
 							</el-form-item>
 						</el-col>
+						<el-col :span='16'>
+							<el-form-item label='供应商'>
+								<span class='c-link no-line' @click='openSupplierDetails(form)'>{{form.supplier_name}}</span>
+							</el-form-item>
+						</el-col>
+						<el-col :span='8'>
+							<el-form-item label='资产价格'>
+								<span>￥{{form.price}}</span>
+							</el-form-item>
+						</el-col>
 						<el-col :span='24'>
 							<el-form-item label='备注'>
-								<span>{{form.remarks}}</span>
+								<span v-html='$commonJs.textareaToHtml(form.remarks)'></span>
 							</el-form-item>
 						</el-col>
 						<el-col :span='24'>
 							<el-form-item label='附件'>
-								<attach-list ref='taskAttachList' />
+								<attach-list ref='attachList' />
 							</el-form-item>
 						</el-col>		
 					</el-row>
@@ -125,6 +135,7 @@
 				<slot name='footer' :data='form'></slot>
 			</template>
 		</el-dialog>
+		<supplier-details :in-dialog='inDialog' ref='supplierDetails'/>
 	</div>
 </template>
 <script>
@@ -132,6 +143,7 @@
 	import attachList from '@/components/common/attach/textList'
 	import qrcodePopover from '@/components/common/qrcodePopover'
 	import statusTag from './statusTag'
+	import supplierDetails from '@/components/it/supplier/details'
 
 	const formInit = {
 		id:null
@@ -140,7 +152,8 @@
 		components:{ 
 			attachList,
 			qrcodePopover,
-			statusTag
+			statusTag,
+			supplierDetails
 		},
 		props:{
 			inDialog:{
@@ -191,7 +204,11 @@
 			closeDialog(){
 				this.tabName = 'useStatus'
 				this.form = {...formInit}
-				this.$refs.taskAttachList.clear()
+				this.$refs.attachList.clear()
+				this.$refs.assetUseStatusList.clear()
+				this.$refs.assetUseReturnList.clear()
+				this.$refs.assetRepairList.clear()
+				this.$refs.assetScrapList.clear()
 			},
 			getDetails(id){
 				this.loading = true
@@ -205,7 +222,7 @@
 			initData(data){
 				this.form = { ...data }
 				if(data.attach_ids){
-					this.$refs.taskAttachList.initData({attach_ids:data.attach_ids})
+					this.$refs.attachList.initData({attach_ids:data.attach_ids})
 				}
 				this.$refs.assetUseStatusList.initData({asset_id:data.id})
 				this.$refs.assetUseReturnList.initData({asset_id:data.id})
@@ -220,6 +237,11 @@
 			},
 			reload(){
 				this.get(this.form.id)
+			},
+			openSupplierDetails(row){
+				this.$refs.supplierDetails.open().then(that=>{
+					that.getDetails(row.supplier_id)
+				})
 			}
 		}
 	}

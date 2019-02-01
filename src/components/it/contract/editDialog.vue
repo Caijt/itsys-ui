@@ -52,7 +52,7 @@
 					<el-input v-model.number='form.price' style='width:150px'>
 						<span slot="prefix">￥</span>
 					</el-input>
-				</el-form-item>
+				</el-form-item>			
 				<el-form-item label='签订日期' prop='sign_date'>
 					<el-date-picker 
 						v-model='form.sign_date' 
@@ -231,7 +231,6 @@
 			},
 			initData(data){
 				this.assign(data)
-
 				this.attachParams.id = data.id
 				if(data.attach_ids){
 					this.$refs.attachList.initData({ attach_ids:data.attach_ids})

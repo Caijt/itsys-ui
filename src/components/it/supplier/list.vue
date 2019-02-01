@@ -33,6 +33,9 @@
 					</el-select>
 				</el-form-item>
 				<div v-show='queryShowMore'>
+					<el-form-item label='全称' prop='full_name'>
+						<el-input v-model.trim='queryParams.full_name' clearable></el-input>
+					</el-form-item>
 					<el-form-item label='地址' prop='address'>
 						<el-input v-model.trim='queryParams.address' clearable></el-input>
 					</el-form-item>		
@@ -56,7 +59,7 @@
 			stripe
 			row-key='id'
 			:size='size'
-			:max-height='maxHeight' 			
+			:max-height='tableMaxHeight' 			
 			@selection-change='selectionChange'
 			:summary-method='getSummaryData'
 			@sort-change='sortChange'>			
@@ -66,10 +69,15 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column prop='name' label='供应商名称' min-width='120' show-overflow-tooltip/>			
+			<el-table-column prop='name' label='供应商简称' min-width='100' show-overflow-tooltip>
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openDetails(row)'>{{row.name}}</span>
+				</template>
+			</el-table-column>			
+			<el-table-column prop='full_name' label='供应商全称' min-width='150' show-overflow-tooltip/>			
 			<el-table-column prop='supplier_type' label='合作类型' sortable='custom' width='120' show-overflow-tooltip>
 				<template slot-scope='{row}'>
-					{{row.supplier_type.replace('ASSET','资产供应商').replace('CONTRACT','合同合作商')}}
+					{{row.supplier_type&&row.supplier_type.replace('ASSET','资产供应商').replace('CONTRACT','合同合作商')}}
 				</template>
 			</el-table-column>
 			<el-table-column prop='address' label='地址' sortable='custom' width='120' show-overflow-tooltip/>
@@ -115,27 +123,22 @@
 	    @size-change='sizeChange'
 	    @current-change='getData' />
 	  <!--/ 分页 -->
-	  <asset-details :in-dialog='inDialog' ref='assetDetails' />
-	  <dep-dialog :in-dialog='inDialog' ref='depDialog' show-select @select='selectDep' />
+	  <supplier-details :in-dialog='inDialog' ref='supplierDetails' />
 	</div>
 </template>
 <script>
 import api from '@/api/it/supplier'
-import assetDetails from '@/components/it/asset/details'
-import depDialog from '@/components/hr/dep/treeDialog'
+import supplierDetails from '@/components/it/supplier/details'
 
-const initQueryParamsLabel = {
-	dep_name:''
-}
 export default {
-	components:{ assetDetails, depDialog },
+	components:{ supplierDetails },
 	props:{
 		size:{
 			type:String,
 			default:''
 		},
 		maxHeight:{
-			default:350
+			default:null
 		},
 		params:{
 			default:()=>({})
@@ -191,13 +194,18 @@ export default {
 			},
 			//数据请求的参数
 			requestParams:{
-				pageSize:10,//分页大小
+				pageSize:this.$store.state.sys.pageSize,//分页大小
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
 				noPage:this.noPage?1:0,
 				inCompany:1
 			}
+		}
+	},
+	computed:{
+		tableMaxHeight(){
+			return this.maxHeight?this.maxHeight:this.$store.state.sys.tableMaxHeight
 		}
 	},
 	created(){
@@ -267,13 +275,11 @@ export default {
 		//重置查询条件
 		resetQuery(){
 			this.$refs.formQuery.resetFields()
-			this.queryParamsLabel = { ...initQueryParamsLabel }
-			// this.queryParams = {...this.queryParams,...this.params}
 			this.requestParams.currentPage = 1
 			this.query()
 		},
 		openDetails(row){
-			this.$refs.assetDetails.open().then(that=>{
+			this.$refs.supplierDetails.open().then(that=>{
 				that.initData(row)
 			})
 		},
@@ -300,21 +306,6 @@ export default {
 					this.$emit('del')
 				})
 			})
-		},
-		openUseStatusDialog(row){
-			this.$refs.assetUseStatusDialog.open().then(that=>{
-				that.initData({asset_id:row.id})
-			})
-		},
-		openSelectDepDialog(){
-			this.$refs.depDialog.open().then(that=>{
-				that.initData()
-			})
-		},
-		selectDep(data){
-			this.queryParamsLabel.dep_name = data.name
-			this.queryParams.dep_id = data.id
-			this.$refs.depDialog.close()
 		}
 	}
 }

@@ -57,6 +57,13 @@
 						  :active-value="1">
 						</el-switch>
 					</el-form-item>
+					<el-form-item label='离职' prop='is_disabled'>
+						<el-switch
+						  v-model="queryParams.is_disabled"
+						  :inactive-value="0"
+						  :active-value="1">
+						</el-switch>
+					</el-form-item>
 				</div>
 			</el-form>
 		</div> 

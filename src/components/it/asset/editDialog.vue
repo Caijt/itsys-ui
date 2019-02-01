@@ -313,12 +313,11 @@
 			},
 			update(){
 				this.loading = true
-				let messageText = this.form.input_status?'提交成功':'保存成功'
 				assetApi.update(this.form).then(res=>{
 					this.form.no = res.data.no
 					this.form.input_status = res.data.input_status
 					this.loading = false
-					this.$message.success(messageText)
+					this.$message.success('保存成功')
 					this.updated = true
 					if(this.form.action==1){
 						this.show=false									

@@ -38,6 +38,12 @@
 						<el-radio :label='1'>女</el-radio>
 					</el-radio-group>
 				</el-form-item>
+				<el-form-item label='状态' prop='is_disabled' >
+					<el-radio-group v-model='form.is_disabled'>
+						<el-radio :label='0'>在职</el-radio>
+						<el-radio :label='1'>离职</el-radio>
+					</el-radio-group>
+				</el-form-item>
 				<el-form-item label='备注' prop='remarks' >
 					<el-input v-model='form.remarks' placeholder=''>
 					</el-input>
@@ -168,6 +174,7 @@
 			assign(data){
 				this.form = { ...this.form, ...data }
 				this.form.sex = Number(this.form.sex)
+				this.form.is_disabled = Number(this.form.is_disabled)
 				return this
 			},
 			save(status=0){

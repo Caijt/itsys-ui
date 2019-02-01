@@ -87,6 +87,7 @@ export default {
 			'no',
 			'name',
 			'price',
+			'pay',
 			'sign_date',
 			'begin_date',
 			'end_date',

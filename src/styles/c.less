@@ -69,7 +69,12 @@ body {
 }
 
 .c-link {
-  cursor: pointer;text-decoration: underline;color:#409EFF
+  cursor: pointer;
+  text-decoration: underline;
+  color:#409EFF
+}
+.c-link.no-line {
+  text-decoration: none;
 }
 .c-dialog-small.el-dialog__wrapper{
   .el-dialog__body{
@@ -175,4 +180,10 @@ body {
 
 .c-text-indent{
   text-indent:2em;
+}
+.el-button + * {
+  margin-left: 10px
+}
+* + .el-button {
+  margin-left: 10px
 }

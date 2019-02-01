@@ -84,6 +84,7 @@ export default {
 			'name',			
 			'no',
 			'sex',
+			'is_disabled',
 			'remarks'
 		])
 		return request({

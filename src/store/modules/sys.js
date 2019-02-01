@@ -6,7 +6,9 @@ const sys = {
 		version:'',
 		login:'',
 		company:'',
-		initConfig:false
+		initConfig:false,
+		pageSize:20,//列表的默认页容量
+		tableMaxHeight:420,//列表的默认页容量
 	},
 	getters: {
 	},

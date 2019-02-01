@@ -47,7 +47,7 @@
 			    type="success"
 			    style='margin-bottom:10px'>
 			    <div>
-			    	<el-button type='text' size='mini' @click='$router.push("/it/asset/stockWarning")'>[ 领用交还明细 ]</el-button>
+			    	<el-button type='text' size='mini' @click='$router.push("/it/asset/query/useReturn")'>[ 领用交还明细 ]</el-button>
 			    </div>
 			  </el-alert>
 	    	<use-return-list 

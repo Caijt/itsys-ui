@@ -1,6 +1,5 @@
 <template>
 	<el-container style='height:100%' >
-		<meta name="viewport" content="" />
 		<el-header style='padding:0px;box-shadow:0px 0px 8px  rgba(0,0,0,.4);z-index: 1' :height='headerHeight'>
 			<el-menu 
 				class='_layout-header' 
@@ -64,7 +63,7 @@
 				<router-view style='margin-bottom:25px'/>
 			</el-main>
 			<el-footer height='35px' style='text-align: center;border-top:1px solid #EBEEF5'>
-				<el-button type='text' @click='checkVersion'>Copyright © {{ new Date().getFullYear() }} {{$store.state.sys.company}} | 版本：v<span ref='version'>20190130001</span></el-button>
+				<el-button type='text' @click='checkVersion'>Copyright © {{ new Date().getFullYear() }} {{$store.state.sys.company}} | 版本：v<span ref='version'>20190201001</span></el-button>
 				<!-- <el-button type='text' @click='contactDialog=true'>系统帮助</el-button> -->
 			</el-footer>
 			<el-dialog :visible.sync="contactDialog" title='系统帮助' class='c-dialog-fixed'>
@@ -109,8 +108,10 @@
 			}
 		},
 		created(){
-			this.maxShowHeaderMenu =  Math.floor(document.body.clientWidth / 100) - 3
-			this.checkVersion()
+		 	let meta = document.getElementsByTagName('meta'); 
+		 	meta[1].content=''
+		 	this.maxShowHeaderMenu =  Math.floor(document.body.clientWidth / 100) - 3
+			this.checkVersion()			
 		},
 		beforeRouteEnter(to,from,next){
 			next(vm=>{

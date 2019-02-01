@@ -137,7 +137,7 @@
 			stripe
 			row-key='id'
 			:size='size'
-			:max-height='maxHeight' 
+			:max-height='tableMaxHeight' 
 			show-summary
 			@selection-change='selectionChange'
 			:summary-method='getSummaryData'
@@ -184,27 +184,31 @@
 					<span class='c-link' @click='openUseStatusDialog(row)'>{{row.remain}} / {{row.avaiable_amount}} / {{row.amount}}</span>
 				</template>
 			</el-table-column>
-			<el-table-column 
-				prop='supplier_name' 
-				label='供应商' 
-				width='100' 
-				show-overflow-tooltip />
-			<el-table-column prop='price' label='金额' sortable='custom' width='100' align='right'>
-				<template slot-scope='{row}'>
-					<span>￥{{ row.price }}</span>
-				</template>
-			</el-table-column>			
-			<el-table-column prop='stock_warning_name' label='库存种类' sortable='custom' width='100' show-overflow-tooltip />
 			<el-table-column prop='use_dep_name' label='近期领用人' sortable='custom' width='120' show-overflow-tooltip>
 				<template slot-scope='{row}'>
 					<span>{{row.use_dep_name}} / {{row.use_employee_name}}</span>
 				</template>
 			</el-table-column>
 			<el-table-column 
+				prop='supplier_name' 
+				label='供应商' 
+				width='100' 
+				show-overflow-tooltip>
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openSupplierDetails(row)'>{{row.supplier_name}}</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop='price' label='金额' sortable='custom' width='100' align='right'>
+				<template slot-scope='{row}'>
+					<span>￥{{ row.price }}</span>
+				</template>
+			</el-table-column>			
+			<el-table-column 
 				prop='source' 
 				label='来源方式' 
 				width='100' 
 				show-overflow-tooltip />
+			<el-table-column prop='stock_warning_name' label='库存种类' sortable='custom' width='100' show-overflow-tooltip />			
 			<el-table-column 
 				prop='sn' 
 				label='序列号' 
@@ -256,6 +260,7 @@
 	  <asset-details :in-dialog='inDialog' ref='assetDetails' />
 	  <asset-use-status-dialog :in-dialog='inDialog' hide-asset-fields ref='assetUseStatusDialog'/>
 	  <type-dialog :in-dialog='inDialog' ref='typeDialog' show-select @select='selectType'/>
+	  <supplier-details :in-dialog='inDialog' ref='supplierDetails'/>
 	</div>
 </template>
 <script>
@@ -265,18 +270,20 @@ import assetDetails from '@/components/it/asset/details'
 import assetUseStatusDialog from './useStatus/listDialog'
 import statusTag from './statusTag'
 import typeDialog from './type/treeDialog'
+import supplierDetails from '@/components/it/supplier/details'
+
 const initQueryParamsLabel = {
 	type_name:''
 }
 export default {
-	components:{ assetDetails, assetUseStatusDialog, statusTag, typeDialog },
+	components:{ assetDetails, assetUseStatusDialog, statusTag, typeDialog, supplierDetails },
 	props:{
 		size:{
 			type:String,
 			default:''
 		},
 		maxHeight:{
-			default:400
+			default:0
 		},
 		params:{
 			default:()=>({})
@@ -313,7 +320,6 @@ export default {
 			dialogShow:false,
 			list:[],
 			dataTotal:0,
-			formLoading:false,
 			projectList:[],
 			summaryData:{},
 			selectionList:[],
@@ -338,13 +344,18 @@ export default {
 			},
 			//数据请求的参数
 			requestParams:{
-				pageSize:10,//分页大小
+				pageSize:this.$store.state.sys.pageSize,//分页大小
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
 				noPage:this.noPage?1:0,
 				inCompany:1
 			}
+		}
+	},
+	computed:{
+		tableMaxHeight(){
+			return this.maxHeight?this.maxHeight:this.$store.state.sys.tableMaxHeight
 		}
 	},
 	created(){
@@ -429,7 +440,7 @@ export default {
 		},
 		openDetails(row){
 			this.$refs.assetDetails.open().then(that=>{
-				that.initData(row)
+				that.getDetails(row.id)
 			})
 		},
 		sortChange({prop,order}){
@@ -471,6 +482,11 @@ export default {
 			this.queryParams.type_id = data.id
 			this.queryParamsLabel.type_name = data.name
 			this.$refs.typeDialog.close()
+		},
+		openSupplierDetails(row){
+			this.$refs.supplierDetails.open().then(that=>{
+				that.getDetails(row.supplier_id)
+			})
 		}
 	}
 }

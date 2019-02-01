@@ -109,7 +109,7 @@
 			},
 			getData(params){
 				this.loading = true				
-				assetApi.getPrintRecordList(params).then(res=>{
+				assetApi.getPrintRecordList({...params,noPage:1}).then(res=>{
 					this.loading = false
 					this.list = res.data.list
 				})
@@ -154,9 +154,10 @@
 	@media print{
 		.record-box{
     	border:1px solid #fff;
+    	page-break-inside: avoid;
     }
   	.print{
-  		width:800px
+  		width:210mm;
   	}
-	}
+	}	
 </style>

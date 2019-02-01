@@ -82,6 +82,7 @@ export default {
 			'action',
 			'company_id',
 			'name',
+			'full_name',
 			'address',
 			'supplier_type',
 			'contacts',

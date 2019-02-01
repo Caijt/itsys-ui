@@ -220,7 +220,7 @@ export default {
 			},
 			//数据请求的参数
 			requestParams:{
-				pageSize:10,//分页大小
+				pageSize:this.$store.state.sys.pageSize,//分页大小
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',

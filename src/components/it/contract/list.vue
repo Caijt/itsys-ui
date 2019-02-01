@@ -36,6 +36,25 @@
 					<el-form-item label='备注' prop='remarks'>
 						<el-input v-model.trim='queryParams.remarks' clearable></el-input>
 					</el-form-item>
+					<el-form-item label='合同金额'>
+            <el-row style='width:300px'>
+              <el-col :span="11">
+                <el-form-item prop='price_begin'>
+                  <el-input v-model.trim='queryParams.price_begin' placeholder='最小值' clearable>
+                    <span slot="prefix">￥</span>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2">至</el-col>
+              <el-col :span="11">
+                <el-form-item prop='price_end'>
+                  <el-input v-model.trim='queryParams.price_end' placeholder='最小值' clearable>
+                    <span slot="prefix">￥</span>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form-item>
 					<el-form-item label='签订日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
@@ -95,7 +114,7 @@
 			stripe
 			row-key='id'
 			:size='size'
-			:max-height='maxHeight' 			
+			:max-height='tableMaxHeight' 			
 			@selection-change='selectionChange'
 			show-summary
 			:summary-method='getSummaryData'
@@ -106,12 +125,42 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column prop='no' label='合同编号' width='110' show-overflow-tooltip/>
-			<el-table-column prop='name' label='合同名称' min-width='120' show-overflow-tooltip/>			
-			<el-table-column prop='supplier_name' label='供应合作商' min-width='120' show-overflow-tooltip/>			
-			<el-table-column prop='price' label='金额' sortable='custom' width='100' align='right'>
+			<el-table-column prop='no' label='合同编号' width='110' show-overflow-tooltip >
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openDetails(row)'>{{row.no}}</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop='name' label='合同名称' min-width='120' show-overflow-tooltip/>		
+			<el-table-column prop='supplier_name' label='供应合作商' min-width='120' show-overflow-tooltip>
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openSupplierDetails(row)'>{{row.supplier_name}}</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop='price' label='合同金额' sortable='custom' width='100' align='right'>
 				<template slot-scope='{row}'>
 					<span>￥{{ row.price }}</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop='pay_price_total' label='已付金额' sortable='custom' width='100' align='right'>
+				<template slot-scope='{row}'>
+					<span>￥{{ row.pay_price_total }}</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop='unpay' label='未付金额' sortable='custom' width='100' align='right'>
+				<template slot-scope='{row}'>
+					<span>￥{{ row.unpay }}</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop='last_pay_date' label='近期付款日期' sortable='custom' width='120' />
+			<el-table-column prop='pay_progress' label='付款进度' sortable='custom' width='120' align='right'>
+				<template slot-scope='{row}'>
+					<el-tooltip placement='left' :content='"￥"+row.pay_price_total+"（已付金额） / ￥"+row.price+"（合同金额）"'>
+            <el-progress 
+              text-inside 
+              :stroke-width='16' 
+              :status='Number(row.pay_progress)>=100?"success":"text"' 
+              :percentage="Number(row.pay_progress)>=100?100:Number(row.pay_progress)"></el-progress>
+          </el-tooltip>
 				</template>
 			</el-table-column>
 			<el-table-column prop='sign_date' label='签订日期' sortable='custom' width='100' />
@@ -163,27 +212,24 @@
 	    @size-change='sizeChange'
 	    @current-change='getData' />
 	  <!--/ 分页 -->
-	  <asset-details :in-dialog='inDialog' ref='assetDetails' />
-	  <dep-dialog :in-dialog='inDialog' ref='depDialog' show-select @select='selectDep' />
+	  <contract-details :in-dialog='inDialog' ref='contractDetails' />
+	  <supplier-details :in-dialog='inDialog' ref='supplierDetails' />
 	</div>
 </template>
 <script>
 import contractApi from '@/api/it/contract'
-import assetDetails from '@/components/it/asset/details'
-import depDialog from '@/components/hr/dep/treeDialog'
+import contractDetails from '@/components/it/contract/details'
+import supplierDetails from '@/components/it/supplier/details'
 
-const initQueryParamsLabel = {
-	dep_name:''
-}
 export default {
-	components:{ assetDetails, depDialog },
+	components:{ contractDetails, supplierDetails },
 	props:{
 		size:{
 			type:String,
 			default:''
 		},
 		maxHeight:{
-			default:350
+			default:null
 		},
 		params:{
 			default:()=>({})
@@ -234,6 +280,8 @@ export default {
 				no:'',//
 				name:'',
 				supplier_name:'',
+				price_begin:'',
+				price_end:'',
 				sign_date_begin:'',
 				sign_date_end:'',
 				begin_date_begin:'',
@@ -243,13 +291,18 @@ export default {
 			},
 			//数据请求的参数
 			requestParams:{
-				pageSize:10,//分页大小
+				pageSize:this.$store.state.sys.pageSize,//分页大小
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
 				noPage:this.noPage?1:0,
 				inCompany:1
 			}
+		}
+	},
+	computed:{
+		tableMaxHeight(){
+			return this.maxHeight?this.maxHeight:this.$store.state.sys.tableMaxHeight
 		}
 	},
 	created(){
@@ -313,20 +366,19 @@ export default {
 				this.requestParams = {...this.requestParams,[key]:value}
 			}else{
 				this.requestParams = {...this.requestParams,...this.queryParams}
-			}			
+			}		
+			this.requestParams.currentPage = 1	
 			this.getData()
 		},
 		//重置查询条件
 		resetQuery(){
 			this.$refs.formQuery.resetFields()
-			this.queryParamsLabel = { ...initQueryParamsLabel }
 			// this.queryParams = {...this.queryParams,...this.params}
-			this.requestParams.currentPage = 1
 			this.query()
 		},
 		openDetails(row){
-			this.$refs.assetDetails.open().then(that=>{
-				that.initData(row)
+			this.$refs.contractDetails.open().then(that=>{
+				that.getDetails(row.id)
 			})
 		},
 		sortChange({prop,order}){
@@ -353,20 +405,10 @@ export default {
 				})
 			})
 		},
-		openUseStatusDialog(row){
-			this.$refs.assetUseStatusDialog.open().then(that=>{
-				that.initData({asset_id:row.id})
+		openSupplierDetails(row){
+			this.$refs.supplierDetails.open().then(that=>{
+				that.getDetails(row.supplier_id)
 			})
-		},
-		openSelectDepDialog(){
-			this.$refs.depDialog.open().then(that=>{
-				that.initData()
-			})
-		},
-		selectDep(data){
-			this.queryParamsLabel.dep_name = data.name
-			this.queryParams.dep_id = data.id
-			this.$refs.depDialog.close()
 		}
 	}
 }

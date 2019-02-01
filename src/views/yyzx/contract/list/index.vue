@@ -22,9 +22,7 @@
 						</template>
 					</el-table-column>
 				</list-dialog>
-				 
 			</el-badge>
-			<el-button @click='exportExcel'>导出Excel</el-button>
 		</div>
 		<el-tabs v-model='tabName'>
 			<el-tab-pane label='合同列表' name='list'>

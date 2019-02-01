@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<el-tabs value="near">
-	    <el-tab-pane name="near" >
+	    <el-tab-pane name="near" v-if='hasPath("/it/contract/query/contract")'>
 	    	<span slot="label">
 	    		<el-badge :hidden='!nearTotal' class='_my-bagde' :value='nearTotal'>
 	    			近期合同
@@ -12,7 +12,7 @@
 			    type="success"
 			    style='margin-bottom:10px'>
 			    <div>
-			    	<el-button type='text' size='mini' @click='$router.push("/it/contract")'>[ 合同管理 ]</el-button>
+			    	<el-button type='text' size='mini' @click='$router.push("/it/contract/query/contract")'>[ 合同查询 ]</el-button>
 			    </div>
 			  </el-alert>
 	    	<contract-list 
@@ -25,9 +25,9 @@
 	    		sort-prop='create_time'
 	    		@loaded='({total})=>{nearTotal=total}'/>
 	    </el-tab-pane>
-	    <el-tab-pane name="stockWarning" >
+	    <el-tab-pane name="expire" v-if='hasPath("/it/contract/query/contract")'>
 	    	<span slot="label">
-	    		<el-badge :hidden='!stockWarningTotal' class='_my-bagde' :value='stockWarningTotal'>
+	    		<el-badge :hidden='!expireTotal' class='_my-bagde' :value='expireTotal'>
 	    			即将到期合同
 	    		</el-badge>
 	    	</span>
@@ -44,7 +44,31 @@
 	    		max-height='250' 
 	    		no-page 
 	    		hide-edit-fields
-	    		@loaded='({total})=>{stockWarningTotal=total}'/>
+	    		@loaded='({total})=>{expireTotal=total}'/>
+	    </el-tab-pane>
+	    <el-tab-pane name="toPay" v-if='hasPath("/it/contract/pay")'>
+	    	<span slot="label">
+	    		<el-badge :hidden='!payTotal' class='_my-bagde' :value='payTotal'>
+	    			待付款合同
+	    		</el-badge>
+	    	</span>
+	    	<el-alert 
+			    title="以下合同的款项还未付清，如已付清，请及时补充付款记录"
+			    type="warning"
+			    show-icon
+			    style='margin-bottom:10px'>
+			    <div>
+			    	<el-button type='text' size='mini' @click='$router.push("/it/contract/pay")'>[ 合同付款 ]</el-button>
+			    </div>
+			  </el-alert>
+	    	<contract-list 
+	    		:params='{toPay:1}' 
+	    		hide-query 
+	    		init 
+	    		max-height='250' 
+	    		no-page 
+	    		hide-edit-fields
+	    		@loaded='({total})=>{payTotal=total}'/>
 	    </el-tab-pane>
 	  </el-tabs>		
 	</div>
@@ -58,7 +82,8 @@
 		data(){
 			return {
 				nearTotal:'..',
-				stockWarningTotal:'..'
+				expireTotal:'..',
+				payTotal:'..'
 			}
 		},
 		mounted(){
@@ -67,6 +92,9 @@
 		methods:{
 			initData(){
 				
+			},
+			hasPath(path){
+				return this.$commonJs.hasUserPath(path)
 			}
 		}
 	}
