@@ -119,7 +119,11 @@
 				prop='supplier_name' 
 				width='100' 
 				label='维修供应商' 
-				show-overflow-tooltip />
+				show-overflow-tooltip>
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openSupplierDetails(row)'>{{row.supplier_name}}</span>
+				</template>
+			</el-table-column>
 			<el-table-column 
 				v-if='!hideAssetFields'
 				prop='asset_no' 
@@ -185,13 +189,16 @@
 	    @current-change='getData' />
 	  <!--/ 分页 -->
 	  <asset-details v-if='!hideAssetFields' :in-dialog='inDialog' ref='assetDetails'/>
+	  <supplier-details :in-dialog='inDialog' ref='supplierDetails'/>
 	</div>
 </template>
 <script>
 import assetApi from '@/api/it/assetRepairRecord'
 import assetDetails from '../details'
+import supplierDetails from '@/components/it/supplier/details'
+
 export default {
-	components:{ assetDetails },
+	components:{ assetDetails, supplierDetails },
 	props:{
 		size:{
 			type:String,
@@ -386,6 +393,11 @@ export default {
 		openAssetDetails(row){
 			this.$refs.assetDetails.open().then(that=>{
 				that.getDetails(row.asset_id)
+			})
+		},
+		openSupplierDetails(row){
+			this.$refs.supplierDetails.open().then(that=>{
+				that.getDetails(row.supplier_id)
 			})
 		}
 	}

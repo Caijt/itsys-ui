@@ -167,11 +167,11 @@
 		      ],
 			    series: [
 			    	{
-			        name: '资产金额',
+			        name: '合同金额',
 			        type: 'bar',
 			    	},
 			    	{
-			        name: '资产数量',
+			        name: '合同数量',
 			        type: 'line',	
 			        yAxisIndex: 1,	     
 			    	}

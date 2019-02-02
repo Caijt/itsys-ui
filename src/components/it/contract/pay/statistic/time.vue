@@ -167,11 +167,11 @@
 		      ],
 			    series: [
 			    	{
-			        name: '资产金额',
+			        name: '付款金额',
 			        type: 'bar',
 			    	},
 			    	{
-			        name: '资产数量',
+			        name: '付款数量',
 			        type: 'line',	
 			        yAxisIndex: 1,	     
 			    	}
