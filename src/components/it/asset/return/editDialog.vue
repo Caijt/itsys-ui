@@ -20,7 +20,7 @@
 						v-model='form.company_id' 
 						placeholder='选择记录所属公司'
 						filterable
-						style='width: 80%'
+						style='width: 100%'
 						:loading='companyLoading'>
 						<el-option
 							v-for='item in companyList'

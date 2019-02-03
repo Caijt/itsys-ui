@@ -28,15 +28,20 @@
 					<el-input v-model='form.name' placeholder='' style='width:30%'>
 					</el-input>
 				</el-form-item>
-				<el-form-item label='工号' prop='no' >
-					<el-input v-model='form.no' placeholder='' style='width:30%'>
-					</el-input>
-				</el-form-item>
+				
 				<el-form-item label='性别' prop='sex' >
 					<el-radio-group v-model='form.sex'>
 						<el-radio :label='0'>男</el-radio>
 						<el-radio :label='1'>女</el-radio>
 					</el-radio-group>
+				</el-form-item>
+				<el-form-item label='工号' prop='no' >
+					<el-input v-model='form.no' placeholder='' style='width:30%'>
+					</el-input>
+				</el-form-item>
+				<el-form-item label='邮箱' prop='mail' >
+					<el-input v-model='form.mail' placeholder='' style='width:30%'>
+					</el-input>
 				</el-form-item>
 				<el-form-item label='状态' prop='is_disabled' >
 					<el-radio-group v-model='form.is_disabled'>
@@ -69,7 +74,8 @@
 		remarks:'',
 		dep_name:'',
 		dep_id:null,
-		sex:0
+		sex:0,
+		mail:''
 	}
 	export default {
 		components:{ 

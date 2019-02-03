@@ -160,6 +160,7 @@
 				this.$refs.form.validate(valid=>{
 					if(valid){
 						this.form.action = status
+						this.loading = true
 						api.save(this.form).then(res=>{
 							this.form.id = res.data.id
 							this.loading = false

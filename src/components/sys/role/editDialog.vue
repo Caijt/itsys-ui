@@ -157,6 +157,7 @@
 					if(valid){
 						this.form.menu_ids = this.$refs.menuList.getCheckedKeys(true).join(',')
 						this.form.action = status
+						this.loading = true
 						api.save(this.form).then(res=>{
 							this.form.id = res.data.id
 							this.loading = false

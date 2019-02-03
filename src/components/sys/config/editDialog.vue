@@ -134,6 +134,7 @@
 				this.$refs.form.validate(valid=>{
 					if(valid){
 						this.form.action = this.form.isEdit
+						this.loading = true
 						api.save(this.form).then(res=>{
 							this.loading = false
 							this.$message.success('保存成功')

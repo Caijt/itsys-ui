@@ -12,58 +12,21 @@
 				  <el-tooltip content='重置查询条件' placement='top'>
 					  <el-button icon="el-icon-refresh" @click='resetQuery'></el-button>
 					</el-tooltip>
-				  <el-tooltip content='导出Excel' placement='top'>
+				  <!-- <el-tooltip content='导出Excel' placement='top'>
 				  	<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-					</el-tooltip>
+					</el-tooltip> -->
 				  <el-tooltip content='显示更多查询条件' placement='top'>
 					  <el-button @click='queryShowMore=!queryShowMore' size='mini'>
 	          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
           	</el-button>
           </el-tooltip>
 				</el-button-group>
-				<!-- <span><el-button type='primary' @click='query' icon='el-icon-search' size='mini'></el-button></span>
-				<span><el-button @click='resetQuery' size='mini'>重置</el-button ></span>
-				<el-tooltip content='导出Excel' placement='top'>
-					<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-				</el-tooltip>				 
-        <el-tooltip content='显示更多查询条件' placement='top'>
-          <el-button @click='queryShowMore=!queryShowMore' size='mini'>
-          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
-          </el-button>
-        </el-tooltip> -->
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
-				<el-form-item label='员工姓名' prop='name'>
+				<el-form-item label='通知事件' prop='name'>
 					<el-input v-model='queryParams.name' clearable></el-input>
 				</el-form-item>
-				<el-form-item label='工号' prop='no'>
-					<el-input v-model='queryParams.no' clearable></el-input>
-				</el-form-item>
 				<div v-show='queryShowMore'>
-					<el-form-item label='部门' prop='dep_id'>
-						<el-input v-model='queryParamsLabel.dep_name' placeholder='点击选择' readonly clearable @click.native='openSelectDepDialog'>
-							<i 
-								style='cursor: pointer;'
-								v-show='queryParams.dep_id' 
-								slot="suffix" 
-								class="el-input__icon el-icon-close" 
-								@click.stop='queryParamsLabel.dep_name="";queryParams.dep_id=""'></i>
-						</el-input>
-					</el-form-item>
-					<el-form-item label='子部门' prop='hasSubDep'>
-						<el-switch
-						  v-model="queryParams.hasSubDep"
-						  :inactive-value="0"
-						  :active-value="1">
-						</el-switch>
-					</el-form-item>
-					<el-form-item label='离职' prop='is_disabled'>
-						<el-switch
-						  v-model="queryParams.is_disabled"
-						  :inactive-value="0"
-						  :active-value="1">
-						</el-switch>
-					</el-form-item>
 				</div>
 			</el-form>
 		</div> 
@@ -88,38 +51,15 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column prop='name' label='姓名' min-width='100' show-overflow-tooltip/>
-			<el-table-column prop='no' label='工号' width='100' show-overflow-tooltip/>
-			<el-table-column prop='mail' label='邮箱' width='150' show-overflow-tooltip/>
-			<el-table-column prop='dep_name' label='部门' width='100' show-overflow-tooltip/>
-			<el-table-column prop='sex' label='性别' align='center' width='60'>
+			<el-table-column prop='name' label='邮件通知事件' width='220' show-overflow-tooltip/>
+			<el-table-column prop='is_disabled' align='center' label='状态' width='80'>
 				<template slot-scope='{row}'>
-					<el-tag v-if='row.sex==0'>男</el-tag>
-					<el-tag v-else type='danger'>女</el-tag>
+					<el-tag type='success' v-if='row.is_disabled==0'>启用</el-tag>
+					<el-tag type='info' v-else>禁用</el-tag>
 				</template>
 			</el-table-column>
-			<el-table-column 
-				prop='create_user_name' 
-				width='90' 
-				label='录入员' />
-			<el-table-column 
-				prop='create_time' 
-				width='120' 
-				label='创建时间' 
-				sortable='custom'>
-				<template slot-scope='{ row }'>
-					<span>{{ row.create_time | formatDate }}</span>
-				</template>
-			</el-table-column>
-			<el-table-column 
-				prop='update_time' 
-				label='最近更新时间' 
-				width='120' 
-				sortable='custom'>
-				<template slot-scope='{row}'>
-					<span>{{ row.update_time | formatDate }}</span>
-				</template>
-			</el-table-column>
+			<el-table-column prop='title_template' label='标题模版' width='150' show-overflow-tooltip/>	
+			<el-table-column prop='content_template' label='内容模版' min-width='100' show-overflow-tooltip/>	
 			<!-- slot[column] -->
 			<slot name='column'></slot>
 			<!--/ slot[column]-->
@@ -136,20 +76,13 @@
 	    @size-change='sizeChange'
 	    @current-change='getData' />
 	  <!--/ 分页 -->
-	  <asset-details :in-dialog='inDialog' ref='assetDetails' />
-	  <dep-dialog :in-dialog='inDialog' ref='depDialog' show-select @select='selectDep' />
 	</div>
 </template>
 <script>
-import employeeApi from '@/api/hr/employee'
-import assetDetails from '@/components/it/asset/details'
-import depDialog from '@/components/hr/dep/treeDialog'
+import api from '@/api/sys/mail'
 
-const initQueryParamsLabel = {
-	dep_name:''
-}
 export default {
-	components:{ assetDetails, depDialog },
+	components:{  },
 	props:{
 		size:{
 			type:String,
@@ -171,7 +104,7 @@ export default {
 		},
 		noPage:{
 			type:Boolean,
-			default:false
+			default:true
 		},
 		init:{
 			type:Boolean,
@@ -204,11 +137,8 @@ export default {
 			},
 			//查询条件字段
 			queryParams:{
-				no:'',//项目编号				
-				invoice_date_begin:'',
-				invoice_date_end:'',
-				dep_id:'',
-				hasSubDep:1
+				name:'',//项目编号				
+				address:'',//
 			},
 			//数据请求的参数
 			requestParams:{
@@ -262,10 +192,10 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			employeeApi.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
+			api.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
 				this.list = res.data.list
 				this.dataTotal = res.data.total
-				this.summaryData = res.data.summary
+				this.summaryData = res.data.summary || {}
 				this.loading = false
 				this.$emit('loaded',{ 
 					total:this.dataTotal,
@@ -281,21 +211,16 @@ export default {
 				this.requestParams = {...this.requestParams,[key]:value}
 			}else{
 				this.requestParams = {...this.requestParams,...this.queryParams}
-			}			
+			}	
+			this.requestParams.currentPage = 1		
 			this.getData()
 		},
 		//重置查询条件
 		resetQuery(){
 			this.$refs.formQuery.resetFields()
-			this.queryParamsLabel = { ...initQueryParamsLabel }
+			// this.queryParamsLabel = { ...initQueryParamsLabel }
 			// this.queryParams = {...this.queryParams,...this.params}
-			this.requestParams.currentPage = 1
 			this.query()
-		},
-		openDetails(row){
-			this.$refs.assetDetails.open().then(that=>{
-				that.initData(row)
-			})
 		},
 		sortChange({prop,order}){
 			this.requestParams.sortProp = prop
@@ -304,37 +229,22 @@ export default {
 		},
 		//导出excel
 		exportExcel(){
-			employeeApi.exportExcel(this.requestParams)
+			api.exportExcel(this.requestParams)
 		},
 		clear(){
 			this.list = []
 		},
 		del(row){
-			let confirmText = '确定删除此员工吗？'
+			let confirmText = '确定删除此公司吗？'
 			this.$confirm(confirmText,'提示',{
 				type: 'warning'
 			}).then(()=>{
-				employeeApi.del(row.id).then(res=>{
+				api.del(row.id).then(res=>{
 					this.reload()
 					this.$message.success('删除成功')
 					this.$emit('del')
 				})
 			})
-		},
-		openUseStatusDialog(row){
-			this.$refs.assetUseStatusDialog.open().then(that=>{
-				that.initData({asset_id:row.id})
-			})
-		},
-		openSelectDepDialog(){
-			this.$refs.depDialog.open().then(that=>{
-				that.initData()
-			})
-		},
-		selectDep(data){
-			this.queryParamsLabel.dep_name = data.name
-			this.queryParams.dep_id = data.id
-			this.$refs.depDialog.close()
 		}
 	}
 }

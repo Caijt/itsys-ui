@@ -116,7 +116,7 @@
 					<span style='font-size: 12px'>* 如果涉及产品保修，请务必填写</span>
 				</el-form-item>				
 				<el-form-item label='备注' prop='remarks' >
-					<el-input type='textarea' v-model='form.remarks' placeholder='资产其它备注信息'>
+					<el-input type='textarea' autosize v-model='form.remarks' placeholder='资产其它备注信息'>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='附件' prop='remarks'>

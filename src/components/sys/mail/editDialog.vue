@@ -8,18 +8,14 @@
 		@open='openDialog'
 		@close='closeDialog'>
 		<div v-loading='loading'>
-			<divider title='公司信息'></divider>
+			<divider title='邮件通知模版'></divider>
 			<el-form 
 				:model='form' :rules='rules' 
 				ref='form' label-width='85px' 
 				size='mini' status-icon
 				class='c-form-mini'>
-				<el-form-item label='公司名称' prop='name' >
-					<el-input v-model='form.name' placeholder='公司名称' >
-					</el-input>
-				</el-form-item>
-				<el-form-item label='公司地址' prop='address' >
-					<el-input v-model='form.address' placeholder='公司所在详细地址' >
+				<el-form-item label='通知事件' prop='name' >
+					<el-input v-model='form.name' placeholder='' disabled>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='启用' prop='is_disabled'>
@@ -27,6 +23,19 @@
 						v-model='form.is_disabled'
 						:active-value="0"
     				:inactive-value="1"/>
+				</el-form-item>
+				<el-form-item label='标题模版' prop='title_template' >
+					<el-input v-model='form.title_template' placeholder='' >
+					</el-input>
+				</el-form-item>
+				<el-form-item label='内容模版' prop='content_template' >
+					<el-input type='textarea' autosize v-model='form.content_template' placeholder='' >
+					</el-input>
+					<span style='font-size:12px'>* 支持html标签</span>
+				</el-form-item>
+				<el-form-item label='模版变量' prop='tips' >
+					<el-input type='textarea' autosize v-model='form.tips' readonly placeholder='' >
+					</el-input>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -38,7 +47,7 @@
 </div>
 </template>
 <script>
-	import api from '@/api/sys/company'
+	import api from '@/api/sys/mail'
 
 	const formInit = {		
 		id:null,
@@ -82,7 +91,6 @@
 				rules:{
 					name:[
 						{ required:true, message:'请填写公司名称' },
-						{ validator:validator ,trigger:'blur'}
 					]
 				},
 				updated:false,
@@ -137,7 +145,6 @@
 				this.$refs.form.validate(valid=>{
 					if(valid){
 						this.form.action = status
-						this.loading = true
 						api.save(this.form).then(res=>{
 							this.form.id = res.data.id
 							this.loading = false

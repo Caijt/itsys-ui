@@ -241,6 +241,7 @@
 						this.form.company_ids = this.form.companyIds.join(',')
 						this.form.factory_ids = this.form.factoryIds.join(',')
 						this.form.action = status
+						this.loading = true
 						api.save(this.form).then(res=>{
 							this.form.id = res.data.id
 							this.loading = false
