@@ -49,15 +49,15 @@
 				  </el-checkbox-group>
 				</el-form-item>
 				<el-form-item label='联系人' prop='contacts' >
-					<el-input type='textarea' v-model='form.contacts' placeholder='供应合作商的联系人，可填写多个'>
+					<el-input type='textarea' autosize v-model='form.contacts' placeholder='供应合作商的联系人，可填写多个'>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='付款银行' prop='bank' >
-					<el-input type='textarea' v-model='form.bank' placeholder='供应合作商的付款银行信息，可填写多个'>
+					<el-input type='textarea' autosize v-model='form.bank' placeholder='供应合作商的付款银行信息，可填写多个'>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='备注' prop='remarks' >
-					<el-input type='textarea' v-model='form.remarks' placeholder=''>
+					<el-input type='textarea' autosize v-model='form.remarks' placeholder=''>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='附件' prop='remarks'>

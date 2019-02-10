@@ -74,6 +74,7 @@
 		remarks:'',
 		dep_name:'',
 		dep_id:null,
+		is_disabled:0,
 		sex:0,
 		mail:''
 	}

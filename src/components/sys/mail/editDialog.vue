@@ -89,9 +89,7 @@
 				roleList:[],
 				form:{ ...formInit },
 				rules:{
-					name:[
-						{ required:true, message:'请填写公司名称' },
-					]
+					
 				},
 				updated:false,
 			}
@@ -101,7 +99,7 @@
 				return this.form.id? true:false
 			},
 			title(){
-				let title = '公司信息'
+				let title = '邮件通知信息'
 				if(this.isEdit){
 					title += ' [ 修改 ]'
 				}else{

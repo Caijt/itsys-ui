@@ -1,12 +1,5 @@
 <template>
 	<div>
-		<el-alert
-	    title="警告"
-	    type="warning"
-	    description="以下为系统参数，非系统开发人员请不要随意修改，否则会导致系统无法打开！"
-	    show-icon
-	    style='margin-bottom:10px'>
-	  </el-alert>
 		<!-- <div style='margin:10px 0px'>
 			<el-button-group>
 				<el-button type='primary' @click='create' icon='el-icon-edit'>创建参数</el-button>

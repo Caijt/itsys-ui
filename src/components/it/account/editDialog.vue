@@ -8,7 +8,7 @@
 		@open='openDialog'
 		@close='closeDialog'>
 		<div v-loading='loading'>
-			<divider title='合同信息'></divider>
+			<divider title='账号信息'></divider>
 			<el-form 
 				:model='form' :rules='rules' 
 				ref='form' label-width='85px' 
@@ -17,7 +17,7 @@
 				<el-form-item label='所属公司' prop='company_id'>
 					<el-select 
 						v-model='form.company_id' 
-						placeholder='选择合同所属公司'
+						placeholder='选择账号所属公司'
 						filterable
 						style='width: 100%'
 						:loading='companyLoading'>
