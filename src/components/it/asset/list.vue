@@ -89,6 +89,26 @@
 							></el-option>
 						</el-select>
 					</el-form-item>	
+					<el-form-item label='领用部门' prop='dep_id'>
+						<el-input v-model='queryParamsLabel.dep_name' placeholder='点击选择' readonly clearable @click.native='openSelectDepDialog'>
+							<i 
+								style='cursor: pointer;'
+								v-show='queryParams.dep_id' 
+								slot="suffix" 
+								class="el-input__icon el-icon-close" 
+								@click.stop='queryParamsLabel.dep_name="";queryParams.dep_id=""'></i>
+						</el-input>
+					</el-form-item>
+					<el-form-item label='子部门' prop='hasSubDep'>
+						<el-switch
+						  v-model="queryParams.hasSubDep"
+						  :inactive-value="0"
+						  :active-value="1">
+						</el-switch>
+					</el-form-item>
+					<el-form-item label='领用员工' prop='employee_name'>
+						<el-input v-model='queryParams.employee_name' clearable></el-input>
+					</el-form-item>
 					<el-form-item label='入库日期'>
 						<el-row style='width:300px'>
 							<el-col :span="11">
@@ -181,7 +201,16 @@
 				sortable='custom' 
 				width='100'>
 				<template slot-scope='{row}'>
-					<span class='c-link' @click='openUseStatusDialog(row)'>{{row.remain}} / {{row.avaiable_amount}} / {{row.amount}}</span>
+					<el-tooltip placement='top'>
+						<div slot="content">
+							库存量：{{row.remain}}<br/>
+							可用量：{{row.avaiable_amount}}<br/>
+							入库量：{{row.amount}}
+						</div>
+						<span class='c-link' @click='openUseStatusDialog(row)'>
+							{{row.remain}} / {{row.avaiable_amount}} / {{row.amount}}
+							</span>
+					</el-tooltip>					
 				</template>
 			</el-table-column>
 			<el-table-column prop='use_dep_name' label='近期领用人' sortable='custom' width='120' show-overflow-tooltip>
@@ -261,6 +290,7 @@
 	  <asset-use-status-dialog :in-dialog='inDialog' hide-asset-fields ref='assetUseStatusDialog'/>
 	  <type-dialog :in-dialog='inDialog' ref='typeDialog' show-select @select='selectType'/>
 	  <supplier-details :in-dialog='inDialog' ref='supplierDetails'/>
+	  <dep-dialog :in-dialog='inDialog' ref='depDialog' show-select @select='selectDep' />
 	</div>
 </template>
 <script>
@@ -271,12 +301,21 @@ import assetUseStatusDialog from './useStatus/listDialog'
 import statusTag from './statusTag'
 import typeDialog from './type/treeDialog'
 import supplierDetails from '@/components/it/supplier/details'
+import depDialog from '@/components/hr/dep/treeDialog'
 
 const initQueryParamsLabel = {
-	type_name:''
+	type_name:'',
+	dep_name:''
 }
 export default {
-	components:{ assetDetails, assetUseStatusDialog, statusTag, typeDialog, supplierDetails },
+	components:{ 
+		assetDetails, 
+		assetUseStatusDialog, 
+		statusTag, 
+		typeDialog, 
+		supplierDetails,
+		depDialog
+	},
 	props:{
 		size:{
 			type:String,
@@ -339,6 +378,7 @@ export default {
 				company_ids:[],
 				supplier_name:'',
 				source:'',
+				hasSubDep:1,
 				price_begin:'',
 				price_end:''
 			},
@@ -487,6 +527,16 @@ export default {
 			this.$refs.supplierDetails.open().then(that=>{
 				that.getDetails(row.supplier_id)
 			})
+		},
+		openSelectDepDialog(){
+			this.$refs.depDialog.open().then(that=>{
+				that.initData()
+			})
+		},
+		selectDep(data){
+			this.queryParamsLabel.dep_name = data.name
+			this.queryParams.dep_id = data.id
+			this.$refs.depDialog.close()
 		}
 	}
 }

@@ -12,32 +12,22 @@
 				  <el-tooltip content='重置查询条件' placement='top'>
 					  <el-button icon="el-icon-refresh" @click='resetQuery'></el-button>
 					</el-tooltip>
-				  <el-tooltip content='导出Excel' placement='top'>
+				  <!-- <el-tooltip content='导出Excel' placement='top'>
 				  	<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-					</el-tooltip>
+					</el-tooltip> -->
 				  <el-tooltip content='显示更多查询条件' placement='top'>
 					  <el-button @click='queryShowMore=!queryShowMore' size='mini'>
 	          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
           	</el-button>
           </el-tooltip>
 				</el-button-group>
-				<!-- <span><el-button type='primary' @click='query' icon='el-icon-search' size='mini'></el-button></span>
-				<span><el-button @click='resetQuery' size='mini'>重置</el-button ></span>
-				<el-tooltip content='导出Excel' placement='top'>
-					<el-button @click='exportExcel' size='mini' icon='el-icon-download'></el-button>
-				</el-tooltip>				 
-        <el-tooltip content='显示更多查询条件' placement='top'>
-          <el-button @click='queryShowMore=!queryShowMore' size='mini'>
-          <i :class="{'el-icon-arrow-up':queryShowMore,'el-icon-arrow-down':!queryShowMore}"></i>
-          </el-button>
-        </el-tooltip> -->
 			</div>
 			<el-form ref='formQuery' :model='queryParams' class='c-form-condensed' label-width='68px' inline size='mini'>
 				<el-form-item label='员工姓名' prop='name'>
-					<el-input v-model='queryParams.name' clearable></el-input>
+					<el-input v-model.trim='queryParams.name' clearable></el-input>
 				</el-form-item>
 				<el-form-item label='工号' prop='no'>
-					<el-input v-model='queryParams.no' clearable></el-input>
+					<el-input v-model.trim='queryParams.no' clearable></el-input>
 				</el-form-item>
 				<div v-show='queryShowMore'>
 					<el-form-item label='部门' prop='dep_id'>
@@ -78,7 +68,7 @@
 			stripe
 			row-key='id'
 			:size='size'
-			:max-height='maxHeight' 			
+			:max-height='tableMaxHeight' 			
 			@selection-change='selectionChange'
 			:summary-method='getSummaryData'
 			@sort-change='sortChange'>			
@@ -156,7 +146,7 @@ export default {
 			default:''
 		},
 		maxHeight:{
-			default:400
+			default:0
 		},
 		params:{
 			default:()=>({})
@@ -205,19 +195,23 @@ export default {
 			//查询条件字段
 			queryParams:{
 				no:'',//项目编号				
-				invoice_date_begin:'',
-				invoice_date_end:'',
+				name:'',
 				dep_id:'',
 				hasSubDep:1
 			},
 			//数据请求的参数
 			requestParams:{
-				pageSize:10,//分页大小
+				pageSize:this.$store.state.sys.pageSize,//分页大小
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
 				noPage:this.noPage?1:0
 			}
+		}
+	},
+	computed:{
+		tableMaxHeight(){
+			return this.maxHeight?this.maxHeight:this.$store.state.sys.tableMaxHeight
 		}
 	},
 	created(){

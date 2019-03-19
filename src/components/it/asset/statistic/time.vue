@@ -108,7 +108,7 @@
 					supplier_name:''
 				},
 				requestParams:{
-
+					inCompany:1
 				}
 			}
 		},

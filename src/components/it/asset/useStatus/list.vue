@@ -28,7 +28,10 @@
 				</el-form-item>
 				<div v-show='queryShowMore'>
 					<el-form-item label='资产型号' prop='asset_model'>
-						<el-input v-model='queryParams.asset_model' clearable></el-input>
+						<el-input v-model.trim='queryParams.asset_model' clearable></el-input>
+					</el-form-item>
+					<el-form-item label='标识号' prop='diy_no'>
+						<el-input v-model.trim='queryParams.diy_no' clearable></el-input>
 					</el-form-item>					
 					<el-form-item label='领用部门' prop='dep_id'>
 						<el-input v-model='queryParamsLabel.dep_name' placeholder='点击选择' readonly clearable @click.native='openSelectDepDialog'>
@@ -92,7 +95,7 @@
 			@sort-change='sortChange'>			
 			<el-table-column 
 				fixed
-				v-if='showSelection'
+				v-if='showCheckbox'
 				type='selection' 
 				align='center' 
 				width='35' />
@@ -192,7 +195,7 @@ export default {
 			type:Boolean,
 			default:false
 		},
-		showSelection:{
+		showCheckbox:{
 			type:Boolean,
 			default:false
 		},
@@ -273,7 +276,7 @@ export default {
 		},
 		getSummaryData({columns,data}){
       let sum = []
-      let labelIndex = this.showSelection?1:0
+      let labelIndex = this.showCheckbox?1:0
       columns.forEach((column,i)=>{
         if(i==labelIndex){
           sum[i]='合计'

@@ -145,7 +145,7 @@
 	import typeEditDialog from './type/editDialog'
 	import supplierDialog from '@/components/it/supplier/listDialog'
 	import stockWarningDialog from './stockWarning/listDialog'
-
+	const todayDate = new Date().toJSON().substr(0,10)
 	const formInit = {		
 		model:'',		
 		company_id:'',
@@ -154,7 +154,7 @@
 		no:'',
 		input_status:-1	,
 		action:null,
-		inbound_date:new Date(),
+		inbound_date:todayDate,
 		price:0,
 		amount:1,
 		type_name:'',

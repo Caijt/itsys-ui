@@ -11,8 +11,7 @@
 				node-key="id"
 				:show-checkbox='showCheckbox'
 				:expand-on-click-node="false"
-				highlight-current 
-				default-expand-all 
+				highlight-current				
 				:data='data' 
 				:props='{label:"name"}' 
 				ref='treeList'

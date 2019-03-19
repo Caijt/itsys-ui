@@ -102,7 +102,11 @@
 				label='交还人' 
 				show-overflow-tooltip />
 			<el-table-column v-if='!hideRecordFields' prop='remarks' label='交还备注' width='120' show-overflow-tooltip />
-			<el-table-column prop='asset_no' width='110' label='资产编号' show-overflow-tooltip />
+			<el-table-column prop='asset_no' width='110' label='资产编号' show-overflow-tooltip >
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openAssetDetails(row)'>{{row.asset_no}}</span>
+				</template>
+			</el-table-column>
 			<el-table-column prop='asset_model' min-width='150' label='资产型号' show-overflow-tooltip />
 			<el-table-column prop='asset_type_name' width='100' label='资产类型' show-overflow-tooltip />
 			<el-table-column 
@@ -300,9 +304,9 @@ export default {
 			this.query()
 		},
 		openDetails(row){
-			this.$refs.assetDetails.open().then(that=>{
-				that.initData(row)
-			})
+			// this.$refs.assetDetails.open().then(that=>{
+			// 	that.initData(row)
+			// })
 		},
 		sortChange({prop,order}){
 			this.requestParams.sortProp = prop
@@ -327,6 +331,11 @@ export default {
 					this.$message.success('删除成功')
 					this.$emit('del')
 				})
+			})
+		},
+		openAssetDetails(row){
+			this.$refs.assetDetails.open().then(that=>{
+				that.getDetails(row.asset_id)
 			})
 		}
 	}

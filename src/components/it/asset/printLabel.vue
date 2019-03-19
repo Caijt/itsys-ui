@@ -125,6 +125,7 @@
 	}
 </script>
 <style lang='less' scoped>	
+	
 	._it-asset-label{
 		position: relative;
 		font-size: 14px;
@@ -137,7 +138,7 @@
 			border-radius:4px;
 			box-sizing: border-box;
 			border:1px solid #DCDFE6;
-			padding:10px 5px;
+			padding:10px;
 			display: flex;
 			justify-content: center;
 			align-items:center;
@@ -160,12 +161,14 @@
 				}
 			}
 		}
-
 	}
 	@media print{
 		._it-asset-label ._it-asset-label-content{
     	border:1px solid #fff;
     }
+    ._it-asset-label:nth-child(odd) ._it-asset-label-content{
+			padding:10px 5px;
+		}
   	.print{
   		width:500px;
   	}

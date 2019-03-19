@@ -22,6 +22,7 @@ export default {
 		window.open( '/upload/attach/'+saveName );
 	},	
 	down(id){
+		console.log(BASE_URL+'/download/id/'+id)
 		window.open( BASE_URL+'/download/id/'+id );
 	},
 	del(id,url=BASE_URL + '/del'){

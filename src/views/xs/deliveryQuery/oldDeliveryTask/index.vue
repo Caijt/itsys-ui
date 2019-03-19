@@ -317,7 +317,7 @@
 				if(expanded){
 					if(expanded){
 						this.$set(row,'detailsLoaded',false);
-						this.$http.get('/api/pc/yyzx/prod_send_task/getTaskDetails',{params:{task_id:row.id}}).then(res=>{
+						this.$http.get('/service/pc/yyzx/prod_send_task/getTaskDetails',{params:{task_id:row.id}}).then(res=>{
 								row.prodList=res.data.prodList;
 								row.attachList=res.data.attachList;
 								row.carList=res.data.carList;
@@ -328,7 +328,7 @@
 			},
 			getData(){
 				this.loading=true;
-				this.$http.post('/api/pc/sale/prod_send_task/getTaskList',this.pageConfig).then((res)=>{
+				this.$http.post('/service/pc/sale/prod_send_task/getTaskList',this.pageConfig).then((res)=>{
 					this.taskList=res.data;
 					this.pageConfig.total=Number(res.total);
 	  			this.loading=false;	
@@ -357,7 +357,7 @@
 					type:'warning'	
 				}).then(()=>{
 					this.loading=true;
-					this.$http.post('/api/pc/sale/prod_send_task/delTask',{id:s.row.id}).then((r)=>{
+					this.$http.post('/service/pc/sale/prod_send_task/delTask',{id:s.row.id}).then((r)=>{
 						this.taskList.splice(s.$index, 1);
 						this.pageConfig.total--;
 		  			this.loading=false;
@@ -447,10 +447,10 @@
 			},
 			exportExcel(){
 				let queryStr=this.$qs.stringify(this.pageConfig);
-				window.location.href='/api/pc/sale/prod_send_task/exportExcel?'+queryStr;
+				window.location.href='/service/pc/sale/prod_send_task/exportExcel?'+queryStr;
 			},
 			downAttach(a){
-				window.location='/api/pc/yyzx/prod_send_task/downAttach/id/'+a.row.id;
+				window.location='/service/pc/yyzx/prod_send_task/downAttach/id/'+a.row.id;
 			},
 			carStateText(s){
 				let type=''
@@ -493,7 +493,7 @@
 				if(expanded){					
 					if(!row.imgLoaded){
 						this.$set(row,'imgLoaded',false);
-						this.$http.get('/api/pc/cyzx/send_task_track/getImgList',{params:{car_id:row.id}}).then(res=>{
+						this.$http.get('/service/pc/cyzx/send_task_track/getImgList',{params:{car_id:row.id}}).then(res=>{
 								row.imgList=res.data;
 								row.imgLoaded=true;
 						})

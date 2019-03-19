@@ -12,7 +12,6 @@
 				:show-checkbox='showCheckbox'
 				:expand-on-click-node="false"
 				highlight-current 
-				default-expand-all 
 				:data='data' 
 				:props='{label:"name"}' 
 				ref='treeList'
@@ -27,7 +26,6 @@
 			</el-tree>
 		</div>
 	</div>
-
 </template>
 <script>
 	import typeApi from '@/api/it/assetType'

@@ -5,14 +5,35 @@
 	    type="success"
 	    style='margin-bottom:10px'>	    
 	  </el-alert>
-		<use-status-list show-more init/>
+	  <div style='margin:10px 0px'>
+			<el-button @click='printBatch' icon='el-icon-printer'>打印标签</el-button>
+		</div>
+		<use-status-list ref='list' show-checkbox show-more init/>
+		<print-label ref='printLabel'/>
 	</div>
 </template>
 <script>
 import useStatusList from '@/components/it/asset/useStatus/list'
+import printLabel from '@/components/it/asset/printLabel'
+
 export default {
 	components:{
-		useStatusList
+		useStatusList,
+		printLabel
+	},
+	methods:{
+		printBatch(){
+			if(this.$refs.list.selectionList.length==0){
+				this.$message.warning('未选择资产数据')
+				return false
+			}
+			let ids = this.$refs.list.selectionList.map(d=>{
+				return d.asset_id
+			})
+			this.$refs.printLabel.open().then(that=>{
+				that.getData({ids:ids.join(',')})
+			})
+		}
 	}
 }
 </script>

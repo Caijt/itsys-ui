@@ -61,7 +61,11 @@
 				type='selection' 
 				align='center' 
 				width='35' />
-			<el-table-column prop='name' label='账号名称' width='110' show-overflow-tooltip/>
+			<el-table-column prop='name' label='账号名称' width='110' show-overflow-tooltip>
+				<template slot-scope='{row}'>
+					<span class='c-link' @click='openDetails(row)'>{{row.name}}</span>
+				</template>
+			</el-table-column>
 			<el-table-column prop='login_address' label='登录地址' min-width='120' show-overflow-tooltip/>			
 			<el-table-column prop='account' label='登录账号' min-width='120' show-overflow-tooltip/>			
 			<el-table-column prop='password' label='账号密码' min-width='120' show-overflow-tooltip/>
@@ -105,20 +109,20 @@
 	    @size-change='sizeChange'
 	    @current-change='getData' />
 	  <!--/ 分页 -->
-	  <asset-details :in-dialog='inDialog' ref='assetDetails' />
+	  <account-details :in-dialog='inDialog' ref='accountDetails' />
 	  <dep-dialog :in-dialog='inDialog' ref='depDialog' show-select @select='selectDep' />
 	</div>
 </template>
 <script>
 import api from '@/api/it/account'
-import assetDetails from '@/components/it/asset/details'
 import depDialog from '@/components/hr/dep/treeDialog'
+import accountDetails from './details'
 
 const initQueryParamsLabel = {
 	dep_name:''
 }
 export default {
-	components:{ assetDetails, depDialog },
+	components:{ depDialog, accountDetails },
 	props:{
 		size:{
 			type:String,
@@ -262,7 +266,7 @@ export default {
 			this.query()
 		},
 		openDetails(row){
-			this.$refs.assetDetails.open().then(that=>{
+			this.$refs.accountDetails.open().then(that=>{
 				that.initData(row)
 			})
 		},

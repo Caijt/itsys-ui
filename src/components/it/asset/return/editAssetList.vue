@@ -26,12 +26,16 @@
 	        align="center"
 	        width="35">
 		      </el-table-column>
-	      <el-table-column prop='asset_no' label='资产编号' width='110' show-overflow-tooltip />
+	      <el-table-column prop='asset_no' label='资产编号' width='110' show-overflow-tooltip>
+	      	<template slot-scope='{row}'>
+	      		<span class='c-link' @click='openAssetDetails(row)'>{{row.asset_no}}</span>
+	      	</template>
+	      </el-table-column>
 	      <el-table-column prop='asset_model' label='资产型号' min-width='150' show-overflow-tooltip />
 	      <el-table-column prop='asset_type_name' label='资产类型' width='100' show-overflow-tooltip />
 	      <el-table-column prop='use_date' sortable label='领用日期' width='100' />
-	      <el-table-column prop='dep_name' sortable label='领用部门' width='100' />
-	      <el-table-column prop='employee_name' sortable label='领用人' width='100' />
+	      <el-table-column prop='dep_name' sortable label='领用部门' width='100' show-overflow-tooltip/>
+	      <el-table-column prop='employee_name' sortable label='领用人' width='100' show-overflow-tooltip/>
 	      <el-table-column prop='use_place' sortable label='使用地点' width='120' show-overflow-tooltip/>
 	      <el-table-column prop='use_remarks' sortable label='领用备注' width='120' show-overflow-tooltip/>
 	      <el-table-column prop='use_amount' fixed='right' align='right' sortable label='领用数量' width='100'>
@@ -49,19 +53,18 @@
 	      <!--/ slot[column]-->
 	    </el-table>
 			</el-form>
-			<asset-use-status-list-dialog show-selection :in-dialog='inDialog' ref='assetUseStatusListDialog'>
+			<asset-use-status-list-dialog show-checkbox :in-dialog='inDialog' ref='assetUseStatusListDialog'>
 				<div slot='footer' >
 					<el-button type='primary' @click='selectAsset'>选择</el-button>
 				</div>
 			</asset-use-status-list-dialog>
-			<contract-info :in-dialog='inDialog' ref='contractInfo' />
+			<asset-details :in-dialog='inDialog' ref='assetDetails' />
 	</div>
 </template>
 
 <script>
-	import paymentProjectApi from '@/api/cw/receivePaymentProject'
 	import assetUseStatusListDialog from '@/components/it/asset/useStatus/listDialog'
-	import contractInfo from '@/components/yyzx/contract/info'
+	import assetDetails from '@/components/it/asset/details'
 
 	const formInit = {
 		task_id:null,
@@ -70,7 +73,7 @@
 	export default {
 		components:{ 
 			assetUseStatusListDialog,
-			contractInfo
+			assetDetails
 		},
 		props:{
 			paymentForm:{
@@ -209,37 +212,6 @@
 				})
 				return v
 			},
-			submit() {
-				this.$refs.form.validate((vaild)=>{
-					if(vaild){
-						let projectList = []
-						this.list.forEach((item,i)=>{
-							if(item.car_area>0){
-								projectList.push({
-									car_id:this.form.car_id,
-									task_id:this.form.task_id,
-									car_product_id:item.car_product_id,
-									product_id:item.product_id,
-									amount:item.use_amount
-								})
-							}								
-						})
-						if(projectList.length==0){
-							this.$message.error('至少选择一个项目！')
-							return false
-						}
-						this.loading = true
-						paymentProjectApi.save(projectList).then(res=>{
-							this.$message.success('提交成功')
-							this.loading = false
-							this.updated = true
-							this.show = false
-						})												
-					}else{
-						return false
-					}
-				})
-			},
 			fillMax(){
 				this.selectionList.forEach(item=>{
 					item.return_amount = item.use_amount
@@ -294,6 +266,11 @@
 					})
 				})
 				this.$refs.tableList.clearSelection()
+			},
+			openAssetDetails(row){
+				this.$refs.assetDetails.open().then(that=>{
+					that.getDetails(row.asset_id)
+				})
 			}
 		}
 	}

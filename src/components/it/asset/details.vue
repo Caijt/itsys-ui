@@ -77,7 +77,7 @@
 								<span>{{form.remain}}</span>
 							</el-form-item>
 						</el-col>
-						<el-col :span='16'>
+						<el-col :span='8'>
 							<el-form-item label='供应商'>
 								<span class='c-link no-line' @click='openSupplierDetails(form)'>{{form.supplier_name}}</span>
 							</el-form-item>
@@ -85,6 +85,11 @@
 						<el-col :span='8'>
 							<el-form-item label='资产价格'>
 								<span>￥{{form.price}}</span>
+							</el-form-item>
+						</el-col>
+						<el-col :span='8'>
+							<el-form-item label='序列号'>
+								<span>{{form.sn}}</span>
 							</el-form-item>
 						</el-col>
 						<el-col :span='24'>

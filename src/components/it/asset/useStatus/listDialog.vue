@@ -9,7 +9,7 @@
 		@close='closeDialog'>
 		<list 
 			:hide-asset-fields='hideAssetFields'
-			:show-selection='showSelection'
+			:show-checkbox='showCheckbox'
 			max-height='300' 
 			:params='params' 
 			in-dialog
@@ -32,7 +32,7 @@
 				type:Boolean,
 				default:false
 			},
-			showSelection:{
+			showCheckbox:{
 				type:Boolean,
 				default:false
 			},

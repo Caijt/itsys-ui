@@ -47,7 +47,7 @@
 					</el-input>
 				</el-form-item>
 				<el-form-item label='备注' prop='remarks' >
-					<el-input v-model='form.remarks' placeholder=''>
+					<el-input v-model='form.remarks' type='textarea' placeholder=''>
 					</el-input>
 				</el-form-item>
 				<el-form-item label='附件' prop='remarks'>
