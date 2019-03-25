@@ -31,7 +31,6 @@
 			    <!-- <el-menu-item index="/my/setting" >配置</el-menu-item> -->
 			    <el-menu-item index='' @click='logout'>注销</el-menu-item>
 			  </el-submenu>
-			  <el-menu-item  index='' style='float:right' @click='contactDialog=true'>帮助</el-menu-item>
 			</el-menu>
 		</el-header>
 		<el-container style='overflow: auto;background-color: #FFF'>
@@ -66,27 +65,6 @@
 				<el-button type='text' @click='checkVersion'>Copyright © {{ new Date().getFullYear() }} {{$store.state.sys.company}} | 版本：v<span ref='version'>20190219001</span></el-button>
 				<!-- <el-button type='text' @click='contactDialog=true'>系统帮助</el-button> -->
 			</el-footer>
-			<el-dialog :visible.sync="contactDialog" title='系统帮助' class='c-dialog-fixed'>
-				<el-row :gutter='10'>
-					<el-col :span='16'>
-						<el-form class='c-form-text' label-position='top'>
-							<el-form-item label='系统操作文档'>
-								<el-button type='text' icon='el-icon-document' @click='down("help1.pdf")'>金刚防火窗产供销系统流程说明</el-button>
-								<el-button type='text' icon='el-icon-document' @click='down("help2.pdf")'>项目进度查询操作</el-button>
-							</el-form-item>
-							<el-form-item label='技术支持电话'>
-								<span>0754-82534808</span>
-							</el-form-item>
-							<el-form-item label='QQ交流群'>
-								<span>366933271（用手机QQ扫描右侧二维码加入交流群）</span>
-							</el-form-item>
-						</el-form>
-					</el-col>
-					<el-col :span='8'>
-						<img src='static/qun.jpg' style='max-width: 100%'/>
-					</el-col>
-				</el-row>
-			</el-dialog>
     </el-container>
 	</el-container>
 </el-container>
