@@ -22,7 +22,7 @@
 			<el-tab-pane label='维修' name='REPAIR'></el-tab-pane>
 			<el-tab-pane label='报废' name='SCRAP'></el-tab-pane>
 		</el-tabs>
-		<list ref='list' init show-selection>
+		<list ref='list' init show-checkbox>
     	<el-table-column slot='column' label='操作' fixed='right' align='center' width='100'>
 				<template slot-scope='scope'>
 					<el-button  size='mini' type='text' icon='el-icon-edit' @click='edit(scope)' />	
@@ -106,11 +106,12 @@ export default {
 			})
 		},
 		printBatch(){
-			if(this.$refs.list.selectionList.length==0){
+			let selectionList = this.$refs.list.getSelectionList()
+			if(selectionList.length==0){
 				this.$message.warning('未选择资产数据')
 				return false
 			}
-			let ids = this.$refs.list.selectionList.map(d=>{
+			let ids = selectionList.map(d=>{
 				return d.id
 			})
 			this.$refs.printLabel.open().then(that=>{

@@ -14,6 +14,7 @@
 				ref='form' label-width='85px' 
 				size='mini' status-icon
 				class='c-form-mini'>
+				<el-alert style='margin-bottom: 10px' type='warning' title='如果不确定发货产品清单及司机信息，可以先保存，等信息确定后再提交，提交后车辆信息就无法修改！'></el-alert>
 				<divider title='发货车辆信息'></divider>	
 				<el-row :gutter='10'>
 					<el-col :span='24'>
@@ -45,8 +46,7 @@
 					<attach-upload ref='attachUpload' :params='attachUploadParams' @uploaded='res=>{$refs.attachList.push(res)}'></attach-upload>
 					<attach-list show-del ref='attachList'></attach-list>
 				</el-form-item>	
-				<divider title='司机信息'></divider>	
-				<el-alert style='margin-bottom: 10px' type='warning' title='如果还不知道司机信息，可以先不填，提交后在发货车辆列表中进行补充'></el-alert>
+				<divider title='司机信息'></divider>				
 				<el-row>
 					<el-col :span='24'>
 						<el-form-item label='车辆单位' prop='driver_unit'>

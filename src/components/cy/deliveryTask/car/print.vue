@@ -36,7 +36,7 @@
 							  </el-switch>
 							</el-form-item>
 						</el-col>
-						<el-col :span='12'>
+						<el-col :span='12' v-show='productShow'>
 							<el-form-item label='产品字段'>
 								<el-select
 									style='width: 100%'

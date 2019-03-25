@@ -91,13 +91,13 @@
 						:params='{ input_status:1 }' 
 						no-page hide-query hide-edit-field hide-task-field
 						@undo='carUpdated'>
-						<el-table-column slot='column' fixed='right' label='操作' align='center' width='130'>
+						<el-table-column slot='column' fixed='right' label='操作' align='center' width='90'>
 							<template slot-scope='scope'>
-								<el-button type='text' @click='supply(scope)'>补充</el-button>
+								<!-- <el-button type='text' @click='supply(scope)'>补充</el-button> -->
 								<el-button type='text' v-show='scope.row.create_user_id==$store.state.user.id' @click='undo(scope)'>撤销</el-button>
 								<el-tooltip content='打印发货签收单'>
 									<el-button type='text' @click='printCar(scope)'>打印</el-button>
-								</el-tooltip>	
+								</el-tooltip>
 							</template>
 						</el-table-column>
 					</car-list>

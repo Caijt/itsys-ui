@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<asset-list show-more init/>
+		<asset-list show-query-more init/>
 	</div>
 </template>
 <script>

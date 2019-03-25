@@ -1,15 +1,14 @@
 <template>
 	<el-dialog 
 		class='c-dialog-fixed'
-		title='资产列表' 
+		title='IT资产列表' 
 		width='80%'		
 		:visible.sync='show'
 		:append-to-body='inDialog'
 		@open='openDialog'
 		@close='closeDialog'>
 		<list 
-			:show-selection='showSelection'
-			max-height='300' 
+			:show-checkbox='showCheckbox'
 			:params='params' 
 			in-dialog
 			ref='list'>
@@ -31,7 +30,7 @@
 				type:Boolean,
 				default:false
 			},
-			showSelection:{
+			showCheckbox:{
 				type:Boolean,
 				default:false
 			},

@@ -54,7 +54,7 @@
 	      <!--/ slot[column]-->
 	    </el-table>
 			</el-form>
-			<asset-list-dialog show-selection :params='{isFree:1}' :in-dialog='inDialog' ref='assetListDialog'>
+			<asset-list-dialog show-checkbox :params='{isFree:1}' :in-dialog='inDialog' ref='assetListDialog'>
 				<div slot='footer' >
 					<el-button type='primary' @click='selectAsset'>选择</el-button>
 				</div>
@@ -229,7 +229,7 @@
 				})
 			},
 			selectAsset(row){
-				let selectionList = this.$refs.assetListDialog.$refs.list.selectionList
+				let selectionList = this.$refs.assetListDialog.$refs.list.getSelectionList()
 				if(selectionList.length==0){
 					this.$message.warning('未选择资产')
 					return false
