@@ -47,17 +47,8 @@
 					<el-input v-model='form.qywx_user' placeholder=''>
 					</el-input>
 				</el-form-item>
-				<el-row :gutter='10'>
-					<el-col :span='8'>
-						<el-form-item label='管理工厂' prop='factoryIds'>
-							<el-checkbox-group v-model="form.factoryIds">
-								<div v-for='item in factoryList' :key='item.id'>
-									<el-checkbox :label='item.id+""'>{{item.name}}</el-checkbox>
-								</div>				    
-						  </el-checkbox-group>
-						</el-form-item>
-					</el-col>
-					<el-col :span='8'>
+				<el-row :gutter='10'>					
+					<el-col :span='12'>
 						<el-form-item label='管理公司' prop='companyIds'>
 							<el-checkbox-group v-model="form.companyIds">
 								<div v-for='item in companyList' :key='item.id'>
@@ -66,7 +57,7 @@
 						  </el-checkbox-group>
 						</el-form-item>
 					</el-col>
-					<el-col :span='8'>
+					<el-col :span='12'>
 						<el-form-item label='所属角色' prop='roleIds'>
 							<el-checkbox-group v-model="form.roleIds">
 								<div v-for='item in roleList' :key='item.id'>

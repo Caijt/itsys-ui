@@ -9,6 +9,7 @@
 			@reset-query='resetQuery'
 			@query='query'
 			@reload='reload'
+			@export-excel='exportExcel'
 			row-key='id'
 			:show-query-more='showQueryMore'
 			:hide-query='hideQuery'
@@ -275,15 +276,21 @@ const initQueryParamsLabel = {
 }
 const initQueryParams = {
 	no:'',
+	model:'',
 	abnormal_status:[],
-	remarks:'',
+	diy_no:'',
+	type_id:'',
 	hasSubType:1,
-	inbound_date_begin:'',
-	inbound_date_end:'',
-	company_ids:[],
-	supplier_name:'',
+	remarks:'',
 	source:'',
+	sn:'',
+	supplier_name:'',
+	company_ids:[],
+	dep_id:'',
 	hasSubDep:1,
+	employee_name:'',
+	inbound_date_begin:'',
+	inbound_date_end:'',	
 	price_begin:'',
 	price_end:''
 }

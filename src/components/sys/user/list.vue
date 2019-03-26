@@ -60,7 +60,6 @@
 			<el-table-column prop='login_name' label='登录用户名' min-width='120' show-overflow-tooltip/>
 			<el-table-column prop='name' label='用户名称' min-width='120' show-overflow-tooltip/>			
 			<el-table-column prop='qywx_user' label='企业号ID' sortable='custom' width='120' show-overflow-tooltip/>
-			<el-table-column prop='factory_names' label='管理工厂' sortable='custom' width='150' show-overflow-tooltip/>
 			<el-table-column prop='company_names' label='管理公司' sortable='custom' width='150' show-overflow-tooltip/>
 			<el-table-column prop='role_names' label='所属角色' sortable='custom' width='150' show-overflow-tooltip/>
 			<el-table-column align='center' label='菜单权限' width='80' show-overflow-tooltip>
