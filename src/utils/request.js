@@ -7,9 +7,12 @@ const service = axios.create({
   //baseURL: process.env.BASE_API, // api的base_url 如果前端跟后端不在同一个服务器上，可以使用
   // timeout: 15000 // 请求超时时间
 })
-
 //这是post请求，可以直接发送对象
-service.defaults.transformRequest = [(data)=> {return Qs.stringify(data)}]
+// service.defaults.transformRequest = [(data)=> {return Qs.stringify(data)}]
+//
+service.defaults.paramsSerializer = (params)=> {
+  return Qs.stringify(params,{indices:false})
+}
 
 // 可以在请求头添加对应信息
 service.interceptors.request.use(config => {

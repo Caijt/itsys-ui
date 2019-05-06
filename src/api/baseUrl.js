@@ -1,1 +1,1 @@
-export default '/service/api'
+export default '/api'

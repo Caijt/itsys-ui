@@ -10,7 +10,8 @@ const user = {
 		menus: [],
 		routers:[],
 		version:'',
-		sysTitle:''
+		sysTitle:'',
+		token:''
 	},
 	getters: {
 		hasUserInfo:state=>{
@@ -18,6 +19,9 @@ const user = {
   	},
   	hasSession:state => {
   		return Cookies.get( SessionKey ) ? true : false
+  	},
+  	hasToken:state => {
+  		return state.token? true : false
   	}
 	},
 	mutations: {
@@ -38,12 +42,16 @@ const user = {
 		},
 		SET_VERSION( state, version) {
 			state.version = version
+		},
+		SET_TOKEN( state, token) {
+			state.token = token
 		}
 	},
 	actions: {
 		login({ commit },user) {
 			return new Promise(( resolve, reject )=>{
 				authApi.login(user.username,user.password).then( res => {
+					commit("SET_TOKEN",res.data)
 					resolve(res)
 				}).catch(error=>reject(error))
 			})
