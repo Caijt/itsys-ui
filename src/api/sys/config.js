@@ -17,7 +17,7 @@ export default {
 	},
 	getValues(keys){
 		return request({
-			url: baseUrl+'/config_no_auth/getValues',
+			url: BASE_URL+'/getValues',
 			method:'get',
 			params:{
 				keys

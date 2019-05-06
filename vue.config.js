@@ -8,12 +8,12 @@ module.exports = {
     host:'0.0.0.0',
   	proxy: {
       '/api': {
-        target: 'http://127.0.0.1:89',
+        target: 'http://localhost:9000',
         //pathRewrite: {'^/api/' : '/'},
         changeOrigin: true
       },
       '/upload': {
-        target: 'http://127.0.0.1:89',
+        target: 'http://localhost:9000',
         //pathRewrite: {'^/api/' : '/'},
         changeOrigin: true
       }      
