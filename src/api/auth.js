@@ -15,7 +15,7 @@ export default {
 	},
 	getUserInfo(){
 		return request({
-			url: baseUrl + '/user/getUserInfo',
+			url: BASE_URL + '/getUserInfo',
 			method: 'get'
 		})
 	}

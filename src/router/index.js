@@ -51,7 +51,7 @@ router.beforeEach((to, from, next) => {
       /* 判断是否有sessionId */
       //if( store.getters.hasSession ) {
       //暂时处理hasSession有时返回false的bug
-      if( Cookies.get( 'PHPSESSID' ) ? true : false ) {
+      if( sessionStorage.getItem("token") ? true : false ) {
         /* 判断是否已读取用户信息 */
         if( store.getters.hasUserInfo ) {
           next()

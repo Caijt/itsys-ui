@@ -19,6 +19,9 @@
 			<el-table-column prop='title' label='更新标题' width='200'></el-table-column>
 			<el-table-column prop='content' label='更新内容' min-width='200' show-overflow-tooltip></el-table-column>			
 			<el-table-column prop='update_date' label='更新日期' width='120'>
+				<template slot-scope='{row}'>
+					{{ $commonJs.formatToDate(row.update_date)}}
+				</template>
 			</el-table-column>
 		</el-table>
 		<el-pagination style='margin-top: 10px'

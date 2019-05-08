@@ -43,6 +43,9 @@ export default {
 		if(!value) return ''
 		return Vue.prototype.$moment(value).format(format)
 	},
+	formatToDate(value){
+		return this.formatDate(value,'YYYY-MM-DD')
+	},
 	hasUserPath(path){
 		return store.state.user.menus.some((item,index)=>{
 			return item.fullPath == path

@@ -8,7 +8,7 @@ const BASE_URL = baseUrl+'/config'
 export default {
 	getValue(key){
 		return request({
-			url: baseUrl+'/config_no_auth/getValue',
+			url: BASE_URL+'/getValue',
 			method:'get',
 			params:{
 				key
