@@ -54,7 +54,7 @@ export default {
 			params
 		})
 	},
-	getList(params){
+	getList(params={}){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getList',
@@ -62,6 +62,14 @@ export default {
 			params
 		})
 	},
+	getPageList(params={}){
+		params = commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getPageList',
+			method:'get',
+			params
+		})
+	},	
 	getProductList(params){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
@@ -73,7 +81,6 @@ export default {
 	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
 			'name',			
 			'remarks',
 			'menu_ids'
@@ -86,8 +93,8 @@ export default {
 	},
 	del(id){
 		return request({
-			url: BASE_URL + '/del',
-			method:'post',
+			url: BASE_URL + '/delete',
+			method:'delete',
 			data:{
 				id
 			}
@@ -175,12 +182,12 @@ export default {
 			params
 		})
 	},
-	checkLoginNameUnique(login_name,id=null){
+	checkNameUnique(name,id=0){
 		return request({
-			url: BASE_URL + '/checkLoginNameUnique',
+			url: BASE_URL + '/checkNameUnique',
 			method:'get',
 			params:{
-				login_name,id
+				name,id
 			}
 		})
 	},

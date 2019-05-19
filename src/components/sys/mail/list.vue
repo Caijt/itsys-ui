@@ -142,11 +142,8 @@ export default {
 			},
 			//数据请求的参数
 			requestParams:{
-				pageSize:10,//分页大小
-				currentPage:1,//当前页
-				sortProp:'',
-				sortOrder:'',
-				noPage:this.noPage?1:0
+				orderProp:'',
+				orderDesc:false,
 			}
 		}
 	},
@@ -193,7 +190,7 @@ export default {
 		getData() {
 			this.loading=true
 			api.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
-				this.list = res.data.list
+				this.list = res.data
 				this.dataTotal = res.data.total
 				this.summaryData = res.data.summary || {}
 				this.loading = false
@@ -212,7 +209,6 @@ export default {
 			}else{
 				this.requestParams = {...this.requestParams,...this.queryParams}
 			}	
-			this.requestParams.currentPage = 1		
 			this.getData()
 		},
 		//重置查询条件
@@ -223,8 +219,8 @@ export default {
 			this.query()
 		},
 		sortChange({prop,order}){
-			this.requestParams.sortProp = prop
-			this.requestParams.sortOrder = order
+			this.requestParams.orderProp = prop
+			this.requestParams.orderDesc = order!="ascending"?true:false
 			this.getData()
 		},
 		//导出excel

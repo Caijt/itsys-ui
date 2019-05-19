@@ -80,7 +80,7 @@
 			getTreeList(){
 				this.loading = true
 				api.getTreeList({...this.requestParams,...this.initParams}).then(res=>{
-					this.data = this.$commonJs.toTreeData(res.data.list)
+					this.data = this.$commonJs.toTreeData(res.data)
 					this.loading = false
 				})
 			},

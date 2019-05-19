@@ -57,7 +57,7 @@
 			<el-table-column prop='name' label='公司名称' min-width='120' show-overflow-tooltip/>
 			<el-table-column prop='is_disabled' align='center' label='状态' width='80'>
 				<template slot-scope='{row}'>
-					<el-tag type='success' v-if='row.is_disabled==0'>启用</el-tag>
+					<el-tag type='success' v-if='!row.is_disabled'>启用</el-tag>
 					<el-tag type='info' v-else>禁用</el-tag>
 				</template>
 			</el-table-column>
@@ -88,18 +88,7 @@
 			<slot name='column'></slot>
 			<!--/ slot[column]-->
 		</el-table>
-		<!-- 数据表格 -->
-		<!-- 分页 -->
-		<el-pagination style='margin-top: 10px'
-			v-if='!noPage'
-	    :page-sizes = "[10, 20, 50, 100]"
-	    :page-size= "requestParams.pageSize"
-	    :current-page.sync = "requestParams.currentPage"
-	    layout="total, sizes, prev, pager, next, jumper"
-	    :total="dataTotal"
-	    @size-change='sizeChange'
-	    @current-change='getData' />
-	  <!--/ 分页 -->
+		<!-- 数据表格 -->		
 	</div>
 </template>
 <script>
@@ -164,14 +153,13 @@ export default {
 				name:'',//项目编号				
 				address:'',//
 			},
+			//排序参数
+			orderParams:{
+				orderProp:"",
+				orderDesc:true
+			},
 			//数据请求的参数
-			requestParams:{
-				pageSize:10,//分页大小
-				currentPage:1,//当前页
-				sortProp:'',
-				sortOrder:'',
-				noPage:this.noPage?1:0
-			}
+			requestParams:{ }
 		}
 	},
 	created(){
@@ -195,7 +183,7 @@ export default {
 		},
 		//分页容量大小发生变化时
 		sizeChange(value){
-			this.requestParams.pageSize=value
+			this.pageParams.pageSize=value
 			this.getData()
 		},
 		selectionChange(valueArrary){
@@ -216,10 +204,13 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			api.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
-				this.list = res.data.list
-				this.dataTotal = res.data.total
-				this.summaryData = res.data.summary || {}
+			api.getList({
+				...this.requestParams,
+				...this.params,
+				...this.initParams,
+				...this.orderParams
+			}).then(res=>{
+				this.list = res.data
 				this.loading = false
 				this.$emit('loaded',{ 
 					total:this.dataTotal,
@@ -236,7 +227,6 @@ export default {
 			}else{
 				this.requestParams = {...this.requestParams,...this.queryParams}
 			}	
-			this.requestParams.currentPage = 1		
 			this.getData()
 		},
 		//重置查询条件
@@ -247,8 +237,8 @@ export default {
 			this.query()
 		},
 		sortChange({prop,order}){
-			this.requestParams.sortProp = prop
-			this.requestParams.sortOrder = order
+			this.orderParams.orderProp = prop
+			this.orderParams.orderDesc = order!="ascending"?true:false
 			this.getData()
 		},
 		//导出excel

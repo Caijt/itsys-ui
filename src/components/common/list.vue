@@ -127,6 +127,11 @@ export default {
 				sortProp:this.sortProp,//排序字段
 				sortOrder:this.sortOrder,//排序顺序
 				showPage:this.showPage?1:0,
+				noPage:this.noPage?1:0
+			},
+			pageParams:{
+				pageSize:this.$store.state.sys.pageSize,//分页大小
+				currentPage:1,//当前页
 				noPage:this.noPage?1:0,
 			}
 		}

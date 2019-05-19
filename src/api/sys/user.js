@@ -47,7 +47,7 @@ export default {
 		})
 	},
 	getSummary(params){
-		params = commonJs.obj.removeNullKey(params)
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getSummary',
 			method:'get',
@@ -55,9 +55,17 @@ export default {
 		})
 	},
 	getList(params){
-		params = commonJs.obj.removeNullKey(params)
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getList',
+			method:'get',
+			params
+		})
+	},
+	getPageList(params){
+		params = params && commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getPageList',
 			method:'get',
 			params
 		})
@@ -73,13 +81,11 @@ export default {
 	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
 			'login_name',
 			'name',
 			'qywx_user',
 			'pwd',
 			'change_pwd',
-			'factory_ids',
 			'company_ids',
 			'role_ids'
 		])
@@ -91,8 +97,8 @@ export default {
 	},
 	del(id){
 		return request({
-			url: BASE_URL + '/del',
-			method:'post',
+			url: BASE_URL + '/delete',
+			method:'delete',
 			data:{
 				id
 			}
@@ -101,15 +107,6 @@ export default {
 	undo(id){
 		return request({
 			url: BASE_URL + '/undo',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undoReview(id){
-		return request({
-			url: BASE_URL + '/undoReview',
 			method:'post',
 			data:{
 				id
@@ -142,23 +139,6 @@ export default {
 			}
 		})
 	},
-	review(data){
-		data = commonJs.obj.copyByKey(data,['id'])
-		return request({
-			url: BASE_URL + '/review',
-			method:'post',
-			data
-		})
-	},
-	driverSupply(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id','driver_unit','driver_no','driver_name','driver_tel'])
-		return request({
-			url: BASE_URL + '/driverSupply',
-			method:'post',
-			data
-		})
-	},
 	exportExcel(params){
 		params = commonJs.obj.removeNullKey(params)
 		let queryStr=qs.stringify(params)
@@ -180,12 +160,12 @@ export default {
 			params
 		})
 	},
-	checkLoginNameUnique(login_name,id=null){
+	checkLoginNameUnique(name,id=0){
 		return request({
 			url: BASE_URL + '/checkLoginNameUnique',
 			method:'get',
 			params:{
-				login_name,id
+				name,id
 			}
 		})
 	},

@@ -1,6 +1,14 @@
 import Vue from 'vue'
 import store from '../store'
+import authApi from '../api/auth'
 export default {
+	newGuid(){
+		return new Promise((resolve,reject)=>{
+				authApi.getGuid().then(res=>{
+					resolve(res.data)
+				})
+			})
+	},
 	convertTextarea(text){
 		text = text||'';
 		if(text){
@@ -77,7 +85,24 @@ export default {
 			}else{
 				callback()
 			}
-		}
+		},
+		// createCheckPropUnique(method,form,message){
+		// 	console.log(form)
+		// 	return (rule,value,callback,a,b,c,d)=>{
+		// 		console.log(form)
+		// 		if(value){
+		// 			method(value,form.id).then(res=>{
+		// 				if(res.data){
+		// 					callback()
+		// 				}else{
+		// 					callback(new Error(message))
+		// 				}
+		// 			})
+		// 		}else{
+		// 			callback()
+		// 		}
+		// 	}
+		// }
 	},
 	toTreeData(data){
 		let rootList=[]

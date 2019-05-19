@@ -186,7 +186,8 @@ export default {
 				currentPage:1,//当前页
 				sortProp:'',
 				sortOrder:'',
-				noPage:this.noPage?1:0
+				noPage:this.noPage?1:0,
+				orderDesc:true
 			}
 		}
 	},
@@ -232,7 +233,7 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			api.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
+			api.getPageList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
 				this.list = res.data.list
 				this.dataTotal = res.data.total
 				this.summaryData = res.data.summary || {}
@@ -312,7 +313,7 @@ export default {
 		},
 		openMenuDialog(row){
 			this.$refs.menuDialog.open().then(that=>{
-				that.initData({ role_ids:row.role_ids, isRoleIds:1})
+				that.initData({ user_id:row.id })
 			})
 		}
 	}

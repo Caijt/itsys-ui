@@ -18,5 +18,11 @@ export default {
 			url: BASE_URL + '/getUserInfo',
 			method: 'get'
 		})
+	},
+	getGuid(){
+		return request({
+			url: BASE_URL + '/getGuid',
+			method: 'get'
+		})
 	}
 }

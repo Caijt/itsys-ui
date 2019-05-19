@@ -57,7 +57,7 @@ export default {
 	getTreeList(params={}){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
-			url: BASE_URL + '/getTreeList',
+			url: BASE_URL + '/getList',
 			method:'get',
 			params
 		})
@@ -87,7 +87,6 @@ export default {
 	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
 			'title',
 			'path',
 			'order',
@@ -96,37 +95,14 @@ export default {
 		])
 		return request({
 			url: BASE_URL + '/save',
-			method:'post',
+			method:'put',
 			data
 		})
-	},
-	update(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id',
-			'action',
-			'parent_id',
-			'company_id',
-			'name',
-			'model',
-			'type',
-			'order',
-			'position',
-			'admin_address',
-			'ip',
-			'account',
-			'password',
-			'remarks'
-		])
-		return request({
-			url: BASE_URL + '/update',
-			method:'post',
-			data
-		})
-	},
+	},	
 	del(id){
 		return request({
 			url: BASE_URL + '/del',
-			method:'post',
+			method:'delete',
 			data:{
 				id
 			}

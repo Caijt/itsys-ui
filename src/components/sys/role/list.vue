@@ -51,9 +51,9 @@
 				width='35' />
 			<el-table-column prop='name' label='角色名称' min-width='120' show-overflow-tooltip/>			
 			<el-table-column prop='remarks' label='角色说明' min-width='120' show-overflow-tooltip/>			
-			<el-table-column prop='factory_names' label='菜单权限' align='center' sortable='custom' width='100' show-overflow-tooltip>
+			<el-table-column prop='factory_names' label='菜单权限' align='center' sortable='custom' width='95' show-overflow-tooltip>
 				<template slot-scope='{row}'>
-					<span class='c-link' @click='openMenuDialog(row)'>{{ getMenuCount(row.menu_ids) }}</span>
+					<span class='c-link' @click='openMenuDialog(row)'>查看</span>
 				</template>
 			</el-table-column>
 			<el-table-column 
@@ -165,8 +165,8 @@ export default {
 			requestParams:{
 				pageSize:10,//分页大小
 				currentPage:1,//当前页
-				sortProp:'',
-				sortOrder:'',
+				orderProp:'',
+				orderDesc:true,
 				noPage:this.noPage?1:0
 			}
 		}
@@ -213,7 +213,7 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			api.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
+			api.getPageList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
 				this.list = res.data.list
 				this.dataTotal = res.data.total
 				this.summaryData = res.data.summary || {}
@@ -249,8 +249,8 @@ export default {
 			})
 		},
 		sortChange({prop,order}){
-			this.requestParams.sortProp = prop
-			this.requestParams.sortOrder = order
+			this.requestParams.orderProp = prop
+			this.requestParams.orderDesc = order!="ascending"?true:false
 			this.getData()
 		},
 		//导出excel
@@ -285,7 +285,7 @@ export default {
 		},
 		openMenuDialog(row){
 			this.$refs.menuDialog.open().then(that=>{
-				that.initData({ ids:row.menu_ids, isIds:1 })
+				that.initData({ role_id:row.id })
 			})
 		}
 	}

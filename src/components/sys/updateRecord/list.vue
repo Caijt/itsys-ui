@@ -51,7 +51,11 @@
 				align='center' 
 				width='35' />
 			<el-table-column prop='title' label='更新标题' width='120' show-overflow-tooltip/>			
-			<el-table-column prop='update_date' label='更新日期' sortable='custom' width='100'/>
+			<el-table-column prop='update_date' label='更新日期' sortable='custom' width='100'>
+				<template slot-scope="{row}">
+					<span>{{row.update_date | formatToDate}}</span>
+				</template>
+			</el-table-column>
 			<el-table-column prop='content' label='内容' sortable='custom' min-width='150' show-overflow-tooltip/>
 			<el-table-column 
 				prop='create_user_name' 
@@ -156,13 +160,17 @@ export default {
 				invoice_date_begin:'',
 				invoice_date_end:''
 			},
+			pageParams:{
+				currentPage:1,
+				pageSize:10
+			},
+			orderParams:{
+				orderProp:'',
+				orderDesc:true
+			},
 			//数据请求的参数
 			requestParams:{
-				pageSize:10,//分页大小
-				currentPage:1,//当前页
-				sortProp:'',
-				sortOrder:'',
-				noPage:this.noPage?1:0
+				
 			}
 		}
 	},
@@ -208,7 +216,13 @@ export default {
 		//获取数据
 		getData() {
 			this.loading=true
-			api.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
+			api.getPageList({
+				...this.requestParams,
+				...this.params,
+				...this.initParams,
+				...this.orderParams,
+				...this.pageParams
+			}).then(res=>{
 				this.list = res.data.list
 				this.dataTotal = res.data.total
 				this.summaryData = res.data.summary || {}

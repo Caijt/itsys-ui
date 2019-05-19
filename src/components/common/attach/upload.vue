@@ -3,7 +3,8 @@
 		style='margin-bottom: 3px'
 		:list-type='type=="img"?"picture":"text"'
 		ref='fileUpload'
-		:data='params'
+		:headers="header"
+		:data="{ attachGuid }"
 	  :action='uploadUrl'
 	  :auto-upload='false'
 	  :limit='limit'
@@ -52,12 +53,13 @@
 				type:Number,
 				default:10*1024*1024
 			},
-			params:{
-				type:Object
-			},
 			imgCompress:{
 				type:Boolean,
 				default:false
+			},
+			attachGuid:{
+				type:String,
+				default:""
 			}
 		},
 		data(){
@@ -76,7 +78,14 @@
 						return attachApi.uploadImgUrl
 					}
 				}
-			}
+			},
+			header(){
+				let token = sessionStorage.getItem("token")
+			  if (token) {
+			  	return { Authorization: "Bearer " + token }
+			  }
+				return {}
+			},
 		},
 		methods:{
 			getUploadFiles(){

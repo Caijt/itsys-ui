@@ -37,8 +37,6 @@
 			row-key='id'
 			:size='size'
 			:max-height='maxHeight' 			
-			@selection-change='selectionChange'
-			:summary-method='getSummaryData'
 			@sort-change='sortChange'>			
 			<el-table-column 
 				fixed
@@ -54,17 +52,6 @@
 			<!--/ slot[column]-->
 		</el-table>
 		<!-- 数据表格 -->
-		<!-- 分页 -->
-		<el-pagination style='margin-top: 10px'
-			v-if='!noPage'
-	    :page-sizes = "[10, 20, 50, 100]"
-	    :page-size= "requestParams.pageSize"
-	    :current-page.sync = "requestParams.currentPage"
-	    layout="total, sizes, prev, pager, next, jumper"
-	    :total="dataTotal"
-	    @size-change='sizeChange'
-	    @current-change='getData' />
-	  <!--/ 分页 -->
 	</div>
 </template>
 <script>
@@ -131,11 +118,8 @@ export default {
 			},
 			//数据请求的参数
 			requestParams:{
-				pageSize:10,//分页大小
-				currentPage:1,//当前页
-				sortProp:'',
-				sortOrder:'',
-				noPage:this.noPage?1:0
+				orderProp:'',
+				orderDesc:false,
 			}
 		}
 	},
@@ -159,32 +143,11 @@ export default {
 			this.getData()
 		},
 		//分页容量大小发生变化时
-		sizeChange(value){
-			this.requestParams.pageSize=value
-			this.getData()
-		},
-		selectionChange(valueArrary){
-			this.selectionList = valueArrary
-		},
-		getSummaryData({columns,data}){
-      let sum = []
-      let labelIndex = this.showCheckbox?1:0
-      columns.forEach((column,i)=>{
-        if(i==labelIndex){
-          sum[i]='合计'
-        }else{
-          sum[i] = this.summaryData[column.property]
-        }       
-      })
-      return sum
-    },
 		//获取数据
 		getData() {
 			this.loading=true
 			api.getList({...this.requestParams,...this.params,...this.initParams}).then(res=>{
-				this.list = res.data.list
-				this.dataTotal = res.data.total
-				this.summaryData = res.data.summary || {}
+				this.list = res.data
 				this.loading = false
 				this.$emit('loaded',{ 
 					total:this.dataTotal,
@@ -201,7 +164,6 @@ export default {
 			}else{
 				this.requestParams = {...this.requestParams,...this.queryParams}
 			}	
-			this.requestParams.currentPage = 1		
 			this.getData()
 		},
 		//重置查询条件
@@ -212,8 +174,8 @@ export default {
 			this.query()
 		},
 		sortChange({prop,order}){
-			this.requestParams.sortProp = prop
-			this.requestParams.sortOrder = order
+			this.requestParams.orderProp = prop
+			this.requestParams.orderDesc = order!="ascending"?true:false
 			this.getData()
 		},
 		//导出excel

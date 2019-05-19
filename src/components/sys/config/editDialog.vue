@@ -72,10 +72,7 @@
 				show:false,
 				loading:false,
 				updated:false,
-				data:{ },				
-				factoryList:[],
-				companyList:[],
-				roleList:[],
+				data:{ },
 				form:{ ...formInit },
 				rules:{
 					key:[

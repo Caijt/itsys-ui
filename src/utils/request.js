@@ -8,8 +8,10 @@ const service = axios.create({
   // timeout: 15000 // 请求超时时间
 })
 //这是post请求，可以直接发送对象
-// service.defaults.transformRequest = [(data)=> {return Qs.stringify(data)}]
-//
+
+service.defaults.headers.delete["Content-Type"] = "application/x-www-form-urlencoded"
+service.defaults.transformRequest = [(data)=> {return Qs.stringify(data,{indices:false})}]
+
 service.defaults.paramsSerializer = (params)=> {
   return Qs.stringify(params,{indices:false})
 }

@@ -42,7 +42,7 @@
 	import api from '@/api/sys/role'
 	import menuList from '@/components/sys/menu/treeList'
 	const formInit = {		
-		id:null,
+		id:0,
 		login_name:'',
 		name:'',
 		remarks:'',
@@ -62,10 +62,10 @@
 			let validator = (rule,value,callback)=>{
 				if(value){
 					api.checkNameUnique(value,this.form.id).then(res=>{
-						if(res.data>0){
-							callback(new Error('角色名称已重复'))
-						}else{
+						if(res.data){
 							callback()
+						}else{
+							callback(new Error('角色名称已重复'))
 						}
 					})
 				}else{
@@ -83,7 +83,10 @@
 				roleList:[],
 				form:{ ...formInit },
 				rules:{
-					name:[{ required:true, message:'请填写角色名称' }]			
+					name:[
+						{ required:true, message:'请填写角色名称' },
+						{ validator:validator ,trigger:'blur'}
+					]			
 				},
 				updated:false,
 				initMenu:false

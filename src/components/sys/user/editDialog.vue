@@ -31,9 +31,7 @@
 					<el-col :span='12' v-if='isEdit'>
 						<el-form-item label='修改密码' prop='change_pwd' >
 							<el-switch 
-								v-model='form.change_pwd' 
-								:active-value="1"
-						    :inactive-value="0" />
+								v-model='form.change_pwd'/>
 						</el-form-item>	
 					</el-col>
 					<el-col :span='12' v-if='!isEdit||form.change_pwd'>
@@ -86,7 +84,7 @@
 	import menuDialog from '@/components/sys/menu/treeDialog'
 
 	const formInit = {		
-		id:null,
+		id:0,
 		login_name:'',
 		name:'',
 		qywx_user:'',
@@ -98,7 +96,8 @@
 		company_ids:'',
 		role_ids:'',
 		roleIds:[],
-		change_pwd:0
+		pwd:"",
+		change_pwd:false
 	}
 	export default {
 		components:{ 
@@ -114,10 +113,10 @@
 			let validator = (rule,value,callback)=>{
 				if(value){
 					api.checkLoginNameUnique(value,this.form.id).then(res=>{
-						if(res.data>0){
-							callback(new Error('登录用户名已重复'))
-						}else{
+						if(res.data){
 							callback()
+						}else{
+							callback(new Error('登录用户名已重复'))
 						}
 					})
 				}else{
@@ -147,7 +146,7 @@
 		},
 		computed:{
 			isEdit(){
-				return this.form.id? true:false
+				return this.form.id!=0? true:false
 			},
 			title(){
 				let title = '登陆用户信息'
@@ -160,7 +159,6 @@
 			}
 		},
 		mounted(){
-			this.getFactoryList()
 			this.getCompanyList()
 			this.getRoleList()
 		},
@@ -184,21 +182,16 @@
 				}
 				this.resetFields()
 			},
-			getFactoryList(){
-				factoryApi.getList({noPage:1}).then(res=>{
-					this.factoryList = res.data.list
-				})
-			},
 			getCompanyList(){
 				this.companyLoading = true
-				companyApi.getList({noPage:1}).then(res=>{
-					this.companyList = res.data.list
+				companyApi.getList().then(res=>{
+					this.companyList = res.data
 				})
 			},
 			getRoleList(){
 				this.companyLoading = true
-				roleApi.getList({noPage:1}).then(res=>{
-					this.roleList = res.data.list
+				roleApi.getList().then(res=>{
+					this.roleList = res.data
 				})
 			},
 			getForm(id){
@@ -231,7 +224,6 @@
 						this.form.role_ids = this.form.roleIds.join(',')
 						this.form.company_ids = this.form.companyIds.join(',')
 						this.form.factory_ids = this.form.factoryIds.join(',')
-						this.form.action = status
 						this.loading = true
 						api.save(this.form).then(res=>{
 							this.form.id = res.data.id
@@ -260,7 +252,7 @@
 			},
 			openMenuDialog(row){
 				this.$refs.menuDialog.open().then(that=>{
-					that.initData({ ids:row.menu_ids, isIds:1 })
+					that.initData({ role_id:row.id })
 				})
 			}
 		}

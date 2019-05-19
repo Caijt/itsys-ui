@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import commonJs from "@/utils/common"
 
 Vue.filter('textareaToHtml',function(value){
 	let text = value||'';
@@ -12,11 +13,11 @@ Vue.filter('textareaToHtml',function(value){
 })
 
 Vue.filter('formatDate',function(value,format){
-	if(!value) return ''
-	format = format||'YYYY-MM-DD HH:mm';
-	return Vue.prototype.$moment(value).format(format)
+  return commonJs.formatDate(value,format)
 })
-
+Vue.filter('formatToDate',function(value,format){
+  return commonJs.formatToDate(value)
+})
 Vue.filter('round',function(value){
 	value = Number(value)
 	return Math.round(value*100*100)/100||0

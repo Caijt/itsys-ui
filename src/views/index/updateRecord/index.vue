@@ -49,7 +49,9 @@
 			},
 			requestParams:{
 				pageSize:10,
-				currentPage:1
+				currentPage:1,
+				orderDesc:true,
+				orderProp:"update_date"
 			}
 		}),
 		created(){

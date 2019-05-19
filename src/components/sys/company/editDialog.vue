@@ -25,8 +25,8 @@
 				<el-form-item label='启用' prop='is_disabled'>
 					<el-switch 
 						v-model='form.is_disabled'
-						:active-value="0"
-    				:inactive-value="1"/>
+						:active-value="false"
+    				:inactive-value="true"/>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -41,10 +41,10 @@
 	import api from '@/api/sys/company'
 
 	const formInit = {		
-		id:null,
+		id:0,
 		name:'',
 		address:'',
-		is_disabled:0
+		is_disabled:false
 	}
 	export default {
 		components:{ 
@@ -59,10 +59,10 @@
 			let validator = (rule,value,callback)=>{
 				if(value){
 					api.checkNameUnique(value,this.form.id).then(res=>{
-						if(res.data>0){
-							callback(new Error('公司名称已重复'))
-						}else{
+						if(res.data){
 							callback()
+						}else{
+							callback(new Error('公司名称已重复'))
 						}
 					})
 				}else{
@@ -90,7 +90,7 @@
 		},
 		computed:{
 			isEdit(){
-				return this.form.id? true:false
+				return this.form.id!=0? true:false
 			},
 			title(){
 				let title = '公司信息'
@@ -130,13 +130,11 @@
 			},
 			assign(data){
 				this.form = { ...this.form, ...data }	
-				this.form.is_disabled = Number(this.form.is_disabled)	
 				return this
 			},
 			save(status=0){
 				this.$refs.form.validate(valid=>{
 					if(valid){
-						this.form.action = status
 						this.loading = true
 						api.save(this.form).then(res=>{
 							this.form.id = res.data.id

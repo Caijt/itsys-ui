@@ -23,7 +23,7 @@
 					</el-col>
 					<el-col :span='12'>
 						<el-form-item label='发件者名称' prop='sender_name' >
-							<el-input v-model='data.sender_name' placeholder='如果为空，则为邮箱地址' >
+							<el-input v-model='data.sender_name' placeholder='如果为空，则为邮箱地址'>
 							</el-input>
 						</el-form-item>
 					</el-col>
@@ -36,9 +36,7 @@
 					<el-col :span='12'>
 						<el-form-item label='开启SSL' prop='is_ssl'>
 							<el-switch 
-								v-model='data.is_ssl'
-								:active-value="1"
-		    				:inactive-value="0"/>
+								v-model='data.is_ssl'/>
 						</el-form-item>
 					</el-col>
 					<el-col :span='12'>
@@ -77,8 +75,12 @@
 
 	const dataInit = {
 		mail:'',
-		address:'',
-		is_ssl:0
+		sender_name:'',
+		smtp_host:'',
+		prop:'',
+		user_name:'',
+		password:'',
+		is_ssl:false
 	}
 	export default {
 		components:{ 
@@ -167,7 +169,6 @@
 			},
 			assign(data){
 				this.data = { ...this.data, ...data }	
-				this.data.is_ssl = Number(this.data.is_ssl)	
 				return this
 			},
 			save(status=0){

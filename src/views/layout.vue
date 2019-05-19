@@ -44,7 +44,7 @@
 						ref='menu'
 						style='border:none'
 						@select='select'>
-					  <el-menu-tree v-for='menu in $store.state.user.routers' v-show='menu.path==modulePath'  :menus='menu.children||[]' :key='menu.path'></el-menu-tree>
+					  <el-menu-tree v-for='menu in $store.state.user.routers' v-show='menu.path==modulePath' :menus='menu.children||[]' :key='menu.path'></el-menu-tree>
 					</el-menu>
 				</el-scrollbar>
 			</el-aside>

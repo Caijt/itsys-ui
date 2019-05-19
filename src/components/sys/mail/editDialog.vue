@@ -21,8 +21,8 @@
 				<el-form-item label='启用' prop='is_disabled'>
 					<el-switch 
 						v-model='form.is_disabled'
-						:active-value="0"
-    				:inactive-value="1"/>
+						:active-value="false"
+    				:inactive-value="true"/>
 				</el-form-item>
 				<el-form-item label='标题模版' prop='title_template' >
 					<el-input v-model='form.title_template' placeholder='' >
@@ -51,9 +51,9 @@
 
 	const formInit = {		
 		id:null,
-		name:'',
-		address:'',
-		is_disabled:0
+		title_template:'',
+		content_template:'',
+		is_disabled:false
 	}
 	export default {
 		components:{ 
@@ -136,7 +136,6 @@
 			},
 			assign(data){
 				this.form = { ...this.form, ...data }	
-				this.form.is_disabled = Number(this.form.is_disabled)	
 				return this
 			},
 			save(status=0){

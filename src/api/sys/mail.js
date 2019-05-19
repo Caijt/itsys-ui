@@ -21,7 +21,7 @@ export default {
 	},
 	getMailDetails(id){
 		return request({
-			url: BASE_URL + '/getMailDetails',
+			url: BASE_URL + '/getMail',
 			method:'get',
 			params:{ id }
 		})

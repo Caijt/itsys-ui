@@ -47,7 +47,7 @@ export default {
 		})
 	},
 	getSummary(params){
-		params = commonJs.obj.removeNullKey(params)
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getSummary',
 			method:'get',
@@ -55,9 +55,17 @@ export default {
 		})
 	},
 	getList(params){
-		params = commonJs.obj.removeNullKey(params)
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getList',
+			method:'get',
+			params
+		})
+	},
+	getPageList(params){
+		params = params && commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getPageList',
 			method:'get',
 			params
 		})
@@ -65,7 +73,6 @@ export default {
 	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
 			'name',
 			'address',
 			'is_disabled'
@@ -78,11 +85,9 @@ export default {
 	},
 	del(id){
 		return request({
-			url: BASE_URL + '/del',
-			method:'post',
-			data:{
-				id
-			}
+			url: BASE_URL + '/delete',
+			method:"delete",
+			data:{ id }
 		})
 	},
 	getSummaryData(params){

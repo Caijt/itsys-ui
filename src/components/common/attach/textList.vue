@@ -63,8 +63,6 @@ export default {
 			initParams:{},		
 			//数据请求的参数
 			requestParams:{
-				isAttachIds:1,
-				noPage:1
 			}	
 		}
 	},
@@ -83,8 +81,7 @@ export default {
 		getData() {
 			this.loading=true
 			attachApi.getList({ ...this.requestParams,...this.params,...this.initParams }).then(res=>{
-				this.list = res.data.list
-				this.dataTotal = res.data.total
+				this.list = res.data
 				this.loading = false
 			})
 		},
