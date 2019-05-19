@@ -1,4 +1,4 @@
-# jg2
+# IT部门信息管理系统前端代码
 
 ## Project setup
 ```
@@ -15,15 +15,3 @@ npm run serve
 npm run build
 ```
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
