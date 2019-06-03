@@ -56,13 +56,10 @@
 	import companyApi from '@/api/sys/company'
 
 	const formInit = {		
-		id:null,
-		input_status:-1,
+		id:0,
 		company_id:null,
-		no:'',
 		name:'',
-		address:'',
-		contacts:'',
+		remarks:'',
 		warning_value:0,
 	}
 	export default {
@@ -101,7 +98,7 @@
 			},
 			title(){
 				let title = '库存预警种类信息'
-				if(this.form.input_status>=0){
+				if(this.isEdit){
 					title += ' [ 修改 ]'
 				}else{
 					title += ' [ 新增 ]'
@@ -134,19 +131,9 @@
 			},
 			getCompanyList(){
 				this.companyLoading = true
-				companyApi.getList({inCompany:1,noPage:1}).then(res=>{
-					this.companyList = res.data.list
+				companyApi.getList({inUserCompany:true}).then(res=>{
+					this.companyList = res.data
 					this.companyLoading = false
-				})
-			},
-			create(){
-				this.loading = true
-				return new Promise((resolve,reject)=>{
-					api.create().then(res=>{
-						this.initData( res.data )
-						this.loading = false
-						resolve()
-					})
 				})
 			},
 			getForm(id){
@@ -166,28 +153,20 @@
 			},
 			save(status=0){
 				this.$refs.form.validate(valid=>{
-					if(valid){
-						this.form.action = status
-						this.update()
-					}else{
-						return false
-					}
-				})
-			},
-			update(){
-				this.loading = true
-				let messageText = this.form.action?'提交成功':'保存成功'
-				api.update(this.form).then(res=>{
-					this.form.input_status = res.data.input_status
-					this.loading = false
-					this.$message.success(messageText)
-					this.updated = true
-					if(this.form.action==1){
-						this.show=false									
-					}
-				}).catch(res=>{
-					this.loading = false
-					console.log(res)
+					if(!valid) return false
+					this.loading = true
+					api.save(this.form).then(res=>{
+						if(!this.isEdit){
+							this.form.id = res.data.id
+						}
+						this.loading = false
+						this.$message.success("保存成功")
+						this.updated = true
+					}).catch(res=>{
+						this.loading = false
+						console.log(res)
+					})
+					
 				})
 			},
 			uploaded(res){

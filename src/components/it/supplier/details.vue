@@ -132,9 +132,7 @@
 			},
 			initData(data){
 				this.form = { ...data }
-				if(data.attach_ids){
-					this.$refs.attachList.initData({attach_ids:data.attach_ids})
-				}
+				this.$refs.attachList.initData({attach_guid:data.attach_guid})
 			},
 			open(){
 				this.show = true

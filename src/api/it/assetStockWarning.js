@@ -3,7 +3,7 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/asset_stock_warning' 
+const BASE_URL = baseUrl +'/assetStockWarning' 
 
 export default {
 	getPrintQrcode(id){
@@ -55,9 +55,17 @@ export default {
 		})
 	},
 	getList(params){
-		params = commonJs.obj.removeNullKey(params)
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getList',
+			method:'get',
+			params
+		})
+	},
+	getPageList(params){
+		params = params && commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getPageList',
 			method:'get',
 			params
 		})
@@ -76,25 +84,24 @@ export default {
 			method:'post'
 		})
 	},
-	update(data){
+	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
 			'company_id',
 			'name',
 			'warning_value',
 			'remarks'
 		])
 		return request({
-			url: BASE_URL + '/update',
+			url: BASE_URL + '/save',
 			method:'post',
 			data
 		})
 	},
 	del(id){
 		return request({
-			url: BASE_URL + '/del',
-			method:'post',
+			url: BASE_URL + '/delete',
+			method:'delete',
 			data:{
 				id
 			}

@@ -3,7 +3,7 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/asset_use_record_detail' 
+const BASE_URL = baseUrl +'/assetUseRecordItem' 
 
 export default {
 	getPrintQrcode(id){
@@ -54,6 +54,14 @@ export default {
 			params
 		})
 	},
+	getPageList(params){
+		params = params && commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getPageList',
+			method:'get',
+			params
+		})
+	},
 	getList(params){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
@@ -62,14 +70,7 @@ export default {
 			params
 		})
 	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getProductList',
-			method:'get',
-			params
-		})
-	},
+	
 	create(){
 		return request({
 			url: BASE_URL + '/create',

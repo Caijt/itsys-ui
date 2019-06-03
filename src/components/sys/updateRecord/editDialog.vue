@@ -164,7 +164,8 @@
 					// let messageText = this.form.action?'提交成功':'保存成功'
 					api.save(this.form).then(res=>{
 						// this.form.input_status = res.data.input_status
-						this.loading = false
+						this.form.id = res.data.id
+						this.loading = false						
 						this.$message.success("保存成功")
 						this.updated = true
 						// if(this.form.action==1){

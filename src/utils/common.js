@@ -4,7 +4,7 @@ import authApi from '../api/auth'
 export default {
 	newGuid(){
 		return new Promise((resolve,reject)=>{
-				authApi.getGuid().then(res=>{
+				authApi.newGuid().then(res=>{
 					resolve(res.data)
 				})
 			})

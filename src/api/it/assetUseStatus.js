@@ -3,7 +3,7 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/asset_use_status' 
+const BASE_URL = baseUrl +'/assetUseStatus' 
 
 export default {
 	getPrintQrcode(id){
@@ -62,64 +62,12 @@ export default {
 			params
 		})
 	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
+	getPageList(params){
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
-			url: BASE_URL + '/getProductList',
+			url: BASE_URL + '/getPageList',
 			method:'get',
 			params
-		})
-	},
-	create(){
-		return request({
-			url: BASE_URL + '/create',
-			method:'post'
-		})
-	},
-	update(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id',
-			'input_status',
-			'company_id',
-			'model',
-			'supplier_name',
-			'buy_date',
-			'price',
-			'amount',
-			'sn',
-			'remarks'
-		])
-		return request({
-			url: BASE_URL + '/update',
-			method:'post',
-			data
-		})
-	},
-	del(id){
-		return request({
-			url: BASE_URL + '/del',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undo(id){
-		return request({
-			url: BASE_URL + '/undo',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undoReview(id){
-		return request({
-			url: BASE_URL + '/undoReview',
-			method:'post',
-			data:{
-				id
-			}
 		})
 	},
 	getSummaryData(params){
@@ -128,41 +76,6 @@ export default {
 			url: BASE_URL + '/getSummaryData',
 			method:'get',
 			params
-		})
-	},
-	loadFinish(task_id){
-		return request({
-			url: BASE_URL + '/loadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	undoLoadFinish(task_id){
-		return request({
-			url: BASE_URL + '/undoLoadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	review(data){
-		data = commonJs.obj.copyByKey(data,['id'])
-		return request({
-			url: BASE_URL + '/review',
-			method:'post',
-			data
-		})
-	},
-	driverSupply(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id','driver_unit','driver_no','driver_name','driver_tel'])
-		return request({
-			url: BASE_URL + '/driverSupply',
-			method:'post',
-			data
 		})
 	},
 	exportExcel(params){

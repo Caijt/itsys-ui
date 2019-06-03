@@ -41,14 +41,12 @@
 		methods:{
 			create(data=null){
 				this.$refs.editDialog.open().then(that=>{
-					that.create().then(()=>{
-						if(data){
-							that.assign({
-								parent_id:data.id,
-								parent_type:data.name
-							})
-						}
-					})
+					if(data){
+						that.assign({
+							parent_id:data.id,
+							parent_type:data.name
+						})
+					}
 				})
 			},
 			edit(node,data){

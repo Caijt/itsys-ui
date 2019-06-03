@@ -10,17 +10,17 @@ const service = axios.create({
 //这是post请求，可以直接发送对象
 
 service.defaults.headers.delete["Content-Type"] = "application/x-www-form-urlencoded"
-service.defaults.transformRequest = [(data)=> {return Qs.stringify(data,{indices:false})}]
+service.defaults.transformRequest = [(data) => { return Qs.stringify(data) }]
 
-service.defaults.paramsSerializer = (params)=> {
-  return Qs.stringify(params,{indices:false})
+service.defaults.paramsSerializer = (params) => {
+  return Qs.stringify(params)
 }
 
 // 可以在请求头添加对应信息
 service.interceptors.request.use(config => {
   let token = sessionStorage.getItem("token")
   if (token) {
-    config.headers['Authorization'] = "Bearer "+token // 让每个请求携带自定义token 请根据实际情况自行修改
+    config.headers['Authorization'] = "Bearer " + token // 让每个请求携带自定义token 请根据实际情况自行修改
   }
   return config
 }, error => {
@@ -41,10 +41,10 @@ service.interceptors.response.use(
 		*/
     const res = response.data
     // code大于40000的为全局错误码，
-    if(res.code > 40000) {
+    if (res.code > 40000) {
       // 40001：未检测到登录信息
-      if(res.code == 40001) {
-        
+      if (res.code == 40001) {
+
         Message({
           message: res.message,
           type: 'error',
@@ -53,8 +53,8 @@ service.interceptors.response.use(
         store.dispatch('logout')
       }
       // 40002：
-      if(res.code == 40002) {
-      	//错误处理
+      if (res.code == 40002) {
+        //错误处理
         Message({
           message: res.message,
           type: 'error',
@@ -85,8 +85,8 @@ service.interceptors.response.use(
       //   })
       // }
       return Promise.reject(res.message)
-    } 
-    
+    }
+
     // code为0视为正常，也有一些局部需要为1或者2，然后到页面具体处理的
     return response.data
   },

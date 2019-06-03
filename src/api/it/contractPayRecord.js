@@ -3,190 +3,52 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/contract_pay_record' 
+const BASE_URL = baseUrl + '/contractPayRecord'
 
 export default {
-	getDetails(id){
+	getDetails(id) {
 		return request({
 			url: BASE_URL + '/getDetails',
-			method:'get',
-			params:{ id }
+			method: 'get',
+			params: { id }
 		})
 	},
-	getForm(id){
+	getForm(id) {
 		return request({
 			url: BASE_URL + '/getForm',
-			method:'get',
-			params:{
+			method: 'get',
+			params: {
 				id
 			}
 		})
 	},
-	getTaskForm(id){
-		return request({
-			url: BASE_URL + '/getTaskForm',
-			method:'get',
-			params:{
-				id
-			}
-		})
-	},
-	getPrint(id){
-		return request({
-			url: BASE_URL + '/getPrint',
-			method:'get',
-			params:{
-				id
-			}
-		})
-	},
-	getSummary(params){
+	getSummary(params) {
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getSummary',
-			method:'get',
+			method: 'get',
 			params
 		})
 	},
-	getList(params){
-		params = commonJs.obj.removeNullKey(params)
+	getList(params) {
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getList',
-			method:'get',
+			method: 'get',
 			params
 		})
 	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
+	getPageList(params) {
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
-			url: BASE_URL + '/getProductList',
-			method:'get',
+			url: BASE_URL + '/getPageList',
+			method: 'get',
 			params
 		})
 	},
-	create(){
-		return request({
-			url: BASE_URL + '/create',
-			method:'post'
-		})
-	},
-	update(data){
-		data = commonJs.obj.copyByKey(data,[
+	save(data) {
+		data = commonJs.obj.copyByKey(data, [
 			'id',
-			'action',
-			'company_id',
-			'supplier_id',
-			'no',
-			'name',
-			'price',
-			'pay',
-			'sign_date',
-			'begin_date',
-			'end_date',
-			'is_remind',
-			'remarks'
-		])
-		return request({
-			url: BASE_URL + '/update',
-			method:'post',
-			data
-		})
-	},
-	del(id){
-		return request({
-			url: BASE_URL + '/del',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undo(id){
-		return request({
-			url: BASE_URL + '/undo',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undoReview(id){
-		return request({
-			url: BASE_URL + '/undoReview',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	getSummaryData(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getSummaryData',
-			method:'get',
-			params
-		})
-	},
-	loadFinish(task_id){
-		return request({
-			url: BASE_URL + '/loadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	undoLoadFinish(task_id){
-		return request({
-			url: BASE_URL + '/undoLoadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	review(data){
-		data = commonJs.obj.copyByKey(data,['id'])
-		return request({
-			url: BASE_URL + '/review',
-			method:'post',
-			data
-		})
-	},
-	driverSupply(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id','driver_unit','driver_no','driver_name','driver_tel'])
-		return request({
-			url: BASE_URL + '/driverSupply',
-			method:'post',
-			data
-		})
-	},
-	exportExcel(params){
-		params = commonJs.obj.removeNullKey(params)
-		let queryStr=qs.stringify(params)
-		window.open( BASE_URL+'/exportExcel?'+queryStr );
-	},
-	getNearMonthSummary(params={}){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getNearMonthSummary ',
-			method:'get',
-			params
-		})
-	},
-	getTimeStatistic(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getTimeStatistic',
-			method:'get',
-			params
-		})
-	},
-	save(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id',
-			'action',
 			'contract_id',
 			'pay_price',
 			'pay_date',
@@ -194,8 +56,47 @@ export default {
 		])
 		return request({
 			url: BASE_URL + '/save',
-			method:'post',
+			method: 'post',
 			data
 		})
 	},
+	del(id) {
+		return request({
+			url: BASE_URL + '/delete',
+			method: 'delete',
+			data: {
+				id
+			}
+		})
+	},
+	getSummaryData(params) {
+		params = commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getSummaryData',
+			method: 'get',
+			params
+		})
+	},
+	exportExcel(params) {
+		params = commonJs.obj.removeNullKey(params)
+		let queryStr = qs.stringify(params)
+		window.open(BASE_URL + '/exportExcel?' + queryStr);
+	},
+	getNearMonthSummary(params = {}) {
+		params = commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getNearMonthSummary ',
+			method: 'get',
+			params
+		})
+	},
+	getTimeStatistic(params) {
+		params = commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getTimeStatistic',
+			method: 'get',
+			params
+		})
+	},
+
 }

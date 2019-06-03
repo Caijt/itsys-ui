@@ -1,13 +1,16 @@
 <template>
-	<div>
-		<asset-list show-query-more init/>
-	</div>
+    <div>
+        <asset-list ref="list" show-query-more/>
+    </div>
 </template>
 <script>
-import assetList from '@/components/it/asset/list'
+import assetList from "@/components/it/asset/list";
 export default {
-	components:{
-		assetList
-	}
-}
+    components: {
+        assetList
+    },
+    mounted() {
+        this.$refs.list.reload();
+    }
+};
 </script>

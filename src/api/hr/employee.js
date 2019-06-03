@@ -54,6 +54,14 @@ export default {
 			params
 		})
 	},
+	getPageList(params){
+		params = commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getPageList',
+			method:'get',
+			params
+		})
+	},
 	getList(params){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
@@ -70,16 +78,9 @@ export default {
 			params
 		})
 	},
-	create(){
-		return request({
-			url: BASE_URL + '/create',
-			method:'post'
-		})
-	},
-	update(data){
+	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
 			'dep_id',
 			'name',			
 			'no',
@@ -89,15 +90,15 @@ export default {
 			'remarks'
 		])
 		return request({
-			url: BASE_URL + '/update',
+			url: BASE_URL + '/save',
 			method:'post',
 			data
 		})
 	},
 	del(id){
 		return request({
-			url: BASE_URL + '/del',
-			method:'post',
+			url: BASE_URL + '/delete',
+			method:'delete',
 			data:{
 				id
 			}

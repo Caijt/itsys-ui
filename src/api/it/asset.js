@@ -10,10 +10,10 @@ export default {
 	uploadAttachUrl:BASE_URL+'/uploadAttach',
 	delAttachUrl:BASE_URL+'/delAttach',
 	getPrintQrcode(id){
-		return BASE_URL+'/getPrintQrcode/id/'+id
+		return BASE_URL+'/getPrintQrcode/'+id
 	},
 	getDetailsQrcode(id){
-		return BASE_URL+'/getDetailsQrcode/id/'+id
+		return BASE_URL+'/getDetailsQrcode/'+id
 	},
 	getDetails(id){
 		return request({
@@ -58,17 +58,25 @@ export default {
 		})
 	},
 	getList(params){
-		params = commonJs.obj.removeNullKey(params)
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getList',
 			method:'get',
 			params
 		})
 	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
+	getPageList(params){
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
-			url: BASE_URL + '/getProductList',
+			url: BASE_URL + '/getPageList',
+			method:'get',
+			params
+		})
+	},
+	getPageListWithSummary(params){
+		params = params && commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getPageListWithSummary',
 			method:'get',
 			params
 		})
@@ -79,10 +87,9 @@ export default {
 			method:'post'
 		})
 	},
-	update(data){
+	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
 			'company_id',
 			'type_id',
 			'supplier_id',
@@ -95,36 +102,19 @@ export default {
 			'source',
 			'is_stock_warning',
 			'stock_warning_id',
-			'remarks'
+			'remarks',
+			"attach_guid"
 		])
 		return request({
-			url: BASE_URL + '/update',
+			url: BASE_URL + '/save',
 			method:'post',
 			data
 		})
 	},
 	del(id){
 		return request({
-			url: BASE_URL + '/del',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undo(id){
-		return request({
-			url: BASE_URL + '/undo',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undoReview(id){
-		return request({
-			url: BASE_URL + '/undoReview',
-			method:'post',
+			url: BASE_URL + '/delete',
+			method:'delete',
 			data:{
 				id
 			}
@@ -136,41 +126,6 @@ export default {
 			url: BASE_URL + '/getSummaryData',
 			method:'get',
 			params
-		})
-	},
-	loadFinish(task_id){
-		return request({
-			url: BASE_URL + '/loadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	undoLoadFinish(task_id){
-		return request({
-			url: BASE_URL + '/undoLoadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	review(data){
-		data = commonJs.obj.copyByKey(data,['id'])
-		return request({
-			url: BASE_URL + '/review',
-			method:'post',
-			data
-		})
-	},
-	driverSupply(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id','driver_unit','driver_no','driver_name','driver_tel'])
-		return request({
-			url: BASE_URL + '/driverSupply',
-			method:'post',
-			data
 		})
 	},
 	exportExcel(params){
@@ -194,12 +149,12 @@ export default {
 			params
 		})
 	},
-	getFieldList({ field, keyword }){
+	getPropList({ prop, keyword }){
 		return request({
-			url: BASE_URL + '/getFieldList',
+			url: BASE_URL + '/getPropList',
 			method:'get',
 			params:{ 
-				field,keyword
+				prop,keyword
 			}
 		})
 	}

@@ -5,7 +5,7 @@
 				<el-button type='primary' @click='create' icon='el-icon-edit'>创建更新记录</el-button>
 			</el-button-group>
 		</div>
-		<list ref='list' init show-selection>
+		<list ref='list'>
     	<el-table-column slot='column' label='操作' fixed='right' align='center' width='70'>
 				<template slot-scope='{row}'>
 					<el-button  size='mini' type='text' icon='el-icon-edit' @click='edit(row)' />	
@@ -30,16 +30,10 @@ export default {
 		return {
 		}
 	},
-	computed:{
-		//表单是否是编辑状态
-	},
 	mounted(){
-		
+		this.reload()
 	},
 	methods:{	
-		exportExcel(){
-			this.$refs.list.exportExcel()
-		},
 		create(){
 			this.$refs.editDialog.open().then(that=>{
 				that.create()
@@ -59,18 +53,7 @@ export default {
 		},
 		reload(){
 			this.$refs.list.reload()
-		},
-		copy({row}){
-			this.$refs.editDialog.open().then(that=>{
-				that.create().then(res=>{
-					let copyData = this.$commonJs.obj.copyByKey(row,['model','company_id','supplier_name','buy_date','price','amount','sn','remarks'])
-					that.assign(copyData).clearValidate()
-				})
-			})
-		},
-		test2(){
-			this.$refs.list.$refs.tableList.clearSelection()
-		}
+		}		
 	}
 }
 </script>

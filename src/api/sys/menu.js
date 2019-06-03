@@ -70,14 +70,6 @@ export default {
 			params
 		})
 	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getProductList',
-			method:'get',
-			params
-		})
-	},
 	create(){
 		return request({
 			url: BASE_URL + '/create',
@@ -95,7 +87,7 @@ export default {
 		])
 		return request({
 			url: BASE_URL + '/save',
-			method:'put',
+			method:'post',
 			data
 		})
 	},	

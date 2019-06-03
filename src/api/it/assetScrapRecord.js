@@ -3,7 +3,7 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/asset_scrap_record' 
+const BASE_URL = baseUrl +'/assetScrapRecord' 
 
 export default {
 	getPrintQrcode(id){
@@ -28,24 +28,6 @@ export default {
 			}
 		})
 	},
-	getTaskForm(id){
-		return request({
-			url: BASE_URL + '/getTaskForm',
-			method:'get',
-			params:{
-				id
-			}
-		})
-	},
-	getPrint(id){
-		return request({
-			url: BASE_URL + '/getPrint',
-			method:'get',
-			params:{
-				id
-			}
-		})
-	},
 	getSummary(params){
 		params = commonJs.obj.removeNullKey(params)
 		return request({
@@ -62,57 +44,32 @@ export default {
 			params
 		})
 	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
+	getPageList(params){
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
-			url: BASE_URL + '/getProductList',
+			url: BASE_URL + '/getPageList',
 			method:'get',
 			params
 		})
 	},
-	create(){
-		return request({
-			url: BASE_URL + '/create',
-			method:'post'
-		})
-	},
-	update(data){
+	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
 			'asset_id',
 			'scrap_date',
 			'reason',
 			'amount'
 		])
 		return request({
-			url: BASE_URL + '/update',
+			url: BASE_URL + '/save',
 			method:'post',
 			data
 		})
 	},
 	del(id){
 		return request({
-			url: BASE_URL + '/del',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undo(id){
-		return request({
-			url: BASE_URL + '/undo',
-			method:'post',
-			data:{
-				id
-			}
-		})
-	},
-	undoReview(id){
-		return request({
-			url: BASE_URL + '/undoReview',
-			method:'post',
+			url: BASE_URL + '/delete',
+			method:'delete',
 			data:{
 				id
 			}
@@ -124,41 +81,6 @@ export default {
 			url: BASE_URL + '/getSummaryData',
 			method:'get',
 			params
-		})
-	},
-	loadFinish(task_id){
-		return request({
-			url: BASE_URL + '/loadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	undoLoadFinish(task_id){
-		return request({
-			url: BASE_URL + '/undoLoadFinish',
-			method:'post',
-			data:{
-				task_id
-			}
-		})
-	},
-	review(data){
-		data = commonJs.obj.copyByKey(data,['id'])
-		return request({
-			url: BASE_URL + '/review',
-			method:'post',
-			data
-		})
-	},
-	driverSupply(data){
-		data = commonJs.obj.copyByKey(data,[
-			'id','driver_unit','driver_no','driver_name','driver_tel'])
-		return request({
-			url: BASE_URL + '/driverSupply',
-			method:'post',
-			data
 		})
 	},
 	exportExcel(params){

@@ -3,91 +3,68 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/network' 
+const BASE_URL = baseUrl + '/network'
 
 export default {
-	getPrintQrcode(id){
-		return BASE_URL+'/getPrintQrcode/id/'+id
+	getPrintQrcode(id) {
+		return BASE_URL + '/getPrintQrcode/id/' + id
 	},
-	getDetailsQrcode(id){
-		return BASE_URL+'/getDetailsQrcode/id/'+id
+	getDetailsQrcode(id) {
+		return BASE_URL + '/getDetailsQrcode/id/' + id
 	},
-	getDetails(id){
+	getDetails(id) {
 		return request({
 			url: BASE_URL + '/getDetails',
-			method:'get',
-			params:{ id }
+			method: 'get',
+			params: { id }
 		})
 	},
-	getForm(id){
+	getForm(id) {
 		return request({
 			url: BASE_URL + '/getForm',
-			method:'get',
-			params:{
+			method: 'get',
+			params: {
 				id
 			}
 		})
 	},
-	getTaskForm(id){
+	getTaskForm(id) {
 		return request({
 			url: BASE_URL + '/getTaskForm',
-			method:'get',
-			params:{
+			method: 'get',
+			params: {
 				id
 			}
 		})
 	},
-	getPrint(id){
+	getPrint(id) {
 		return request({
 			url: BASE_URL + '/getPrint',
-			method:'get',
-			params:{
+			method: 'get',
+			params: {
 				id
 			}
 		})
 	},
-	getSummary(params){
+	getSummary(params) {
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getSummary',
-			method:'get',
+			method: 'get',
 			params
 		})
 	},
-	getTreeList(params={}){
+	getList(params = {}) {
 		params = commonJs.obj.removeNullKey(params)
 		return request({
-			url: BASE_URL + '/getTreeList',
-			method:'get',
+			url: BASE_URL + '/getList',
+			method: 'get',
 			params
 		})
 	},
-	getPrintRecordList(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getPrintRecordList',
-			method:'get',
-			params
-		})
-	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getProductList',
-			method:'get',
-			params
-		})
-	},
-	create(){
-		return request({
-			url: BASE_URL + '/create',
-			method:'post'
-		})
-	},
-	update(data){
-		data = commonJs.obj.copyByKey(data,[
+	save(data) {
+		data = commonJs.obj.copyByKey(data, [
 			'id',
-			'action',
 			'parent_id',
 			'company_id',
 			'name',
@@ -99,58 +76,59 @@ export default {
 			'ip',
 			'account',
 			'password',
-			'remarks'
+			'remarks',
+			"attach_guid"
 		])
 		return request({
-			url: BASE_URL + '/update',
-			method:'post',
+			url: BASE_URL + '/save',
+			method: 'post',
 			data
 		})
 	},
-	del(id){
+	del(id) {
 		return request({
-			url: BASE_URL + '/del',
-			method:'post',
-			data:{
+			url: BASE_URL + '/delete',
+			method: 'delete',
+			data: {
 				id
 			}
 		})
 	},
-	getSummaryData(params){
+	getSummaryData(params) {
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getSummaryData',
-			method:'get',
+			method: 'get',
 			params
 		})
 	},
-	exportExcel(params){
+	exportExcel(params) {
 		params = commonJs.obj.removeNullKey(params)
-		let queryStr=qs.stringify(params)
-		window.open( BASE_URL+'/exportExcel?'+queryStr );
+		let queryStr = qs.stringify(params)
+		window.open(BASE_URL + '/exportExcel?' + queryStr);
 	},
-	getNearMonthSummary(params={}){
+	getNearMonthSummary(params = {}) {
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getNearMonthSummary ',
-			method:'get',
+			method: 'get',
 			params
 		})
 	},
-	getTimeStatistic(params){
+	getTimeStatistic(params) {
 		params = commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getTimeStatistic',
-			method:'get',
+			method: 'get',
 			params
 		})
 	},
-	getFieldList({ field, keyword }){
+	getPropList({ prop, keyword }) {
 		return request({
-			url: BASE_URL + '/getFieldList',
-			method:'get',
-			params:{ 
-				field,keyword
+			url: BASE_URL + '/getPropList',
+			method: 'get',
+			params: {
+				prop, keyword
 			}
 		})
 	}

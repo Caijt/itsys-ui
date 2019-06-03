@@ -19,9 +19,9 @@ export default {
 			method: 'get'
 		})
 	},
-	getGuid(){
+	newGuid(){
 		return request({
-			url: BASE_URL + '/getGuid',
+			url: BASE_URL + '/newGuid',
 			method: 'get'
 		})
 	}

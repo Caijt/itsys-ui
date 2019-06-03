@@ -3,7 +3,7 @@ import baseUrl from './baseUrl'
 import commonJs from '@/utils/common'
 import qs from 'qs'
 
-const BASE_URL = baseUrl +'/asset_type' 
+const BASE_URL = baseUrl +'/assetType' 
 
 export default {
 	getPrintQrcode(id){
@@ -54,10 +54,18 @@ export default {
 			params
 		})
 	},
-	getTreeList(params={}){
-		params = commonJs.obj.removeNullKey(params)
+	getTreeList(params){
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getTreeList',
+			method:'get',
+			params
+		})
+	},
+	getList(params){
+		params = params && commonJs.obj.removeNullKey(params)
+		return request({
+			url: BASE_URL + '/getList',
 			method:'get',
 			params
 		})
@@ -84,25 +92,25 @@ export default {
 			method:'post'
 		})
 	},
-	update(data){
+	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
 			'parent_id',
 			'name',
 			'order',
-			'remarks'
+			'remarks',
+			"attach_guid"
 		])
 		return request({
-			url: BASE_URL + '/update',
+			url: BASE_URL + '/save',
 			method:'post',
 			data
 		})
 	},
 	del(id){
 		return request({
-			url: BASE_URL + '/del',
-			method:'post',
+			url: BASE_URL + '/delete',
+			method:'delete',
 			data:{
 				id
 			}

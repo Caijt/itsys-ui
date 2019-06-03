@@ -69,8 +69,8 @@
 		methods:{
 			getTreeList(){
 				this.loading = true
-				depApi.getTreeList().then(res=>{
-					this.data = this.$commonJs.toTreeData(res.data.list)
+				depApi.getList().then(res=>{
+					this.data = this.$commonJs.toTreeData(res.data)
 					this.loading = false
 				})
 			},

@@ -5,7 +5,7 @@
 				<el-button type='primary' @click='create' icon='el-icon-edit'>创建参数</el-button>
 			</el-button-group>
 		</div> -->
-		<list ref='list' init show-selection>
+		<list ref='list'>
     	<el-table-column slot='column' label='操作' fixed='right' align='center' width='60'>
 				<template slot-scope='{row}'>
 					<el-button  size='mini' type='text' icon='el-icon-edit' @click='edit(row)' />	
@@ -34,14 +34,9 @@ export default {
 
 	},
 	mounted(){
-		
+		this.reload()
 	},
 	methods:{	
-		create(){
-			this.$refs.editDialog.open().then(that=>{
-				
-			})
-		},
 		edit(row){
 			this.$refs.editDialog.open().then(that=>{
 				that.initData({...row,isEdit:1})

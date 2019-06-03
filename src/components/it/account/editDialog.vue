@@ -51,8 +51,8 @@
 					</el-input>
 				</el-form-item>
 				<el-form-item label='附件' prop='remarks'>
-					<attach-upload ref='attachUpload' :params='attachParams' @uploaded='uploaded'></attach-upload>
-					<attach-list ref='attachList' show-del @del='updated=true'></attach-list>
+					<attach-upload ref='attachUpload' :attach-guid="form.attach_guid" @uploaded='uploaded'></attach-upload>
+					<attach-list ref='attachList' show-del></attach-list>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -70,15 +70,15 @@
 	import attachList from '@/components/common/attach/textList'
 
 	const formInit = {		
-		id:null,
-		input_status:-1,
+		id:0,
 		company_id:null,
 		no:'',
 		name:'',
 		login_address:'',
 		account:'',
 		password:'',
-		remarks:''		
+		remarks:'',
+		attach_guid:null
 	}
 	export default {
 		components:{ 
@@ -108,11 +108,7 @@
 				},
 				updated:false,
 				companyList:[],
-				companyLoading:false,
-				attachParams:{
-					table_name:'it_contract',
-					table_id:null
-				}
+				companyLoading:false
 			}
 		},
 		computed:{
@@ -121,7 +117,7 @@
 			},
 			title(){
 				let title = '账号信息'
-				if(this.form.input_status>=0){
+				if(this.isEdit){
 					title += ' [ 修改 ]'
 				}else{
 					title += ' [ 新增 ]'
@@ -156,19 +152,16 @@
 			},
 			getCompanyList(){
 				this.companyLoading = true
-				companyApi.getList({inCompany:1,noPage:1}).then(res=>{
-					this.companyList = res.data.list
+				companyApi.getList({inUserCompany:true}).then(res=>{
+					this.companyList = res.data
 					this.companyLoading = false
 				})
 			},
 			create(){
 				this.loading = true
-				return new Promise((resolve,reject)=>{
-					api.create().then(res=>{
-						this.initData( res.data )
-						this.loading = false
-						resolve()
-					})
+				this.$commonJs.newGuid().then(guid=>{
+					this.form.attach_guid = guid
+					this.loading = false
 				})
 			},
 			getForm(id){
@@ -180,45 +173,33 @@
 			},
 			initData(data){
 				this.assign(data)
-				this.attachParams.table_id = data.id
-				if(data.attach_ids){
-					this.$refs.attachList.initData({ attach_ids:data.attach_ids})
-				}
+				this.$refs.attachList.initData({ attach_guid:data.attach_guid})
 				this.clearValidate()
 			},
 			assign(data){
 				this.form = { ...this.form, ...data }
-				this.form.price = Number(this.form.price)
 				return this
 			},
-			save(status=0){
+			save(){
 				this.$refs.form.validate(valid=>{
-					if(valid){
-						this.form.action = status
-						this.update()
-					}else{
+					if(!valid){
 						return false
 					}
-				})
-			},
-			update(){
-				this.loading = true
-				let messageText = this.form.action?'提交成功':'保存成功'
-				api.update(this.form).then(res=>{
-					this.form.input_status = res.data.input_status
-					this.loading = false
-					this.$message.success(messageText)
-					this.updated = true
-					if(this.form.action==1){
-						this.show=false									
-					}
-				}).catch(res=>{
-					this.loading = false
-					console.log(res)
+					this.loading = true
+					api.save(this.form).then(res=>{
+						if(!this.isEdit){
+							this.form.id = res.data.id
+						}
+						this.loading = false
+						this.updated = true
+						this.$message.success("保存成功")
+					}).catch(res=>{
+						this.loading = false
+						console.log(res)
+					})
 				})
 			},
 			uploaded(res){
-				this.updated = true
 				this.$refs.attachList.push(res)
 			},
 			clearValidate(){

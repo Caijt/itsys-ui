@@ -46,40 +46,25 @@ export default {
 			}
 		})
 	},
-	getSummary(params){
-		params = commonJs.obj.removeNullKey(params)
-		return request({
-			url: BASE_URL + '/getSummary',
-			method:'get',
-			params
-		})
-	},
 	getList(params){
-		params = commonJs.obj.removeNullKey(params)
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
 			url: BASE_URL + '/getList',
 			method:'get',
 			params
 		})
 	},
-	getProductList(params){
-		params = commonJs.obj.removeNullKey(params)
+	getPageList(params){
+		params = params && commonJs.obj.removeNullKey(params)
 		return request({
-			url: BASE_URL + '/getProductList',
+			url: BASE_URL + '/getPageList',
 			method:'get',
 			params
 		})
-	},
-	create(){
-		return request({
-			url: BASE_URL + '/create',
-			method:'post'
-		})
-	},
-	update(data){
+	},	
+	save(data){
 		data = commonJs.obj.copyByKey(data,[
 			'id',
-			'action',
 			'company_id',
 			'name',
 			'full_name',
@@ -87,18 +72,19 @@ export default {
 			'supplier_type',
 			'contacts',
 			'bank',
-			'remarks'
+			'remarks',
+			"attach_guid"
 		])
 		return request({
-			url: BASE_URL + '/update',
+			url: BASE_URL + '/save',
 			method:'post',
 			data
 		})
 	},
 	del(id){
 		return request({
-			url: BASE_URL + '/del',
-			method:'post',
+			url: BASE_URL + '/delete',
+			method:'delete',
 			data:{
 				id
 			}
