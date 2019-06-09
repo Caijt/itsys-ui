@@ -201,7 +201,7 @@
                             <el-progress
                                 text-inside
                                 :stroke-width="16"
-                                :status="row.pay_progress>=100?'success':'text'"
+                                :status="row.pay_progress>=100?'success':undefined"
                                 :percentage="row.pay_progress>=100?100:row.pay_progress"
                             ></el-progress>
                         </el-tooltip>

@@ -48,7 +48,7 @@
                 :stroke-width="18"
                 :percentage="getImgPercentage"
                 style="margin-bottom:10px"
-                :status="getImgPercentage==100?'success':'text'"
+                :status="getImgPercentage==100?'success':undefined"
             ></el-progress>
             <el-button
                 type="primary"
@@ -105,7 +105,7 @@ export default {
         },
         getData(params) {
             this.loading = true;
-            assetApi.getList({ ...params}).then(res => {
+            assetApi.getList({ ...params }).then(res => {
                 this.loading = false;
                 this.list = res.data;
             });
