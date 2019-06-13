@@ -1,29 +1,22 @@
-# jg2
+# IT部门信息管理系统前端代码
 
-## Project setup
+### 安装依赖项
+
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 开发调试
+
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 构建
+
 ```
 npm run build
 ```
 
-### Run your tests
-```
-npm run test
-```
+[相关博客](https://www.cnblogs.com/caijt/p/11015116.html)
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
