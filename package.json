@@ -13,7 +13,7 @@
     "element-ui": "^2.4.5",
     "js-cookie": "^2.2.0",
     "lrz": "^4.9.40",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "vue": "^2.5.22",
